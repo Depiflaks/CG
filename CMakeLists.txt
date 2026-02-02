@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.28)
+project(CG)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS_OUTPUT_DIR ${CMAKE_BINARY_DIR})
+
+include(FetchContent)
+FetchContent_Declare(
+        googletest
+        URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
+)
+FetchContent_MakeAvailable(googletest)
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.20)
+    include(GoogleTest)
+endif()
+
+find_package(SFML 2.6 COMPONENTS system window graphics network audio REQUIRED)
+
+#add_subdirectory(labs/lab1/object_ducks ${CMAKE_BINARY_DIR}/labs/lab1/object_ducks)
