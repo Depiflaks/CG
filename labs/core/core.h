@@ -137,6 +137,10 @@ private:
 	{
 	}
 
+	virtual void HandleMouseEnter()
+	{
+	}
+
 	void HandleEvents()
 	{
 		sf::Event e{};
@@ -163,6 +167,10 @@ private:
 			{
 				HandleMouseLeave();
 			}
+			if (e.type == sf::Event::MouseEntered)
+			{
+				HandleMouseEnter();
+			}
 		}
 	}
 
@@ -182,6 +190,8 @@ public:
 	virtual void OnMouseMove(sf::Vector2f mousePosition) = 0;
 
 	virtual void OnMouseLeave() = 0;
+
+	virtual void OnMouseEnter() = 0;
 };
 } // namespace core
 

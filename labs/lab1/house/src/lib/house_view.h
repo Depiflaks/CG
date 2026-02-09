@@ -47,6 +47,12 @@ private:
 
 	void HandleMouseLeave() override
 	{
+		m_picture.OnMouseLeave();
+	}
+
+	void HandleMouseEnter() override
+	{
+		m_picture.OnMouseEnter();
 	}
 
 	Picture m_picture;
