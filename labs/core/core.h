@@ -3,50 +3,11 @@
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Graphics/Text.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <iostream>
 
 namespace core
 {
-class AbstractView
-{
-public:
-	AbstractView(uint w, uint h, std::string title)
-		: m_window(sf::VideoMode(w, h), std::move(title))
-	{
-	}
-
-	virtual ~AbstractView() = default;
-
-	void Run()
-	{
-		while (m_window.isOpen())
-		{
-			float dt = m_clock.restart().asSeconds();
-			dt = std::min(dt, 0.033f);
-
-			HandleEvents();
-			UpdateObjects(dt);
-			Redraw();
-		}
-	}
-
-private:
-	virtual void Redraw()
-	{
-	}
-
-	virtual void UpdateObjects(float dt)
-	{
-	}
-
-	virtual void HandleEvents()
-	{
-	}
-
-	sf::RenderWindow m_window;
-	sf::Clock m_clock;
-};
 
 class Locatable
 {
@@ -61,7 +22,7 @@ public:
 		m_position = position;
 	}
 
-	sf::Vector2f Position() const
+	[[nodiscard]] sf::Vector2f Position() const
 	{
 		return m_position;
 	}
@@ -91,7 +52,7 @@ public:
 		m_speed = speed;
 	}
 
-	sf::Vector2f Speed() const
+	[[nodiscard]] sf::Vector2f Speed() const
 	{
 		return m_speed;
 	}
@@ -122,6 +83,49 @@ public:
 	virtual ~Drawable() = default;
 
 	virtual void Draw(sf::RenderTarget& target, sf::RenderStates states) = 0;
+};
+
+class AbstractView : Drawable
+{
+public:
+	AbstractView(uint w, uint h, const std::string& title)
+		: m_window(sf::VideoMode(w, h), title)
+	{
+	}
+
+	void Run()
+	{
+		while (m_window.isOpen())
+		{
+			float dt = m_clock.restart().asSeconds();
+			dt = std::min(dt, 0.033f);
+
+			HandleEvents();
+			UpdateObjects(dt);
+			Redraw();
+		}
+	}
+
+private:
+	void Redraw()
+	{
+		m_window.clear(sf::Color::White);
+		Draw(m_window, sf::RenderStates::Default);
+		m_window.display();
+	}
+
+	void Draw(sf::RenderTarget& target, sf::RenderStates states) override = 0;
+
+	virtual void UpdateObjects(float dt)
+	{
+	}
+
+	virtual void HandleEvents()
+	{
+	}
+
+	sf::RenderWindow m_window;
+	sf::Clock m_clock;
 };
 
 class Clickable
