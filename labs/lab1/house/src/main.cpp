@@ -1,5 +1,5 @@
 
-#include "lib/initials_view.h"
+#include "lib/house_view.h"
 
 int main()
 {
