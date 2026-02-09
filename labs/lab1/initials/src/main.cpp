@@ -2,6 +2,7 @@
 
 #include "lib/core/core.h"
 #include <algorithm> // std::min
+#include <iostream>
 
 class Letter
 	: public core::Drawable
@@ -13,6 +14,9 @@ public:
 		: Kinematic(position, speed, acceleration)
 	{
 	}
+
+private:
+	sf::Vector2f m_bounds;
 };
 
 class Application

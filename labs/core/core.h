@@ -2,73 +2,134 @@
 #define CG_CORE_H
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Text.hpp>
 #include <SFML/System/Vector2.hpp>
 
-namespace core {
-    class Locatable {
-    public:
-        explicit Locatable(sf::Vector2f position) : m_position(position) {
-        };
+namespace core
+{
+class AbstractApplication
+{
+public:
+	AbstractApplication(uint w, uint h, std::string title)
+		: m_window(sf::VideoMode(w, h), std::move(title))
+	{
+	}
 
-        virtual ~Locatable() = default;
+	virtual ~AbstractApplication() = default;
 
-        void SetPosition(sf::Vector2f position) {
-            m_position = position;
-        }
+	void Run()
+	{
+		while (m_window.isOpen())
+		{
+			float dt = m_clock.restart().asSeconds();
+			dt = std::min(dt, 0.033f);
 
-        sf::Vector2f Position() const {
-            return m_position;
-        }
+			HandleEvents();
+			UpdateObjects(dt);
+			Redraw();
+		}
+	}
 
-        void Move(sf::Vector2f delta) {
-            m_position += delta;
-        }
+private:
+	virtual void Redraw() = 0;
+	virtual void UpdateObjects(float dt) = 0;
+	virtual void HandleEvent() = 0;
 
-    private:
-        sf::Vector2f m_position;
-    };
+	sf::RenderWindow m_window;
+	sf::Clock m_clock;
 
-    class Kinematic : public Locatable {
-    public:
-        explicit Kinematic(sf::Vector2f position, sf::Vector2f speed, sf::Vector2f acceleration)
-            : Locatable(position),
-              m_speed(speed),
-              m_acceleration(acceleration) {
-        }
+	sf::Font m_font;
+	sf::Text m_text;
+};
 
-        void SetSpeed(sf::Vector2f speed) { m_speed = speed; }
+class Locatable
+{
+public:
+	explicit Locatable(sf::Vector2f position)
+		: m_position(position) {};
 
-        sf::Vector2f Speed() const { return m_speed; }
+	virtual ~Locatable() = default;
 
-        void SetAcceleration(sf::Vector2f acc) { m_acceleration = acc; }
+	void SetPosition(sf::Vector2f position)
+	{
+		m_position = position;
+	}
 
-        void IntegrateSpeed(float dt) { m_speed += m_acceleration * dt; }
+	sf::Vector2f Position() const
+	{
+		return m_position;
+	}
 
-        void IntegratePosition(float dt) { Move(m_speed * dt); }
+	void Move(sf::Vector2f delta)
+	{
+		m_position += delta;
+	}
 
-    private:
-        sf::Vector2f m_speed;
-        sf::Vector2f m_acceleration;
-    };
+private:
+	sf::Vector2f m_position;
+};
 
-    class Drawable {
-    public:
-        virtual ~Drawable() = default;
+class Kinematic : public Locatable
+{
+public:
+	explicit Kinematic(
+		sf::Vector2f position, sf::Vector2f speed, sf::Vector2f acceleration)
+		: Locatable(position)
+		, m_speed(speed)
+		, m_acceleration(acceleration)
+	{
+	}
 
-        virtual void Draw(sf::RenderTarget &target, sf::RenderStates states) = 0;
-    };
+	void SetSpeed(sf::Vector2f speed)
+	{
+		m_speed = speed;
+	}
 
-    class Clickable {
-    public:
-        virtual ~Clickable() = default;
+	sf::Vector2f Speed() const
+	{
+		return m_speed;
+	}
 
-        virtual void OnMouseDown(sf::Vector2f mousePosition) = 0;
+	void SetAcceleration(sf::Vector2f acc)
+	{
+		m_acceleration = acc;
+	}
 
-        virtual void OnMouseUp(sf::Vector2f mousePosition) = 0;
+	void IntegrateSpeed(float dt)
+	{
+		m_speed += m_acceleration * dt;
+	}
 
-        virtual void OnMouseMove(sf::Vector2f mousePosition) = 0;
-    };
-}
+	void IntegratePosition(float dt)
+	{
+		Move(m_speed * dt);
+	}
 
+private:
+	sf::Vector2f m_speed;
+	sf::Vector2f m_acceleration;
+};
 
-#endif //CG_CORE_H
+class Drawable
+{
+public:
+	virtual ~Drawable() = default;
+
+	virtual void Draw(sf::RenderTarget& target, sf::RenderStates states) = 0;
+};
+
+class Clickable
+{
+public:
+	virtual ~Clickable() = default;
+
+	virtual void OnMouseDown(sf::Vector2f mousePosition) = 0;
+
+	virtual void OnMouseUp(sf::Vector2f mousePosition) = 0;
+
+	virtual void OnMouseMove(sf::Vector2f mousePosition) = 0;
+};
+} // namespace core
+
+#endif // CG_CORE_H
