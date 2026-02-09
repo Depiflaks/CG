@@ -119,6 +119,7 @@ private:
 
 	virtual void UpdateObjects(float dt)
 	{
+
 	}
 
 	virtual void HandleEvents()
