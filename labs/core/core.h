@@ -133,6 +133,10 @@ private:
 	{
 	}
 
+	virtual void HandleMouseLeave()
+	{
+	}
+
 	void HandleEvents()
 	{
 		sf::Event e{};
@@ -155,6 +159,10 @@ private:
 			{
 				HandleMouseMove(e.mouseMove);
 			}
+			if (e.type == sf::Event::MouseLeft)
+			{
+				HandleMouseLeave();
+			}
 		}
 	}
 
@@ -172,6 +180,8 @@ public:
 	virtual void OnMouseUp(sf::Vector2f mousePosition) = 0;
 
 	virtual void OnMouseMove(sf::Vector2f mousePosition) = 0;
+
+	virtual void OnMouseLeave() = 0;
 };
 } // namespace core
 

@@ -45,6 +45,10 @@ private:
 			{ static_cast<float>(e.x), static_cast<float>(e.y) });
 	}
 
+	void HandleMouseLeave() override
+	{
+	}
+
 	Picture m_picture;
 };
 
