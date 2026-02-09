@@ -17,6 +17,11 @@ public:
 	{
 	}
 
+	sf::Vector2f GetBounds() const
+	{
+		return m_bounds;
+	}
+
 private:
 	sf::Vector2f m_bounds;
 };
@@ -28,7 +33,6 @@ public:
 		const sf::Vector2f& acceleration, const sf::Vector2f& bounds,
 		const sf::Color& color)
 		: Letter(position, speed, acceleration, bounds)
-		, m_bounds(bounds)
 		, m_color(color)
 	{
 	}
@@ -36,8 +40,8 @@ public:
 	void Draw(sf::RenderTarget& target, sf::RenderStates states) override
 	{
 		const auto pos = Position();
-		const float w = m_bounds.x;
-		const float h = m_bounds.y;
+		const float w = GetBounds().x;
+		const float h = GetBounds().y;
 		const float t = std::max(2.f, std::min(w, h) * 0.22f);
 
 		const sf::Vector2f tl{ pos.x - w * 0.5f, pos.y - h * 0.5f };
@@ -60,7 +64,6 @@ public:
 	}
 
 private:
-	sf::Vector2f m_bounds;
 	sf::Color m_color;
 };
 
@@ -71,7 +74,6 @@ public:
 		const sf::Vector2f& acceleration, const sf::Vector2f& bounds,
 		const sf::Color& color)
 		: Letter(position, speed, acceleration, bounds)
-		, m_bounds(bounds)
 		, m_color(color)
 	{
 	}
@@ -79,8 +81,8 @@ public:
 	void Draw(sf::RenderTarget& target, sf::RenderStates states) override
 	{
 		const auto pos = Position();
-		const float w = m_bounds.x;
-		const float h = m_bounds.y;
+		const float w = GetBounds().x;
+		const float h = GetBounds().y;
 		const float t = std::max(2.f, std::min(w, h) * 0.18f);
 
 		const sf::Vector2f tl{ pos.x - w * 0.5f, pos.y - h * 0.5f };
@@ -99,22 +101,16 @@ public:
 		outer.setPosition(cCenter);
 
 		sf::CircleShape inner(rInner);
-		inner.setFillColor(sf::Color::Black);
+		inner.setFillColor(sf::Color::White);
 		inner.setOrigin(rInner, rInner);
 		inner.setPosition(cCenter);
-
-		sf::RectangleShape bridge({ std::max(0.f, rOuter), t });
-		bridge.setFillColor(m_color);
-		bridge.setPosition({ tl.x + t, tl.y + (h - t) * 0.5f });
 
 		target.draw(leftBar, states);
 		target.draw(outer, states);
 		target.draw(inner, states);
-		target.draw(bridge, states);
 	}
 
 private:
-	sf::Vector2f m_bounds;
 	sf::Color m_color;
 };
 

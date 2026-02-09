@@ -4,6 +4,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Event.hpp>
 #include <iostream>
 
 namespace core
@@ -122,6 +123,14 @@ private:
 
 	virtual void HandleEvents()
 	{
+		sf::Event e{};
+		while (m_window.pollEvent(e))
+		{
+			if (e.type == sf::Event::Closed)
+			{
+				m_window.close();
+			}
+		}
 	}
 
 	sf::RenderWindow m_window;
