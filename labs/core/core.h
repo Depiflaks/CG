@@ -8,15 +8,15 @@
 
 namespace core
 {
-class AbstractApplication
+class AbstractView
 {
 public:
-	AbstractApplication(uint w, uint h, std::string title)
+	AbstractView(uint w, uint h, std::string title)
 		: m_window(sf::VideoMode(w, h), std::move(title))
 	{
 	}
 
-	virtual ~AbstractApplication() = default;
+	virtual ~AbstractView() = default;
 
 	void Run()
 	{
@@ -32,15 +32,20 @@ public:
 	}
 
 private:
-	virtual void Redraw() = 0;
-	virtual void UpdateObjects(float dt) = 0;
-	virtual void HandleEvent() = 0;
+	virtual void Redraw()
+	{
+	}
+
+	virtual void UpdateObjects(float dt)
+	{
+	}
+
+	virtual void HandleEvents()
+	{
+	}
 
 	sf::RenderWindow m_window;
 	sf::Clock m_clock;
-
-	sf::Font m_font;
-	sf::Text m_text;
 };
 
 class Locatable
