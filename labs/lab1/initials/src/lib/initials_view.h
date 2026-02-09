@@ -4,12 +4,15 @@
 
 #ifndef CG_VIEW_H
 #define CG_VIEW_H
+#include "letter.h"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/VideoMode.hpp>
 
 #include "lib/core/core.h"
 #include <algorithm> // std::min
 #include <iostream>
+#include <memory>
 
 class InitialsView : public core::AbstractView
 {
@@ -17,23 +20,7 @@ public:
 	InitialsView()
 		: AbstractView(800, 800, "initials")
 	{
-		m_text.setFont(m_font);
-
-		if (!m_font.loadFromFile("assets/DejaVuSans.ttf"))
-		{
-			m_window.close();
-			return;
-		}
-		m_text.setString(sf::String("SSU"));
-		m_text.setCharacterSize(160);
-		m_text.setFillColor(sf::Color::White);
-
-		auto b = m_text.getLocalBounds();
-		m_text.setOrigin(b.left + b.width * 0.5f, b.top + b.height * 0.5f);
-
-		m_text.setPosition(400.f, m_groundY);
-
-		m_velocityY = -m_jumpSpeed;
+		m_letters = {};
 	}
 
 private:
@@ -61,7 +48,7 @@ private:
 	{
 	}
 
-	float m_velocityY = 0.f;
+	std::vector<std::unique_ptr<Letter>> m_letters{};
 
 	const float m_gravity = 1800.f;
 	const float m_jumpSpeed = 900.f;
