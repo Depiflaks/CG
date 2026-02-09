@@ -119,10 +119,21 @@ private:
 
 	virtual void UpdateObjects(float dt)
 	{
-
 	}
 
-	virtual void HandleEvents()
+	virtual void HandleMouseUp(sf::Event::MouseButtonEvent e)
+	{
+	}
+
+	virtual void HandleMouseDown(sf::Event::MouseButtonEvent e)
+	{
+	}
+
+	virtual void HandleMouseMove(sf::Event::MouseMoveEvent e)
+	{
+	}
+
+	void HandleEvents()
 	{
 		sf::Event e{};
 		while (m_window.pollEvent(e))
@@ -130,6 +141,19 @@ private:
 			if (e.type == sf::Event::Closed)
 			{
 				m_window.close();
+			}
+
+			if (e.type == sf::Event::MouseButtonPressed)
+			{
+				HandleMouseDown(e.mouseButton);
+			}
+			if (e.type == sf::Event::MouseButtonReleased)
+			{
+				HandleMouseUp(e.mouseButton);
+			}
+			if (e.type == sf::Event::MouseMoved)
+			{
+				HandleMouseMove(e.mouseMove);
 			}
 		}
 	}

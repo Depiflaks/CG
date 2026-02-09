@@ -21,11 +21,6 @@ public:
 	}
 
 private:
-	void UpdateObjects(float dt) override
-	{
-
-	}
-
 	void Draw(sf::RenderTarget& target, sf::RenderStates states) override
 	{
 		for (const auto& m_letter : m_letters)
@@ -33,6 +28,8 @@ private:
 			m_letter->Draw(target, states);
 		}
 	}
+
+
 
 	std::vector<std::unique_ptr<Letter>> m_letters{};
 
