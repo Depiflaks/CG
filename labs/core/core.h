@@ -162,10 +162,10 @@ private:
 	sf::Clock m_clock;
 };
 
-class Clickable
+class Draggable
 {
 public:
-	virtual ~Clickable() = default;
+	virtual ~Draggable() = default;
 
 	virtual void OnMouseDown(sf::Vector2f mousePosition) = 0;
 

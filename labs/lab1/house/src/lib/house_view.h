@@ -4,7 +4,7 @@
 
 #ifndef CG_VIEW_H
 #define CG_VIEW_H
-#include "letter.h"
+#include "picture.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -12,28 +12,40 @@
 #include <memory>
 #include <random>
 
-class InitialsView : public core::AbstractView
+class HouseView : public core::AbstractView
 {
 public:
-	InitialsView()
+	HouseView()
 		: AbstractView(800, 800, "house")
+		, m_picture({ 100.0, 100.0 }, { 600.0, 600.0 })
 	{
 	}
 
 private:
 	void Draw(sf::RenderTarget& target, sf::RenderStates states) override
 	{
-		for (const auto& m_letter : m_letters)
-		{
-			m_letter->Draw(target, states);
-		}
+		m_picture.Draw(target, states);
 	}
 
+	void HandleMouseUp(sf::Event::MouseButtonEvent e) override
+	{
+		m_picture.OnMouseUp(
+			{ static_cast<float>(e.x), static_cast<float>(e.y) });
+	}
 
+	void HandleMouseDown(sf::Event::MouseButtonEvent e) override
+	{
+		m_picture.OnMouseDown(
+			{ static_cast<float>(e.x), static_cast<float>(e.y) });
+	}
 
-	std::vector<std::unique_ptr<Letter>> m_letters{};
+	void HandleMouseMove(sf::Event::MouseMoveEvent e) override
+	{
+		m_picture.OnMouseMove(
+			{ static_cast<float>(e.x), static_cast<float>(e.y) });
+	}
 
-	const float m_groundY = 600.f;
+	Picture m_picture;
 };
 
 #endif // CG_VIEW_H
