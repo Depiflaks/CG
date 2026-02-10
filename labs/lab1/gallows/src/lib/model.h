@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cctype>
 #include <random>
+#include <ranges>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
@@ -36,6 +37,7 @@ public:
 	{
 		return m_letter;
 	}
+
 	LetterState State() const
 	{
 		return m_state;
@@ -74,23 +76,23 @@ public:
 	{
 		return m_letters;
 	}
+
 	int GetAttemptsNumber() const
 	{
 		return m_attemptsNum;
 	}
-	std::vector<char> GetCurrentWord() const
-	{
-		return { m_currentWord.begin(), m_currentWord.end() };
-	}
+
 	std::string GetDisplayWord() const
 	{
 		return m_displayWord;
 	}
+
 	std::string GetDescription() const
 	{
-		auto it = m_dictionary.find(m_currentWord);
+		const auto it = m_dictionary.find(m_currentWord);
 		return it == m_dictionary.end() ? std::string{} : it->second;
 	}
+
 	GameState GetGameState() const
 	{
 		return m_currentState;
@@ -158,11 +160,11 @@ private:
 		return static_cast<char>(std::toupper(static_cast<unsigned char>(ch)));
 	}
 
-	int FindLetterIndex(char ch) const
+	static int FindLetterIndex(char ch)
 	{
 		if (ch < 'A' || ch > 'Z')
 			return -1;
-		return static_cast<int>(ch - 'A');
+		return ch - 'A';
 	}
 
 	std::string PickRandomWord()
@@ -171,7 +173,7 @@ private:
 
 		std::vector<std::string> keys;
 		keys.reserve(m_dictionary.size());
-		for (const auto& [k, _] : m_dictionary)
+		for (const auto& k : m_dictionary | std::views::keys)
 			keys.push_back(k);
 
 		std::uniform_int_distribution<size_t> dist(0, keys.size() - 1);
