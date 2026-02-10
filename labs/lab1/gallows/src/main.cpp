@@ -3,6 +3,6 @@
 
 int main()
 {
-	auto view = GallowsView{};
+	auto view = HouseView{};
 	view.Run();
 }

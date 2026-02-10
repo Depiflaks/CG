@@ -16,7 +16,7 @@ class GallowsView : public core::AbstractView
 {
 public:
 	GallowsView()
-		: AbstractView(800, 800, "house")
+		: AbstractView(800, 800, "gallows")
 		, m_picture({ 100.0, 100.0 }, { 600.0, 600.0 })
 	{
 	}
