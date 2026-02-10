@@ -9,8 +9,6 @@
 #include <SFML/Graphics.hpp>
 
 #include "lib/core/core.h"
-#include <memory>
-#include <random>
 
 class CircleView : public core::AbstractView
 {

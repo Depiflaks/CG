@@ -292,7 +292,13 @@
           <mxGeometry x="-310" y="860" width="140" height="52" as="geometry" />
         </mxCell>
         <mxCell id="qc-e_eL3y4BU1I_y3N1L-147" value="Button" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="-160" y="720" width="140" height="52" as="geometry" />
+          <mxGeometry x="-160" y="696" width="170" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="qc-e_eL3y4BU1I_y3N1L-156" value="+ OnMouseDown(vector2d)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="qc-e_eL3y4BU1I_y3N1L-147">
+          <mxGeometry y="26" width="170" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="qc-e_eL3y4BU1I_y3N1L-157" value="+ Draw(target, states)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="qc-e_eL3y4BU1I_y3N1L-147">
+          <mxGeometry y="52" width="170" height="28" as="geometry" />
         </mxCell>
         <mxCell id="qc-e_eL3y4BU1I_y3N1L-148" value="RotateButton" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="-160" y="950" width="140" height="52" as="geometry" />

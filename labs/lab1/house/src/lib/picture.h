@@ -6,10 +6,9 @@
 #include <SFML/Graphics/ConvexShape.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <cmath>
+
 class Picture
-	: public core::Drawable
-	, public core::Locatable
-	, public core::Draggable
+	: public core::Locatable
 {
 public:
 	explicit Picture(const sf::Vector2f& position, const sf::Vector2f& bounds)
@@ -25,7 +24,7 @@ public:
 		Build();
 	}
 
-	void Draw(sf::RenderTarget& target, sf::RenderStates states) override
+	void Draw(sf::RenderTarget& target, sf::RenderStates states)
 	{
 		states.transform.translate(Position());
 		for (const auto& s : m_rects)
@@ -38,7 +37,7 @@ public:
 			target.draw(s, states);
 	}
 
-	void OnMouseDown(sf::Vector2f mousePosition) override
+	void OnMouseDown(sf::Vector2f mousePosition)
 	{
 		if (IsInside(mousePosition))
 		{
@@ -47,23 +46,23 @@ public:
 		}
 	}
 
-	void OnMouseUp(sf::Vector2f mousePosition) override
+	void OnMouseUp(sf::Vector2f mousePosition)
 	{
 		m_isDragging = false;
 	}
 
-	void OnMouseMove(sf::Vector2f mousePosition) override
+	void OnMouseMove(sf::Vector2f mousePosition)
 	{
 		if (m_isDragging && m_inWindow)
 			SetPosition(mousePosition + m_delta);
 	}
 
-	void OnMouseLeave() override
+	void OnMouseLeave()
 	{
 		m_inWindow = false;
 	}
 
-	void OnMouseEnter() override
+	void OnMouseEnter()
 	{
 		m_inWindow = true;
 	}

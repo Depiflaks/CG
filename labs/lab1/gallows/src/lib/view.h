@@ -45,10 +45,7 @@ static inline sf::String ToSfString(const std::string& s)
 
 class ViewManager;
 
-class Button
-	: public core::Drawable
-	, public core::Locatable
-	, public core::Draggable
+class Button : public core::Locatable
 {
 public:
 	using Callback = std::function<void()>;
@@ -61,7 +58,7 @@ public:
 	{
 	}
 
-	void Draw(sf::RenderTarget& target, sf::RenderStates states) override
+	void Draw(sf::RenderTarget& target, sf::RenderStates states)
 	{
 		sf::RectangleShape r(m_bounds);
 		r.setPosition(Position());
@@ -71,7 +68,7 @@ public:
 		target.draw(r, states);
 	}
 
-	void OnMouseDown(sf::Vector2f mousePosition) override
+	void OnMouseDown(sf::Vector2f mousePosition)
 	{
 		if (ContainsPoint(Position(), m_bounds, mousePosition))
 		{
@@ -80,10 +77,10 @@ public:
 		}
 	}
 
-	void OnMouseUp(sf::Vector2f) override
+	void OnMouseUp(sf::Vector2f)
 	{
 	}
-	void OnMouseMove(sf::Vector2f) override
+	void OnMouseMove(sf::Vector2f)
 	{
 	}
 
@@ -126,7 +123,7 @@ public:
 		Recenter();
 	}
 
-	void Draw(sf::RenderTarget& target, sf::RenderStates states) override
+	void Draw(sf::RenderTarget& target, sf::RenderStates states)
 	{
 		Button::Draw(target, states);
 		target.draw(m_text, states);

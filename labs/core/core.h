@@ -86,7 +86,7 @@ public:
 	virtual void Draw(sf::RenderTarget& target, sf::RenderStates states) = 0;
 };
 
-class AbstractView : Drawable
+class AbstractView
 {
 public:
 	AbstractView(uint w, uint h, const std::string& title)
@@ -115,7 +115,7 @@ private:
 		m_window.display();
 	}
 
-	void Draw(sf::RenderTarget& target, sf::RenderStates states) override = 0;
+	virtual void Draw(sf::RenderTarget& target, sf::RenderStates states) = 0;
 
 	virtual void UpdateObjects(float dt)
 	{
@@ -178,6 +178,7 @@ private:
 	sf::Clock m_clock;
 };
 
+// тоже лишний интерфейс
 class Draggable
 {
 public:
