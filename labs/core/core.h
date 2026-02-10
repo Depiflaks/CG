@@ -183,15 +183,25 @@ class Draggable
 public:
 	virtual ~Draggable() = default;
 
-	virtual void OnMouseDown(sf::Vector2f mousePosition) = 0;
+	virtual void OnMouseDown(sf::Vector2f mousePosition)
+	{
+	}
 
-	virtual void OnMouseUp(sf::Vector2f mousePosition) = 0;
+	virtual void OnMouseUp(sf::Vector2f mousePosition)
+	{
+	}
 
-	virtual void OnMouseMove(sf::Vector2f mousePosition) = 0;
+	virtual void OnMouseMove(sf::Vector2f mousePosition)
+	{
+	}
 
-	virtual void OnMouseLeave() = 0;
+	virtual void OnMouseLeave()
+	{
+	}
 
-	virtual void OnMouseEnter() = 0;
+	virtual void OnMouseEnter()
+	{
+	}
 };
 } // namespace core
 
