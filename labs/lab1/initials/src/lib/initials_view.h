@@ -22,10 +22,10 @@ inline float RandomJumpSpeed()
 	return dist(rng);
 }
 
-class GallowsView : public core::AbstractView
+class CircleView : public core::AbstractView
 {
 public:
-	GallowsView()
+	CircleView()
 		: AbstractView(800, 800, "initials")
 	{
 		const sf::Vector2f bounds{ 100.f, 200.f };

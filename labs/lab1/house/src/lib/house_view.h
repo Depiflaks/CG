@@ -12,10 +12,10 @@
 #include <memory>
 #include <random>
 
-class GallowsView : public core::AbstractView
+class CircleView : public core::AbstractView
 {
 public:
-	GallowsView()
+	CircleView()
 		: AbstractView(800, 800, "house")
 		, m_picture({ 100.0, 100.0 }, { 600.0, 600.0 })
 	{
