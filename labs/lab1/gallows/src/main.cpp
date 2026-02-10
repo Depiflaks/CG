@@ -1,8 +1,7 @@
-
-#include "lib/house_view.h"
+#include "lib/view.h"
 
 int main()
 {
-	auto view = HouseView{};
+	auto view = GallowsView{};
 	view.Run();
 }
