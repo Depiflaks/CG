@@ -19,7 +19,7 @@ namespace view_manager
 class ViewManager : public core::AbstractView
 {
 public:
-	ViewManager();
+	explicit ViewManager(Gallows& gallows);
 
 	void NextView()
 	{
@@ -34,8 +34,15 @@ private:
 	void Draw(sf::RenderTarget& target, sf::RenderStates states) override
 	{
 		m_current->get()->Draw(target, states);
-	};
+	}
 
+	void HandleMouseDown(sf::Event::MouseButtonEvent e) override
+	{
+		m_current->get()->OnClick(
+			{ static_cast<float>(e.x), static_cast<float>(e.y) });
+	}
+
+	Gallows& m_gallows;
 	std::list<std::unique_ptr<view_strategy::ViewStrategy>> m_viewStrategies{};
 	std::list<std::unique_ptr<view_strategy::ViewStrategy>>::iterator
 		m_current{};

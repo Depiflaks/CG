@@ -227,6 +227,9 @@ public:
 
 	[[nodiscard]] bool Contains(sf::Vector2f point) const
 	{
+		std::cout << Position().x << " " << Position().y << std::endl;
+		std::cout << m_bounds.x << " " << m_bounds.y << std::endl;
+		std::cout << point.x << " " << point.y << std::endl;
 		return point.x >= Position().x && point.x <= Position().x + m_bounds.x
 			&& point.y >= Position().y && point.y <= Position().y + m_bounds.y;
 	}

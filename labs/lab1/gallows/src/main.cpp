@@ -2,8 +2,7 @@
 
 int main()
 {
-	auto view = view_manager::ViewManager{};
-	view.NextView();
-	view.NextView();
+	Gallows gallows;
+	auto view = view_manager::ViewManager{gallows};
 	view.Run();
 }

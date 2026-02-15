@@ -15,6 +15,7 @@ public:
 	void OnWordChanged() override = 0;
 
 	virtual void Draw(sf::RenderTarget& target, sf::RenderStates states) = 0;
+	virtual void OnClick(sf::Vector2f position) const = 0;
 };
 
 
