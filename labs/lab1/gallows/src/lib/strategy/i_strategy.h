@@ -8,12 +8,12 @@
 namespace view_strategy
 {
 
-class ViewStrategy : private GallowsObserver
+class ViewStrategy : public GallowsObserver
 {
 public:
-	void OnWordChanged() override;
+	void OnWordChanged() override = 0;
 
-	virtual void Draw(sf::RenderTarget& target, sf::RenderStates states);
+	virtual void Draw(sf::RenderTarget& target, sf::RenderStates states) = 0;
 };
 
 

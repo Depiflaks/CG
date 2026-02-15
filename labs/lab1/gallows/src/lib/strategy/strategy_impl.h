@@ -43,6 +43,10 @@ public:
 		target.draw(m_testObj);
 	}
 
+	void OnWordChanged() override
+	{
+	}
+
 private:
 	void Build()
 	{
@@ -60,9 +64,17 @@ public:
 	explicit AttemptsView(view_manager::ViewManager& m_view_manager)
 		: AbstractView(m_view_manager)
 	{
+		Build();
 	}
 
-	void Draw(sf::RenderTarget& target, sf::RenderStates states) override;
+	void Draw(sf::RenderTarget& target, sf::RenderStates states) override
+	{
+		target.draw(m_testObj);
+	}
+
+	void OnWordChanged() override
+	{
+	}
 
 private:
 	void Build()

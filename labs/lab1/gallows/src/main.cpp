@@ -4,5 +4,6 @@ int main()
 {
 	auto view = view_manager::ViewManager{};
 	view.NextView();
+	view.NextView();
 	view.Run();
 }
