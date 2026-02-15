@@ -4,6 +4,7 @@
 
 #ifndef CG_VIEW_STRATEGY_H
 #define CG_VIEW_STRATEGY_H
+#include "lib/model.h"
 
 namespace view_strategy
 {

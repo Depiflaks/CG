@@ -14,7 +14,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/s
 
 list(FILTER PROJECT_SOURCES EXCLUDE REGEX ".*main\\.cpp$")
 
-target_link_libraries(lab1
+target_link_libraries(${PROJECT_NAME}
         PRIVATE
         lib
 )

@@ -180,7 +180,6 @@ private:
 	sf::Clock m_clock;
 };
 
-// тоже лишний интерфейс
 class Draggable
 {
 public:
@@ -206,6 +205,36 @@ public:
 	{
 	}
 };
+
+class Widget : public Locatable
+{
+public:
+	explicit Widget(const sf::Vector2f& position, const sf::Vector2f& size)
+		: Locatable(position)
+		, m_bounds(size)
+	{
+	}
+
+	sf::Vector2f Bounds() const
+	{
+		return m_bounds;
+	}
+
+	void SetBounds(sf::Vector2f bounds)
+	{
+		m_bounds = bounds;
+	}
+
+	[[nodiscard]] bool Contains(sf::Vector2f point) const
+	{
+		return point.x >= Position().x && point.x <= Position().x + m_bounds.x
+			&& point.y >= Position().y && point.y <= Position().y + m_bounds.y;
+	}
+
+private:
+	sf::Vector2f m_bounds;
+};
+
 } // namespace core
 
 #endif // CG_CORE_H

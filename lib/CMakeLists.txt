@@ -1,11 +1,13 @@
-add_library(core STATIC
+add_library(lib INTERFACE
 )
 
 target_include_directories(lib
-        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
+        INTERFACE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
+target_compile_features(lib INTERFACE cxx_std_20)
+
 target_link_libraries(lib
-        PUBLIC sfml-graphics sfml-window sfml-system
+        INTERFACE sfml-graphics sfml-window sfml-system
 )

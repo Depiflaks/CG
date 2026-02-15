@@ -5,23 +5,13 @@
 #ifndef CG_VIEW_H
 #define CG_VIEW_H
 
-#include "model.h"
-
 #include <SFML/Graphics.hpp>
 
-#include "lib/core/core.h"
 #include "lib/strategy/strategy.h"
 #include <memory>
-#include <random>
+#include <sfml_core/core.h>
 
-#include <algorithm>
-#include <cctype>
-#include <functional>
 #include <list>
-#include <memory>
-#include <string>
-#include <utility>
-#include <vector>
 
 namespace view_manager
 {
