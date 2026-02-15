@@ -6,7 +6,7 @@
 #define CG_STRATEGY_IMPL_H
 
 #include "../view_manager.h"
-#include "i_strategy.h"
+#include "strategy.h"
 
 namespace view_strategy
 {

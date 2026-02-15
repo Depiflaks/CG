@@ -19,6 +19,7 @@ endif()
 
 find_package(SFML 2.6 COMPONENTS system window graphics network audio REQUIRED)
 
+add_subdirectory(lib)
 add_subdirectory(labs/lab1/initials ${CMAKE_BINARY_DIR}/labs/lab1/initials)
 add_subdirectory(labs/lab1/house ${CMAKE_BINARY_DIR}/labs/lab1/house)
 add_subdirectory(labs/lab1/circle ${CMAKE_BINARY_DIR}/labs/lab1/circle)

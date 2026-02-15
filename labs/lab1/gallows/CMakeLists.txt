@@ -14,6 +14,11 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/s
 
 list(FILTER PROJECT_SOURCES EXCLUDE REGEX ".*main\\.cpp$")
 
+target_link_libraries(lab1
+        PRIVATE
+        lib
+)
+
 target_link_libraries(${PROJECT_NAME} PRIVATE
         sfml-graphics
         sfml-window
