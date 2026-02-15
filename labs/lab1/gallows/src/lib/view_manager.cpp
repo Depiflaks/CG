@@ -4,8 +4,8 @@
 view_manager::ViewManager::ViewManager()
 	: AbstractView(800, 600, "gallows")
 {
-	m_viewStrategies.emplace_back(std::make_unique<GallowsView>());
-	m_viewStrategies.emplace_back(std::make_unique<AttemptsView>());
+	m_viewStrategies.emplace_back(std::make_unique<view_strategy::GallowsView>());
+	m_viewStrategies.emplace_back(std::make_unique<view_strategy::AttemptsView>());
 	m_current = m_viewStrategies.begin();
 }
 

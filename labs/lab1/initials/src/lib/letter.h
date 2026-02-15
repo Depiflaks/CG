@@ -62,7 +62,7 @@ private:
 		const float rxI = std::max(0.f, rxO - t);
 		const float ryI = std::max(0.f, ryO - t);
 
-		const float 	cutW = std::max(1.f, rxO * 1.1f);
+		const float cutW = std::max(1.f, rxO * 1.1f);
 		const float cutH = std::max(1.f, h * 0.60f);
 
 		m_outer = MakeEllipse(rxO, ryO, m_color, 96);
@@ -97,7 +97,6 @@ private:
 		return s;
 	}
 
-private:
 	sf::Color m_color;
 
 	sf::ConvexShape m_outer;

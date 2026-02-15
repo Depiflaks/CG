@@ -10,7 +10,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "lib/core/core.h"
-#include "lib/strategy/view_strategy.h"
+#include "lib/strategy/i_strategy.h"
 #include <memory>
 #include <random>
 
