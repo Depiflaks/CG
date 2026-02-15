@@ -1,4 +1,4 @@
-#include "lib/view.h"
+#include "lib/view_manager.h"
 
 int main()
 {

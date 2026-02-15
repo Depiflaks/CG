@@ -24,6 +24,13 @@ enum class GameState
 	Victory
 };
 
+class GallowsObserver
+{
+public:
+	virtual ~GallowsObserver() = default;
+	virtual void OnWordChanged() = 0;
+};
+
 class Letter
 {
 public:
@@ -82,14 +89,14 @@ public:
 		return m_attemptsNum;
 	}
 
-	std::string GetDisplayWord() const
+	std::string GetWordView() const
 	{
-		return m_displayWord;
+		return m_wordView;
 	}
 
 	std::string GetDescription() const
 	{
-		const auto it = m_dictionary.find(m_currentWord);
+		const auto it = m_dictionary.find(m_hiddenWord);
 		return it == m_dictionary.end() ? std::string{} : it->second;
 	}
 
@@ -111,19 +118,19 @@ public:
 		if (m_letters[static_cast<size_t>(idx)].State() != LetterState::Unknown)
 			return;
 
-		const bool inWord = (m_currentWord.find(ch) != std::string::npos);
+		const bool inWord = (m_hiddenWord.find(ch) != std::string::npos);
 		m_letters[static_cast<size_t>(idx)].SetState(
 			inWord ? LetterState::Correct : LetterState::Incorrect);
 
 		if (inWord)
 		{
-			for (size_t i = 0; i < m_currentWord.size(); ++i)
+			for (size_t i = 0; i < m_hiddenWord.size(); ++i)
 			{
-				if (m_currentWord[i] == ch)
-					m_displayWord[i] = ch;
+				if (m_hiddenWord[i] == ch)
+					m_wordView[i] = ch;
 			}
 
-			if (m_displayWord == m_currentWord)
+			if (m_wordView == m_hiddenWord)
 				m_currentState = GameState::Victory;
 		}
 		else
@@ -132,6 +139,7 @@ public:
 			if (m_attemptsNum <= 0)
 				m_currentState = GameState::GameOver;
 		}
+		NotifyObservers();
 	}
 
 	void NewGame()
@@ -139,12 +147,18 @@ public:
 		if (m_dictionary.empty())
 			throw std::runtime_error("dictionary is empty");
 
-		m_currentWord = PickRandomWord();
-		m_displayWord.assign(m_currentWord.size(), '_');
+		m_hiddenWord = PickRandomWord();
+		m_wordView.assign(m_hiddenWord.size(), '_');
 		m_currentState = GameState::InProgress;
 
 		ResetLetters();
 		m_attemptsNum = m_initialAttempts;
+		NotifyObservers();
+	}
+
+	void RegisterObserver(GallowsObserver& observer)
+	{
+		m_observers.emplace_back(&observer);
 	}
 
 private:
@@ -180,12 +194,23 @@ private:
 		return keys[dist(rng)];
 	}
 
+	void NotifyObservers() const
+	{
+		for (const auto& ob : m_observers)
+		{
+			ob->OnWordChanged();
+		}
+	}
+
 	std::vector<Letter> m_letters;
-	std::string m_currentWord;
-	std::string m_displayWord;
+	std::string m_hiddenWord;
+	std::string m_wordView;
 	int m_attemptsNum{};
 	const int m_initialAttempts{ m_attemptsNum };
 	std::unordered_map<std::string, std::string> m_dictionary;
 	GameState m_currentState{ GameState::InProgress };
+
+	std::vector<GallowsObserver*> m_observers{};
 };
+
 #endif // CG_MODEL_H

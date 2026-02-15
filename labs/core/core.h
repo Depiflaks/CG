@@ -89,6 +89,8 @@ public:
 class AbstractView
 {
 public:
+	virtual ~AbstractView() = default;
+
 	AbstractView(uint w, uint h, const std::string& title)
 		: m_window(sf::VideoMode(w, h), title)
 	{
