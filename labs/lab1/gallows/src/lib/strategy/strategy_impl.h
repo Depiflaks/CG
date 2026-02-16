@@ -23,8 +23,12 @@ public:
 		, m_gallows(gallows)
 		, m_viewManager(viewManager)
 		, m_switchButton(
-			  { 100, 100 }, {}, [] { std::cout << "Clicked!"; }, "switch view",
-			  sf::Color::Black, 16)
+			  { 100, 100 },
+			  {},
+			  [] { std::cout << "Clicked!"; },
+			  "switch view",
+			  sf::Color::Black,
+			  16)
 	{
 	}
 

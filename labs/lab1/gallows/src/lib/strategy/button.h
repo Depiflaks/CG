@@ -4,21 +4,24 @@
 
 #ifndef CG_BUTTON_H
 #define CG_BUTTON_H
-#include "sfml_core/core.h"
 #include "sfml_core/font.h"
+#include "sfml_core/sfml_core.h"
 
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <algorithm>
 #include <functional>
 
-class Button : public core::Widget
+class Button : public sfml_core::Widget
 {
 public:
 	using onClickCallback = std::function<void()>;
 
-	Button(const sf::Vector2f& position, const sf::Vector2f& size,
-		onClickCallback onClick, const std::string& label, sf::Color labelColor,
+	Button(const sf::Vector2f& position,
+		const sf::Vector2f& size,
+		onClickCallback onClick,
+		const std::string& label,
+		sf::Color labelColor,
 		uint charSize)
 		: Widget(position, size)
 		, m_onClick(std::move(onClick))
@@ -40,7 +43,7 @@ public:
 private:
 	void Build(const std::string& label, sf::Color labelColor, uint charSize)
 	{
-		m_font = core::loadFont();
+		m_font = sfml_core::loadFont();
 		m_text.setFont(m_font);
 		m_text.setString(label);
 		m_text.setCharacterSize(charSize);

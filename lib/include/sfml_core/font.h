@@ -7,7 +7,7 @@
 #include <SFML/Graphics/Font.hpp>
 #include <iostream>
 
-namespace core
+namespace sfml_core
 {
 
 constexpr auto k_fontPath{ "assets/DejaVuSans.ttf" };

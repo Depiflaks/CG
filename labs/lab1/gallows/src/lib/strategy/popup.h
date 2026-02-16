@@ -4,13 +4,13 @@
 
 #ifndef CG_POPUP_H
 #define CG_POPUP_H
-#include "sfml_core/core.h"
 #include "sfml_core/font.h"
+#include "sfml_core/sfml_core.h"
 
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Text.hpp>
 
-class Popup : public core::Widget
+class Popup : public sfml_core::Widget
 {
 public:
 	Popup(const sf::Vector2f& position, const sf::Vector2f& size,
@@ -37,7 +37,7 @@ private:
 		m_background.setOutlineColor(captionColor);
 
 		sf::Text text;
-		m_font = core::loadFont();
+		m_font = sfml_core::loadFont();
 		m_title.setFont(m_font);
 		m_title.setString(caption);
 		m_title.setCharacterSize(28);

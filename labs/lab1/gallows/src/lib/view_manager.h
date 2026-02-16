@@ -9,14 +9,15 @@
 
 #include "lib/strategy/strategy.h"
 #include <memory>
-#include <sfml_core/core.h>
+#include <sfml_core/sfml_core.h>
+#include <sfml_core/view.h>
 
 #include <list>
 
 namespace view_manager
 {
 
-class ViewManager : public core::AbstractView
+class ViewManager : public sfml_core::AbstractView
 {
 public:
 	explicit ViewManager(Gallows& gallows);
