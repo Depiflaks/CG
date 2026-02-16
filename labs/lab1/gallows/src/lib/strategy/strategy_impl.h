@@ -15,8 +15,11 @@ namespace view_strategy
 class AbstractView : public ViewStrategy
 {
 public:
-	explicit AbstractView(
-		view_manager::ViewManager& viewManager, Gallows& gallows)
+	using callback = std::function<void()>;
+
+	explicit AbstractView(view_manager::ViewManager& viewManager,
+		Gallows& gallows,
+		callback close)
 		: m_letters(&gallows.GetLetters())
 		, m_wordView(gallows.GetWordView())
 		, m_attemptsNum(gallows.GetAttemptsNumber())
@@ -98,8 +101,10 @@ private:
 class GallowsView : public AbstractView
 {
 public:
-	GallowsView(view_manager::ViewManager& viewManager, Gallows& gallows)
-		: AbstractView(viewManager, gallows)
+	GallowsView(view_manager::ViewManager& viewManager,
+		Gallows& gallows,
+		callback close)
+		: AbstractView(viewManager, gallows, [close] { close(); })
 	{
 		Build();
 	}
@@ -117,7 +122,9 @@ private:
 class AttemptsView : public AbstractView
 {
 public:
-	AttemptsView(view_manager::ViewManager& viewManager, Gallows& gallows)
+	AttemptsView(view_manager::ViewManager& viewManager,
+		Gallows& gallows,
+		callback close)
 		: AbstractView(viewManager, gallows)
 	{
 		Build();

@@ -38,6 +38,11 @@ public:
 		}
 	}
 
+	void Close()
+	{
+		m_window.close();
+	}
+
 private:
 	void Redraw()
 	{

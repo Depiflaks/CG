@@ -8,6 +8,8 @@
 #include <SFML/Graphics.hpp>
 
 #include "lib/strategy/strategy.h"
+
+#include <functional>
 #include <memory>
 #include <sfml_core/sfml_core.h>
 #include <sfml_core/view.h>
@@ -20,7 +22,9 @@ namespace view_manager
 class ViewManager : public sfml_core::AbstractView
 {
 public:
-	explicit ViewManager(Gallows& gallows);
+	using closeCallback = std::function<void()>;
+
+	explicit ViewManager(Gallows& gallows, closeCallback close);
 
 	void NextView()
 	{
@@ -47,6 +51,8 @@ private:
 	std::list<std::unique_ptr<view_strategy::ViewStrategy>> m_viewStrategies{};
 	std::list<std::unique_ptr<view_strategy::ViewStrategy>>::iterator
 		m_current{};
+
+	closeCallback m_close{};
 };
 
 } // namespace view_manager
