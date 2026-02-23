@@ -2,6 +2,7 @@
 #define CG_MODEL_H
 
 #include <cctype>
+#include <iostream>
 #include <random>
 #include <ranges>
 #include <stdexcept>
@@ -143,6 +144,7 @@ public:
 
 	void NewGame()
 	{
+		std::cout << "New game started" << std::endl;
 		if (m_dictionary.empty())
 			throw std::runtime_error("dictionary is empty");
 

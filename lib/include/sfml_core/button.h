@@ -105,6 +105,7 @@ public:
 
 		const sf::Vector2f pos = Position();
 		m_textBlock.setPosition(pos.x + m_paddingX, pos.y + m_paddingY);
+		m_backgroundRect.setPosition(pos);
 	}
 
 private:
@@ -124,8 +125,8 @@ private:
 		Rebuild();
 	}
 
-	float m_paddingX = 5.f;
-	float m_paddingY = 5.f;
+	float m_paddingX = 10.f;
+	float m_paddingY = 10.f;
 
 	SimpleCallback m_onClick;
 	sf::RectangleShape m_backgroundRect{};

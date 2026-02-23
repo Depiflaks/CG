@@ -46,7 +46,6 @@ public:
 
 	void Draw(sf::RenderTarget& target, sf::RenderStates states) override
 	{
-		m_currentState = GameState::Victory;
 		DrawGame(target, states);
 		m_switchButton.Draw(target, states);
 		switch (m_currentState)
@@ -67,9 +66,20 @@ public:
 
 	void OnClick(sf::Vector2f position) const override
 	{
-		if (m_switchButton.Contains(position))
+		switch (m_currentState)
 		{
-			m_switchButton.OnClick();
+		case GameState::InProgress:
+			if (m_switchButton.Contains(position))
+			{
+				m_switchButton.OnClick();
+			}
+			break;
+		case GameState::GameOver:
+			m_losePopup.OnClick(position);
+			break;
+		case GameState::Victory:
+			m_winPopup.OnClick(position);
+			break;
 		}
 	}
 
@@ -84,15 +94,25 @@ private:
 		m_switchButton.SetCharSize(16);
 		m_switchButton.SetLabel("Switch");
 		m_switchButton.SetLabelColor(sf::Color::Blue);
-		m_switchButton.SetPosition({20, 20});
-		m_switchButton.Rebuild();
+		m_switchButton.SetPosition({ 20, 20 });
 
-		m_winPopup.SetBackgroundColor(sf::Color::White);
+		m_winPopup.SetBackgroundColor(sf::Color(210, 255, 209));
 		m_winPopup.SetBackgroundOutlineColor(sf::Color::Black);
-		m_winPopup.SetBackgroundOutlineThickness(1);
+		m_winPopup.SetBackgroundOutlineThickness(2);
 		m_winPopup.SetCaption("Victory!!!");
 		m_winPopup.SetCaptionColor(sf::Color::Green);
-		m_winPopup.SetPosition()
+		m_winPopup.SetBounds({ 300, 150 });
+
+		m_losePopup.SetBackgroundColor(sf::Color(255, 209, 209));
+		m_losePopup.SetBackgroundOutlineColor(sf::Color::Black);
+		m_losePopup.SetBackgroundOutlineThickness(1);
+		m_losePopup.SetCaption("Game Over!!!");
+		m_losePopup.SetCaptionColor(sf::Color::Red);
+		m_losePopup.SetBounds({ 300, 150 });
+
+		m_switchButton.Rebuild();
+		m_winPopup.Rebuild();
+		m_losePopup.Rebuild();
 	}
 
 	Gallows& m_gallows;
@@ -125,6 +145,8 @@ private:
 	void DrawGame(sf::RenderTarget& target, sf::RenderStates states) override
 	{
 	}
+
+
 };
 
 class AttemptsView : public AbstractView

@@ -35,9 +35,20 @@ public:
 		m_nextGameButton.Draw(target, states);
 	}
 
-	void Centerize(const sf::RenderTarget& target)
+	void OnClick(sf::Vector2f position) const
 	{
-		const auto size = target.getSize();
+		if (m_closeButton.Contains(position))
+		{
+			m_closeButton.OnClick();
+		}
+		if (m_nextGameButton.Contains(position))
+		{
+			m_nextGameButton.OnClick();
+		}
+	}
+
+	void Centerize(sf::Vector2f size)
+	{
 		SetPosition({ (size.x - Bounds().x) / 2, (size.y - Bounds().y) / 2.f });
 	}
 
@@ -78,6 +89,41 @@ public:
 		m_backgroundRect.setOutlineThickness(thickness);
 	}
 
+	void Rebuild()
+	{
+		Centerize({800, 600});
+		std::cout << Position().x << " " << Position().y << std::endl;
+		constexpr float gap = 20.f;
+		constexpr float bottomMargin = 20.f;
+		const sf::Vector2f blockPosition{ Position().x
+				+ (Bounds().x - m_nextGameButton.Bounds().x
+					  - m_closeButton.Bounds().x - gap)
+					/ 2.f,
+			Position().y
+				+ (Bounds().y - m_nextGameButton.Bounds().y - bottomMargin) };
+
+		std::cout << blockPosition.x << " " << blockPosition.y << std::endl;
+
+		m_closeButton.SetPosition({ blockPosition.x, blockPosition.y });
+		m_nextGameButton.SetPosition(
+			{ blockPosition.x + gap + m_nextGameButton.Bounds().x,
+				blockPosition.y });
+
+		m_closeButton.Rebuild();
+		m_nextGameButton.Rebuild();
+
+		m_backgroundRect.setSize(Bounds());
+
+		const sf::FloatRect titleBounds = m_titleBlock.getLocalBounds();
+		m_titleBlock.setOrigin(titleBounds.left + titleBounds.width / 2.f,
+			titleBounds.top + titleBounds.height / 2.f);
+
+		m_titleBlock.setPosition(
+			Position().x + Bounds().x / 2.f, Position().y + 40.f);
+
+		m_backgroundRect.setPosition(Position());
+	}
+
 private:
 	void Build()
 	{
@@ -87,30 +133,10 @@ private:
 
 		m_nextGameButton.SetCharSize(16);
 		m_nextGameButton.SetLabel("Next Game");
-		m_nextGameButton.SetLabelColor(sf::Color::Green);
+		m_nextGameButton.SetLabelColor(sf::Color::Blue);
 
 		m_closeButton.Rebuild();
 		m_nextGameButton.Rebuild();
-
-		const float gap = 20.f;
-		const float bottomMargin = 20.f;
-		const sf::Vector2f blockPosition{ Position().x
-				+ (Bounds().x - m_nextGameButton.Position().x
-					  - m_closeButton.Position().x - gap)
-					/ 2.f,
-			Position().y
-				+ (Bounds().y - m_nextGameButton.Position().y - bottomMargin) };
-
-		m_closeButton.SetPosition({ blockPosition.x, blockPosition.y });
-		m_nextGameButton.SetPosition(
-			{ blockPosition.x + gap + m_nextGameButton.Bounds().x,
-				blockPosition.y });
-
-		m_backgroundRect.setSize(Bounds());
-		m_backgroundRect.setPosition(Position());
-		m_backgroundRect.setFillColor(sf::Color(150, 150, 150));
-		m_backgroundRect.setOutlineThickness(2.f);
-		m_backgroundRect.setOutlineColor(sf::Color::Black);
 
 		m_font = loadFont();
 		m_titleBlock.setFont(m_font);
@@ -118,12 +144,7 @@ private:
 		m_titleBlock.setCharacterSize(28);
 		m_titleBlock.setFillColor(m_captionColor);
 
-		const sf::FloatRect titleBounds = m_titleBlock.getLocalBounds();
-		m_titleBlock.setOrigin(titleBounds.left + titleBounds.width / 2.f,
-			titleBounds.top + titleBounds.height / 2.f);
-
-		m_titleBlock.setPosition(
-			Position().x + Bounds().x / 2.f, Position().y + 40.f);
+		Rebuild();
 	}
 
 	std::string m_caption{ "Label" };
