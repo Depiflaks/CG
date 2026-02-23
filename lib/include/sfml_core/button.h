@@ -8,7 +8,6 @@
 #include "callback.h"
 #include "font.h"
 #include "sfml_core.h"
-#include "view.h"
 
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
@@ -27,6 +26,21 @@ public:
 		, m_onClick(std::move(onClick))
 	{
 		Build();
+	}
+
+	Button(Button&& other) noexcept
+		: Widget(std::move(other))
+		, m_paddingX(other.m_paddingX)
+		, m_paddingY(other.m_paddingY)
+		, m_onClick(std::move(other.m_onClick))
+		, m_backgroundRect(std::move(other.m_backgroundRect))
+		, m_textBlock(std::move(other.m_textBlock))
+		, m_font(std::move(other.m_font))
+		, m_label(std::move(other.m_label))
+		, m_labelColor(other.m_labelColor)
+		, m_charSize(other.m_charSize)
+	{
+		m_textBlock.setFont(m_font);
 	}
 
 	void OnClick() const
@@ -53,11 +67,6 @@ public:
 	uint CharSize() const
 	{
 		return m_charSize;
-	}
-
-	const sf::Font& Font() const
-	{
-		return m_font;
 	}
 
 	const sf::RectangleShape& Background() const
@@ -132,7 +141,7 @@ private:
 	sf::RectangleShape m_backgroundRect{};
 
 	sf::Text m_textBlock{};
-	sf::Font m_font{};
+	sf::Font m_font;
 
 	std::string m_label{};
 	sf::Color m_labelColor = sf::Color::Black;

@@ -9,5 +9,9 @@ view_manager::ViewManager::ViewManager(Gallows& gallows)
 		*this, gallows, [this] { this->Close(); }));
 	m_viewStrategies.emplace_back(std::make_unique<view_strategy::AttemptsView>(
 		*this, gallows, [this] { this->Close(); }));
+	for (auto& strategy : m_viewStrategies)
+	{
+		m_gallows.RegisterObserver(*strategy.get());
+	}
 	m_current = m_viewStrategies.begin();
 }

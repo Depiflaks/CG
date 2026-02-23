@@ -17,7 +17,7 @@ inline sf::Font loadFont()
 	sf::Font font;
 	if (!font.loadFromFile(k_fontPath))
 	{
-		std::cerr << "Failed to load font\n";
+		throw std::runtime_error("Failed to load font from: " + std::string(k_fontPath));
 	}
 	return font;
 }

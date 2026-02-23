@@ -42,6 +42,7 @@ public:
 		m_attemptsNum = m_gallows.GetAttemptsNumber();
 		m_wordView = m_gallows.GetWordView();
 		m_currentState = m_gallows.GetGameState();
+		UpdateLetterButtons();
 	}
 
 	void Draw(sf::RenderTarget& target, sf::RenderStates states) override
@@ -61,8 +62,10 @@ public:
 		}
 	}
 
-	virtual void DrawGame(sf::RenderTarget& target, sf::RenderStates states)
-		= 0;
+	void DrawGame(sf::RenderTarget& target, sf::RenderStates states) const
+	{
+		DrawLettersRaw(target, states);
+	}
 
 	void OnClick(sf::Vector2f position) const override
 	{
@@ -72,6 +75,13 @@ public:
 			if (m_switchButton.Contains(position))
 			{
 				m_switchButton.OnClick();
+			}
+			for (auto& letter : m_letterButtons)
+			{
+				if (letter.Contains(position))
+				{
+					letter.OnClick();
+				}
 			}
 			break;
 		case GameState::GameOver:
@@ -84,6 +94,15 @@ public:
 	}
 
 protected:
+	void DrawLettersRaw(sf::RenderTarget& target, sf::RenderStates states) const
+	{
+		for (auto& letter : m_letterButtons)
+		{
+			letter.Draw(target, states);
+		}
+	}
+
+	std::vector<sfml_core::Button> m_letterButtons;
 	const std::vector<Letter>* m_letters;
 	std::string m_wordView;
 	int m_attemptsNum{};
@@ -113,6 +132,65 @@ private:
 		m_switchButton.Rebuild();
 		m_winPopup.Rebuild();
 		m_losePopup.Rebuild();
+
+		BuildLetters();
+	}
+
+	void BuildLetters()
+	{
+		constexpr float xOffset{ 50 };
+		constexpr float yOffset{ 500 };
+		m_letterButtons.reserve(m_letters->size());
+		m_letters = &m_gallows.GetLetters();
+		for (int i = 0; i < m_letters->size(); ++i)
+		{
+			auto& letter = m_letters->at(i);
+			m_letterButtons.push_back(sfml_core::Button{ [this, letter] {
+				this->m_gallows.CheckLetter(letter.LetterChar());
+			} });
+			auto& cur = m_letterButtons.back();
+			switch (letter.State())
+			{
+			case LetterState::Unknown:
+				cur.SetLabelColor(sf::Color(100, 100, 100));
+				break;
+			case LetterState::Correct:
+				cur.SetLabelColor(sf::Color::Green);
+				break;
+			case LetterState::Incorrect:
+				cur.SetLabelColor(sf::Color::Red);
+				break;
+			}
+			cur.SetPadding(2, 2);
+			cur.SetCharSize(20);
+			cur.SetLabel(std::string{ letter.LetterChar() });
+			cur.SetPosition({ xOffset + 25 * i, yOffset });
+			cur.Rebuild();
+		}
+	}
+
+	void UpdateLetterButtons()
+	{
+		for (int i = 0; i < m_letterButtons.size(); ++i)
+		{
+			auto& letter = m_letters->at(i);
+			auto& cur = m_letterButtons.back();
+			switch (letter.State())
+			{
+			case LetterState::Unknown:
+				cur.SetLabelColor(sf::Color(100, 100, 100));
+				break;
+			case LetterState::Correct:
+				std::cout << "correct" << letter.LetterChar() << std::endl;
+				cur.SetLabelColor(sf::Color::Green);
+				break;
+			case LetterState::Incorrect:
+				std::cout << "incorrect" << letter.LetterChar() << std::endl;
+				cur.SetLabelColor(sf::Color::Red);
+				break;
+			}
+			cur.Rebuild();
+		}
 	}
 
 	Gallows& m_gallows;
@@ -141,12 +219,6 @@ private:
 	void Build()
 	{
 	}
-
-	void DrawGame(sf::RenderTarget& target, sf::RenderStates states) override
-	{
-	}
-
-
 };
 
 class AttemptsView : public AbstractView
@@ -162,10 +234,6 @@ public:
 
 private:
 	void Build()
-	{
-	}
-
-	void DrawGame(sf::RenderTarget& target, sf::RenderStates states) override
 	{
 	}
 };

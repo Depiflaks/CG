@@ -92,7 +92,6 @@ public:
 	void Rebuild()
 	{
 		Centerize({800, 600});
-		std::cout << Position().x << " " << Position().y << std::endl;
 		constexpr float gap = 20.f;
 		constexpr float bottomMargin = 20.f;
 		const sf::Vector2f blockPosition{ Position().x
@@ -101,8 +100,6 @@ public:
 					/ 2.f,
 			Position().y
 				+ (Bounds().y - m_nextGameButton.Bounds().y - bottomMargin) };
-
-		std::cout << blockPosition.x << " " << blockPosition.y << std::endl;
 
 		m_closeButton.SetPosition({ blockPosition.x, blockPosition.y });
 		m_nextGameButton.SetPosition(
