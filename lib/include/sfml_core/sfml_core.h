@@ -23,7 +23,7 @@ public:
 		m_position = position;
 	}
 
-	[[nodiscard]] sf::Vector2f Position() const
+	sf::Vector2f Position() const
 	{
 		return m_position;
 	}

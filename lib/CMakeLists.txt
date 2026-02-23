@@ -1,5 +1,9 @@
+file(GLOB_RECURSE LIB_PUBLIC_HEADERS "include/*.h")
+
 add_library(lib INTERFACE
 )
+
+target_sources(lib INTERFACE ${LIB_PUBLIC_HEADERS})
 
 target_include_directories(lib
         INTERFACE

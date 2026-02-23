@@ -24,7 +24,7 @@ class ViewManager : public sfml_core::AbstractView
 public:
 	using closeCallback = std::function<void()>;
 
-	explicit ViewManager(Gallows& gallows, closeCallback close);
+	explicit ViewManager(Gallows& gallows);
 
 	void NextView()
 	{

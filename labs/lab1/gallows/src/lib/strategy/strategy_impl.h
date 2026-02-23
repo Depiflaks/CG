@@ -6,7 +6,6 @@
 #define CG_STRATEGY_IMPL_H
 
 #include "../view_manager.h"
-#include "button.h"
 #include "strategy.h"
 
 namespace view_strategy
@@ -15,23 +14,33 @@ namespace view_strategy
 class AbstractView : public ViewStrategy
 {
 public:
-	using callback = std::function<void()>;
+	using Callback = std::function<void()>;
 
 	explicit AbstractView(view_manager::ViewManager& viewManager,
 		Gallows& gallows,
-		callback close)
+		Callback&& closeWindow)
 		: m_letters(&gallows.GetLetters())
 		, m_wordView(gallows.GetWordView())
 		, m_attemptsNum(gallows.GetAttemptsNumber())
 		, m_gallows(gallows)
 		, m_viewManager(viewManager)
-		, m_switchButton(
-			  { 100, 100 },
-			  {},
-			  [] { std::cout << "Clicked!"; },
-			  "switch view",
-			  sf::Color::Black,
-			  16)
+		// , m_switchButton([this] { this->m_viewManager.NextView(); },
+		// 	  "switch view",
+		// 	  sf::Color::Black,
+		// 	  16)
+		// , m_winPopup(
+		// 	  { 150, 150 },
+		// 	  "Victory!",
+		// 	  sf::Color::Green,
+		// 	  [this] { this->m_closeWindow(); },
+		// 	  [this] { this->m_gallows.NewGame(); })
+		// , m_losePopup(
+		// 	  { 150, 150 },
+		// 	  "Game Over!",
+		// 	  sf::Color::Red,
+		// 	  [this] { this->m_closeWindow(); },
+		// 	  [this] { this->m_gallows.NewGame(); })
+		, m_closeWindow(std::move(closeWindow))
 	{
 	}
 
@@ -45,6 +54,9 @@ public:
 
 	void Draw(sf::RenderTarget& target, sf::RenderStates states) override
 	{
+		m_currentState = GameState::Victory;
+		DrawGame(target, states);
+		// m_switchButton.Draw(target, states);
 		switch (m_currentState)
 		{
 		case GameState::InProgress:
@@ -56,8 +68,6 @@ public:
 			DrawWinPopup(target, states);
 			break;
 		}
-		DrawGame(target, states);
-		m_switchButton.Draw(target, states);
 	}
 
 	virtual void DrawGame(sf::RenderTarget& target, sf::RenderStates states)
@@ -65,25 +75,27 @@ public:
 
 	void OnClick(sf::Vector2f position) const override
 	{
-		if (m_switchButton.Contains(position))
-		{
-			m_switchButton.OnClick();
-		}
+		// if (m_switchButton.Contains(position))
+		// {
+		// 	m_switchButton.OnClick();
+		// }
 	}
 
 protected:
-	void DrawWinPopup(sf::RenderTarget& target, sf::RenderStates states) const
+	void DrawWinPopup(sf::RenderTarget& target, sf::RenderStates states)
 	{
+		// m_winPopup.Draw(target, states);
 	}
 
-	void DrawLosePopup(sf::RenderTarget& target, sf::RenderStates states) const
+	void DrawLosePopup(sf::RenderTarget& target, sf::RenderStates states)
 	{
+		// m_losePopup.Draw(target, states);
 	}
 
 	void DrawSwitchButton(
 		sf::RenderTarget& target, sf::RenderStates states) const
 	{
-		m_switchButton.Draw(target, states);
+		// m_switchButton.Draw(target, states);
 	}
 
 	const std::vector<Letter>* m_letters;
@@ -95,7 +107,11 @@ private:
 	GameState m_currentState{ GameState::InProgress };
 	view_manager::ViewManager& m_viewManager;
 
-	Button m_switchButton;
+	// Button m_switchButton;
+	// Popup m_winPopup;
+	// Popup m_losePopup;
+
+	Callback m_closeWindow;
 };
 
 class GallowsView : public AbstractView
@@ -103,8 +119,8 @@ class GallowsView : public AbstractView
 public:
 	GallowsView(view_manager::ViewManager& viewManager,
 		Gallows& gallows,
-		callback close)
-		: AbstractView(viewManager, gallows, [close] { close(); })
+		Callback&& close)
+		: AbstractView(viewManager, gallows, std::move(close))
 	{
 		Build();
 	}
@@ -124,8 +140,8 @@ class AttemptsView : public AbstractView
 public:
 	AttemptsView(view_manager::ViewManager& viewManager,
 		Gallows& gallows,
-		callback close)
-		: AbstractView(viewManager, gallows)
+		Callback&& closeWindow)
+		: AbstractView(viewManager, gallows, std::move(closeWindow))
 	{
 		Build();
 	}
