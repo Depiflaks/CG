@@ -20,26 +20,13 @@ namespace sfml_core
 class Button : public Widget
 {
 public:
-	Button(const sf::Vector2f& position,
-		const sf::Vector2f& size,
-		SimpleCallback onClick,
-		const std::string& label,
-		sf::Color labelColor,
-		uint charSize)
-		: Widget(position, size)
-		, m_onClick(std::move(onClick))
-	{
-		Build(label, labelColor, charSize);
-	}
+	using Locatable::SetPosition;
 
-	Button(SimpleCallback onClick,
-		const std::string& label,
-		sf::Color labelColor,
-		uint charSize)
+	explicit Button(SimpleCallback onClick)
 		: Widget({}, {})
 		, m_onClick(std::move(onClick))
 	{
-		Build(label, labelColor, charSize);
+		Build();
 	}
 
 	void OnClick() const
@@ -49,36 +36,36 @@ public:
 
 	void Draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
-		target.draw(m_background, states);
-		target.draw(m_text, states);
+		target.draw(m_backgroundRect, states);
+		target.draw(m_textBlock, states);
 	}
 
-	const std::string& GetLabel() const
+	const std::string& Label() const
 	{
 		return m_label;
 	}
 
-	sf::Color GetLabelColor() const
+	sf::Color LabelColor() const
 	{
 		return m_labelColor;
 	}
 
-	uint GetCharSize() const
+	uint CharSize() const
 	{
 		return m_charSize;
 	}
 
-	const sf::Font& GetFont() const
+	const sf::Font& Font() const
 	{
 		return m_font;
 	}
 
-	const sf::RectangleShape& GetBackground() const
+	const sf::RectangleShape& Background() const
 	{
-		return m_background;
+		return m_backgroundRect;
 	}
 
-	sf::Vector2f GetPadding() const
+	sf::Vector2f Padding() const
 	{
 		return { m_paddingX, m_paddingY };
 	}
@@ -86,28 +73,19 @@ public:
 	void SetLabel(const std::string& label)
 	{
 		m_label = label;
-		m_text.setString(label);
-		UpdateSize();
+		m_textBlock.setString(label);
 	}
 
 	void SetLabelColor(sf::Color color)
 	{
 		m_labelColor = color;
-		m_text.setFillColor(color);
+		m_textBlock.setFillColor(color);
 	}
 
 	void SetCharSize(uint charSize)
 	{
 		m_charSize = charSize;
-		m_text.setCharacterSize(charSize);
-		UpdateSize();
-	}
-
-	void SetFont(const sf::Font& font)
-	{
-		m_font = font;
-		m_text.setFont(font);
-		UpdateSize();
+		m_textBlock.setCharacterSize(charSize);
 	}
 
 	void SetPadding(float x, float y)
@@ -116,46 +94,43 @@ public:
 		m_paddingY = y;
 	}
 
-private:
-	void Build(const std::string& label, sf::Color labelColor, uint charSize)
+	void Rebuild()
 	{
-		m_font = loadFont();
-		m_text.setFont(m_font);
-		m_text.setString(label);
-		m_text.setCharacterSize(charSize);
-		m_text.setFillColor(labelColor);
-
-		const sf::FloatRect tb = m_text.getLocalBounds();
+		const sf::FloatRect tb = m_textBlock.getLocalBounds();
 		SetBounds(
 			{ tb.width + 2.f * m_paddingX, tb.height + 2.f * m_paddingY });
 
-		m_background.setSize({ Bounds().x, Bounds().y });
-		m_background.setOutlineColor(sf::Color::Black);
-		m_background.setOutlineThickness(1.f);
+		m_backgroundRect.setSize({ Bounds().x, Bounds().y });
+		m_textBlock.setOrigin(tb.left, tb.top);
 
-		m_text.setOrigin(tb.left, tb.top);
+		const sf::Vector2f pos = Position();
+		m_textBlock.setPosition(pos.x + m_paddingX, pos.y + m_paddingY);
 	}
 
-	void UpdateSize()
+private:
+	using Widget::SetBounds;
+
+	void Build()
 	{
-		const sf::FloatRect tb = m_text.getLocalBounds();
-		SetBounds(
-			{ tb.width + 2.f * m_paddingX, tb.height + 2.f * m_paddingY });
+		m_font = loadFont();
+		m_textBlock.setFont(m_font);
+		m_textBlock.setString(m_label);
+		m_textBlock.setCharacterSize(m_charSize);
+		m_textBlock.setFillColor(m_labelColor);
 
-		m_background.setSize({ Bounds().x, Bounds().y });
-		m_text.setOrigin(tb.left, tb.top);
+		m_backgroundRect.setOutlineColor(sf::Color::Black);
+		m_backgroundRect.setOutlineThickness(1.f);
 
-		const sf::Vector2f pos = GetPosition();
-		m_text.setPosition(pos.x + m_paddingX, pos.y + m_paddingY);
+		Rebuild();
 	}
 
 	float m_paddingX = 5.f;
 	float m_paddingY = 5.f;
 
 	SimpleCallback m_onClick;
-	sf::RectangleShape m_background{};
+	sf::RectangleShape m_backgroundRect{};
 
-	sf::Text m_text{};
+	sf::Text m_textBlock{};
 	sf::Font m_font{};
 
 	std::string m_label{};

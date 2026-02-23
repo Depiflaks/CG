@@ -1,7 +1,6 @@
 #ifndef CG_MODEL_H
 #define CG_MODEL_H
 
-#include <algorithm>
 #include <cctype>
 #include <random>
 #include <ranges>

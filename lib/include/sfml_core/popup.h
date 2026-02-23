@@ -19,91 +19,122 @@ namespace sfml_core
 class Popup : public Widget
 {
 public:
-	Popup(const sf::Vector2f& size,
-		const std::string& caption,
-		sf::Color captionColor,
-		SimpleCallback closeWindow,
-		SimpleCallback nextGame)
-		: Widget({}, size)
-		, m_caption(caption)
-		, m_captionColor(captionColor)
-		, m_closeButton(std::move(closeWindow), "Exit", sf::Color::Black, 16)
-		, m_nextGameButton(std::move(nextGame), "Next", sf::Color::Black, 16)
+	Popup(SimpleCallback closeWindow, SimpleCallback nextGame)
+		: Widget({}, {})
+		, m_closeButton(std::move(closeWindow))
+		, m_nextGameButton(std::move(nextGame))
 	{
-		BuildStatic();
+		Build();
 	}
 
-	void Draw(sf::RenderTarget& target, sf::RenderStates states)
+	void Draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
-		EnsureLayout(target.getSize());
-		target.draw(m_background, states);
-		target.draw(m_title, states);
+		target.draw(m_backgroundRect, states);
+		target.draw(m_titleBlock, states);
 		m_closeButton.Draw(target, states);
 		m_nextGameButton.Draw(target, states);
 	}
 
-private:
-	void BuildStatic()
+	void Centerize(const sf::RenderTarget& target)
 	{
-		m_background.setSize(Bounds());
-		m_background.setFillColor(sf::Color(150, 150, 150));
-		m_background.setOutlineThickness(2.f);
-		m_background.setOutlineColor(sf::Color::Black);
-
-		m_font = loadFont();
-		m_title.setFont(m_font);
-		m_title.setString(m_caption);
-		m_title.setCharacterSize(28);
-		m_title.setFillColor(m_captionColor);
-
-		const sf::FloatRect titleBounds = m_title.getLocalBounds();
-		m_title.setOrigin(titleBounds.left + titleBounds.width / 2.f,
-			titleBounds.top + titleBounds.height / 2.f);
+		const auto size = target.getSize();
+		SetPosition({ (size.x - Bounds().x) / 2, (size.y - Bounds().y) / 2.f });
 	}
 
-	void EnsureLayout(sf::Vector2u windowSize)
+	const std::string& Caption() const
 	{
-		if (m_lastWindowSize == windowSize)
-			return;
+		return m_caption;
+	}
 
-		m_lastWindowSize = windowSize;
+	sf::Color CaptionColor() const
+	{
+		return m_captionColor;
+	}
 
-		const sf::Vector2f pos((windowSize.x - Bounds().x) / 2.f,
-			(windowSize.y - Bounds().y) / 2.f);
+	void SetCaption(const std::string& caption)
+	{
+		m_caption = caption;
+		m_titleBlock.setString(caption);
+	}
 
-		m_background.setPosition(pos);
+	void SetCaptionColor(sf::Color color)
+	{
+		m_captionColor = color;
+		m_titleBlock.setFillColor(color);
+	}
 
-		m_title.setPosition(
-			Position().x + Bounds().x / 2.f, Position().y + 40.f);
+	void SetBackgroundColor(sf::Color color)
+	{
+		m_backgroundRect.setFillColor(color);
+	}
+
+	void SetBackgroundOutlineColor(sf::Color color)
+	{
+		m_backgroundRect.setOutlineColor(color);
+	}
+
+	void SetBackgroundOutlineThickness(float thickness)
+	{
+		m_backgroundRect.setOutlineThickness(thickness);
+	}
+
+private:
+	void Build()
+	{
+		m_closeButton.SetCharSize(16);
+		m_closeButton.SetLabel("Close");
+		m_closeButton.SetLabelColor(sf::Color::Red);
+
+		m_nextGameButton.SetCharSize(16);
+		m_nextGameButton.SetLabel("Next Game");
+		m_nextGameButton.SetLabelColor(sf::Color::Green);
+
+		m_closeButton.Rebuild();
+		m_nextGameButton.Rebuild();
 
 		const float gap = 20.f;
 		const float bottomMargin = 20.f;
+		const sf::Vector2f blockPosition{ Position().x
+				+ (Bounds().x - m_nextGameButton.Position().x
+					  - m_closeButton.Position().x - gap)
+					/ 2.f,
+			Position().y
+				+ (Bounds().y - m_nextGameButton.Position().y - bottomMargin) };
 
-		const sf::Vector2f leftSize = m_closeButton.Position();
-		const sf::Vector2f rightSize = m_nextGameButton.Position();
+		m_closeButton.SetPosition({ blockPosition.x, blockPosition.y });
+		m_nextGameButton.SetPosition(
+			{ blockPosition.x + gap + m_nextGameButton.Bounds().x,
+				blockPosition.y });
 
-		const float y = pos.y + Bounds().y - bottomMargin
-			- std::max(leftSize.y, rightSize.y);
-		const float midX = pos.x + Bounds().x / 2.f;
+		m_backgroundRect.setSize(Bounds());
+		m_backgroundRect.setPosition(Position());
+		m_backgroundRect.setFillColor(sf::Color(150, 150, 150));
+		m_backgroundRect.setOutlineThickness(2.f);
+		m_backgroundRect.setOutlineColor(sf::Color::Black);
 
-		const float leftX = midX - gap / 2.f - leftSize.x;
-		const float rightX = midX + gap / 2.f;
+		m_font = loadFont();
+		m_titleBlock.setFont(m_font);
+		m_titleBlock.setString(m_caption);
+		m_titleBlock.setCharacterSize(28);
+		m_titleBlock.setFillColor(m_captionColor);
 
-		m_closeButton.SetPosition({ leftX, y });
-		m_nextGameButton.SetPosition({ rightX, y });
+		const sf::FloatRect titleBounds = m_titleBlock.getLocalBounds();
+		m_titleBlock.setOrigin(titleBounds.left + titleBounds.width / 2.f,
+			titleBounds.top + titleBounds.height / 2.f);
+
+		m_titleBlock.setPosition(
+			Position().x + Bounds().x / 2.f, Position().y + 40.f);
 	}
 
-	std::string m_caption;
-	sf::Color m_captionColor;
+	std::string m_caption{ "Label" };
+	sf::Color m_captionColor = sf::Color::Black;
 
-	mutable sf::Vector2u m_lastWindowSize{ 0u, 0u };
-
-	mutable sf::RectangleShape m_background{};
+	sf::RectangleShape m_backgroundRect{};
 	sf::Font m_font{};
-	sf::Text m_title{};
+	sf::Text m_titleBlock{};
 
-	mutable Button m_closeButton;
-	mutable Button m_nextGameButton;
+	Button m_closeButton;
+	Button m_nextGameButton;
 };
 
 } // namespace sfml_core
