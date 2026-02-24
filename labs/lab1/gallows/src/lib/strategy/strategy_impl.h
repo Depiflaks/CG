@@ -86,12 +86,6 @@ public:
 		}
 	}
 
-	void DrawGame(sf::RenderTarget& target, sf::RenderStates states) const
-	{
-		DrawLettersRaw(target, states);
-		DrawGameState(target, states);
-	}
-
 	void OnClick(sf::Vector2f position) const override
 	{
 		switch (m_currentState)
@@ -220,6 +214,13 @@ private:
 
 	virtual void DrawGameState(
 		sf::RenderTarget& target, sf::RenderStates states) const = 0;
+
+
+	void DrawGame(sf::RenderTarget& target, sf::RenderStates states) const
+	{
+		DrawLettersRaw(target, states);
+		DrawGameState(target, states);
+	}
 
 	Gallows& m_gallows;
 	GameState m_currentState{ GameState::InProgress };
