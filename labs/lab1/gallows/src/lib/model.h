@@ -63,7 +63,7 @@ private:
 class Gallows
 {
 public:
-	explicit Gallows(int attemptsNum = 6)
+	explicit Gallows(int attemptsNum = 7)
 		: m_attemptsNum(attemptsNum)
 	{
 		if (m_attemptsNum <= 0)
@@ -87,6 +87,11 @@ public:
 	int GetAttemptsNumber() const
 	{
 		return m_attemptsNum;
+	}
+
+	int GetInitialAttemptsNumber() const
+	{
+		return m_initialAttempts;
 	}
 
 	std::string GetWordView() const

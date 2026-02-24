@@ -6,12 +6,33 @@
 #define CG_STRATEGY_IMPL_H
 
 #include "../view_manager.h"
+#include "hangman/hangman.h"
 #include "sfml_core/button.h"
 #include "sfml_core/popup.h"
 #include "strategy.h"
 
 namespace view_strategy
 {
+
+inline std::string AddSpacesBetweenChars(const std::string& input)
+{
+	if (input.empty())
+		return input;
+
+	std::string result;
+	result.reserve(input.size() * 2);
+
+	for (size_t i = 0; i < input.size(); ++i)
+	{
+		result += input[i];
+		if (i < input.size() - 1)
+		{
+			result += ' ';
+		}
+	}
+
+	return result;
+}
 
 class AbstractView : public ViewStrategy
 {
@@ -23,7 +44,9 @@ public:
 		Callback&& closeWindow)
 		: m_letters(&gallows.GetLetters())
 		, m_wordView(gallows.GetWordView())
+		, m_description(gallows.GetDescription())
 		, m_attemptsNum(gallows.GetAttemptsNumber())
+		, m_initialAttempts(gallows.GetInitialAttemptsNumber())
 		, m_gallows(gallows)
 		, m_viewManager(viewManager)
 		, m_switchButton([this] { this->m_viewManager.NextView(); })
@@ -42,6 +65,7 @@ public:
 		m_attemptsNum = m_gallows.GetAttemptsNumber();
 		m_wordView = m_gallows.GetWordView();
 		m_currentState = m_gallows.GetGameState();
+		m_description = m_gallows.GetDescription();
 		UpdateLetterButtons();
 	}
 
@@ -65,6 +89,7 @@ public:
 	void DrawGame(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		DrawLettersRaw(target, states);
+		DrawGameState(target, states);
 	}
 
 	void OnClick(sf::Vector2f position) const override
@@ -105,7 +130,9 @@ protected:
 	std::vector<sfml_core::Button> m_letterButtons;
 	const std::vector<Letter>* m_letters;
 	std::string m_wordView;
+	std::string m_description;
 	int m_attemptsNum{};
+	int m_initialAttempts{};
 
 private:
 	void Build()
@@ -174,24 +201,25 @@ private:
 		for (int i = 0; i < m_letterButtons.size(); ++i)
 		{
 			auto& letter = m_letters->at(i);
-			auto& cur = m_letterButtons.back();
+			auto& cur = m_letterButtons[i];
 			switch (letter.State())
 			{
 			case LetterState::Unknown:
 				cur.SetLabelColor(sf::Color(100, 100, 100));
 				break;
 			case LetterState::Correct:
-				std::cout << "correct" << letter.LetterChar() << std::endl;
 				cur.SetLabelColor(sf::Color::Green);
 				break;
 			case LetterState::Incorrect:
-				std::cout << "incorrect" << letter.LetterChar() << std::endl;
 				cur.SetLabelColor(sf::Color::Red);
 				break;
 			}
 			cur.Rebuild();
 		}
 	}
+
+	virtual void DrawGameState(
+		sf::RenderTarget& target, sf::RenderStates states) const = 0;
 
 	Gallows& m_gallows;
 	GameState m_currentState{ GameState::InProgress };
@@ -218,7 +246,36 @@ public:
 private:
 	void Build()
 	{
+		m_font = sfml_core::loadFont();
 	}
+
+	void DrawGameState(
+		sf::RenderTarget& target, sf::RenderStates states) const override
+	{
+		hangman::DrawHangman(target, m_attemptsNum, m_config);
+		DrawWordViewGallows(target);
+		DrawDescriptionGallows(target);
+	}
+
+	void DrawWordViewGallows(sf::RenderTarget& target) const
+	{
+
+		sf::Text text(AddSpacesBetweenChars(m_wordView), m_font, 48);
+		text.setFillColor(sf::Color::Black);
+		text.setPosition({ 400.f, 200.f });
+		target.draw(text);
+	}
+
+	void DrawDescriptionGallows(sf::RenderTarget& target) const
+	{
+		sf::Text text(m_description, m_font, 24);
+		text.setFillColor(sf::Color::Black);
+		text.setPosition({ 200.f, 50.f });
+		target.draw(text);
+	}
+
+	hangman::HangmanConfig m_config;
+	sf::Font m_font;
 };
 
 class AttemptsView : public AbstractView
@@ -235,7 +292,45 @@ public:
 private:
 	void Build()
 	{
+		m_font = sfml_core::loadFont();
 	}
+
+	void DrawGameState(
+		sf::RenderTarget& target, sf::RenderStates states) const override
+	{
+		DrawAttemptsLeft(target);
+		DrawWordViewAttempts(target);
+		DrawDescriptionAttempts(target);
+	}
+
+	void DrawAttemptsLeft(sf::RenderTarget& target) const
+	{
+		sf::Text text("Attempts left: "
+				+ std::to_string(m_initialAttempts - m_attemptsNum) + " / "
+				+ std::to_string(m_initialAttempts),
+			m_font,
+			28);
+		text.setFillColor(sf::Color::Green);
+		text.setPosition({ 40.f, 80.f });
+		target.draw(text);
+	}
+
+	void DrawWordViewAttempts(sf::RenderTarget& target) const
+	{
+		sf::Text text(AddSpacesBetweenChars(m_wordView), m_font, 36);
+		text.setFillColor(sf::Color::Blue);
+		text.setPosition({ 150.f, 150.f });
+		target.draw(text);
+	}
+
+	void DrawDescriptionAttempts(sf::RenderTarget& target) const
+	{
+		sf::Text text(m_description, m_font, 30);
+		text.setFillColor(sf::Color::Magenta);
+		text.setPosition({ 150.f, 250.f });
+		target.draw(text);
+	}
+	sf::Font m_font;
 };
 
 } // namespace view_strategy
