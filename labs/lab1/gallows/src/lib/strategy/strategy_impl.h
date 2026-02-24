@@ -270,7 +270,7 @@ private:
 	{
 		sf::Text text(m_description, m_font, 24);
 		text.setFillColor(sf::Color::Black);
-		text.setPosition({ 200.f, 50.f });
+		text.setPosition({ 50.f, 50.f });
 		target.draw(text);
 	}
 
@@ -327,7 +327,7 @@ private:
 	{
 		sf::Text text(m_description, m_font, 30);
 		text.setFillColor(sf::Color::Magenta);
-		text.setPosition({ 150.f, 250.f });
+		text.setPosition({ 50.f, 250.f });
 		target.draw(text);
 	}
 	sf::Font m_font;

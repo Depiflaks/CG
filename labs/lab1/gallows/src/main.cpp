@@ -2,7 +2,7 @@
 
 int main()
 {
-	Gallows gallows;
+	Gallows gallows{"assets/dict.gallows"};
 	auto view = view_manager::ViewManager{gallows};
 	view.Run();
 }

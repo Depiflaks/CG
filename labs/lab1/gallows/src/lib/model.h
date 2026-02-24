@@ -2,6 +2,7 @@
 #define CG_MODEL_H
 
 #include <cctype>
+#include <fstream>
 #include <iostream>
 #include <random>
 #include <ranges>
@@ -9,6 +10,40 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+
+inline bool LoadDictionary(const std::string& filename,
+	std::unordered_map<std::string, std::string>& dictionary)
+{
+	std::ifstream file(filename);
+	if (!file.is_open())
+	{
+		return false;
+	}
+
+	std::string line;
+	while (std::getline(file, line))
+	{
+		if (line.empty())
+			continue;
+
+		auto pos = line.find(':');
+		if (pos == std::string::npos)
+			continue;
+
+		std::string word = line.substr(0, pos);
+		std::string description = line.substr(pos + 1);
+
+		word.erase(0, word.find_first_not_of(" \t"));
+		word.erase(word.find_last_not_of(" \t") + 1);
+		description.erase(0, description.find_first_not_of(" \t"));
+		description.erase(description.find_last_not_of(" \t") + 1);
+
+		dictionary[word] = description;
+	}
+
+	file.close();
+	return true;
+}
 
 enum class LetterState
 {
@@ -63,17 +98,13 @@ private:
 class Gallows
 {
 public:
-	explicit Gallows(int attemptsNum = 7)
+	explicit Gallows(const std::string& dictPath, int attemptsNum = 7)
 		: m_attemptsNum(attemptsNum)
 	{
 		if (m_attemptsNum <= 0)
 			throw std::invalid_argument("attemptsNum must be > 0");
 
-		m_dictionary = { { "HOUSE", "A building for living." },
-			{ "WINDOW", "An opening in a wall with glass." },
-			{ "GARDEN", "A place where plants are grown." },
-			{ "CLOUD", "A visible mass of condensed water vapor." },
-			{ "SUN", "The star at the center of the Solar System." } };
+		LoadDictionary(dictPath, m_dictionary);
 
 		ResetLetters();
 		NewGame();
