@@ -336,4 +336,4 @@ private:
 
 } // namespace view_strategy
 
-#endif CG_STRATEGY_IMPL_H
+#endif //CG_STRATEGY_IMPL_H

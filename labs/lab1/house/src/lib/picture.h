@@ -1,6 +1,7 @@
 #ifndef CG_PICTURE_H
 #define CG_PICTURE_H
-#include "lib/core/core.h"
+#include <sfml_core/sfml_core.h>
+#include <sfml_core/view.h>
 
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/ConvexShape.hpp>
@@ -8,7 +9,7 @@
 #include <cmath>
 
 class Picture
-	: public core::Locatable
+	: public sfml_core::Locatable
 {
 public:
 	explicit Picture(const sf::Vector2f& position, const sf::Vector2f& bounds)

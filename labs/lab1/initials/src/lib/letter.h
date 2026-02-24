@@ -1,13 +1,14 @@
 #ifndef CG_LETTER_H
 #define CG_LETTER_H
-#include "core/core.h"
+#include <sfml_core/sfml_core.h>
+#include <sfml_core/view.h>
 
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/ConvexShape.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <cmath>
 
-class Letter : public core::Kinematic
+class Letter : public sfml_core::Kinematic
 {
 public:
 	Letter(const sf::Vector2f& position, const sf::Vector2f& speed,

@@ -9,9 +9,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/VideoMode.hpp>
 
-#include "lib/core/core.h"
-#include <algorithm> // std::min
-#include <iostream>
 #include <memory>
 #include <random>
 
@@ -22,7 +19,7 @@ inline float RandomJumpSpeed()
 	return dist(rng);
 }
 
-class CircleView : public core::AbstractView
+class CircleView : public sfml_core::AbstractView
 {
 public:
 	CircleView()

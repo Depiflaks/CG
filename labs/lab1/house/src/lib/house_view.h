@@ -8,9 +8,8 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "lib/core/core.h"
 
-class CircleView : public core::AbstractView
+class CircleView : public sfml_core::AbstractView
 {
 public:
 	CircleView()
