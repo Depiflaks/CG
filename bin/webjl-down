@@ -1,0 +1,18 @@
+#!/bin/sh
+set -eu
+
+ROOT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+PID_FILE="$ROOT_DIR/.webjl.pid"
+
+[ -f "$PID_FILE" ] || { echo "WebJL development environment is not running."; exit 0; }
+PID=$(cat "$PID_FILE")
+
+if kill -0 "$PID" 2>/dev/null; then
+  kill "$PID"
+  while kill -0 "$PID" 2>/dev/null; do sleep 0.1; done
+  echo "WebJL development environment stopped."
+else
+  echo "Removed stale WebJL PID file."
+fi
+
+rm -f "$PID_FILE"

@@ -1,0 +1,38 @@
+#!/bin/sh
+# Start the project development server in the background from any directory.
+set -eu
+
+ROOT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+PID_FILE="$ROOT_DIR/.webjl.pid"
+LOG_FILE="$ROOT_DIR/.webjl.log"
+
+command -v node >/dev/null 2>&1 || { echo "Error: Node.js is required." >&2; exit 1; }
+command -v npm >/dev/null 2>&1 || { echo "Error: npm is required." >&2; exit 1; }
+NODE_MAJOR=$(node -p "Number(process.versions.node.split('.')[0])")
+NODE_MINOR=$(node -p "Number(process.versions.node.split('.')[1])")
+if [ "$NODE_MAJOR" -lt 20 ] || { [ "$NODE_MAJOR" -eq 20 ] && [ "$NODE_MINOR" -lt 19 ]; }; then
+  echo "Error: Node.js 20.19 or newer is required (found $(node --version))." >&2
+  exit 1
+fi
+[ -d "$ROOT_DIR/node_modules" ] || { echo "Error: dependencies are missing; run 'npm install'." >&2; exit 1; }
+
+if [ -f "$PID_FILE" ] && kill -0 "$(cat "$PID_FILE")" 2>/dev/null; then
+  echo "WebJL development environment is already running (PID $(cat "$PID_FILE"))."
+  exit 0
+fi
+
+rm -f "$PID_FILE"
+cd "$ROOT_DIR"
+nohup npm run dev >"$LOG_FILE" 2>&1 &
+echo $! >"$PID_FILE"
+sleep 1
+
+if ! kill -0 "$(cat "$PID_FILE")" 2>/dev/null; then
+  cat "$LOG_FILE" >&2
+  rm -f "$PID_FILE"
+  echo "Error: development server failed to start." >&2
+  exit 1
+fi
+
+echo "WebJL development environment started at http://127.0.0.1:5173 (PID $(cat "$PID_FILE"))."
+echo "Log: $LOG_FILE"
