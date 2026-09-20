@@ -1,9 +1,0 @@
-{
-  "types": ["type1", "type2"],
-  "schemas": [
-    {
-      "ingridients": ["type1", "type2"],
-      "result": "type3"
-    }
-  ]
-}

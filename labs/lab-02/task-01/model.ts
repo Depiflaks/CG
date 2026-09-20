@@ -1,5 +1,12 @@
 export type ElementType = string;
 
+export interface TypeDefinition {
+  name: ElementType;
+  img: string;
+  sound: string;
+  isBase: boolean;
+}
+
 class ElementNotFoundException extends Error {
   constructor(id: string) {
     super(`Element with id ${id} not found`);
@@ -20,7 +27,7 @@ interface Schema {
 }
 
 export interface LibraryData {
-  types: ElementType[];
+  types: TypeDefinition[];
   schemas: Schema[];
 }
 
@@ -42,18 +49,22 @@ export class Element {
   }
 }
 
-interface BoardObserver {
-  UpdateElements(): void;
+export interface BoardObserver {
+  updateElements(): void;
 }
 
 export class Library {
   private elements: Map<ElementType, boolean>;
+  private typeDefinitions: Map<ElementType, TypeDefinition>;
   private schemas: Schema[];
 
   constructor(data: LibraryData) {
     this.elements = new Map<ElementType, boolean>();
-    for (const type of data.types) {
-      this.elements.set(type, true);
+    this.typeDefinitions = new Map<ElementType, TypeDefinition>();
+
+    for (const typeDef of data.types) {
+      this.elements.set(typeDef.name, typeDef.isBase);
+      this.typeDefinitions.set(typeDef.name, typeDef);
     }
 
     this.schemas = data.schemas;
@@ -84,11 +95,14 @@ export class Library {
     return null;
   }
 
-  public openedTypes(): ElementType[] {
-    const opened: ElementType[] = [];
+  public openedTypes(): TypeDefinition[] {
+    const opened: TypeDefinition[] = [];
     for (const [type, isOpen] of this.elements.entries()) {
       if (isOpen) {
-        opened.push(type);
+        const typeDef = this.typeDefinitions.get(type);
+        if (typeDef) {
+          opened.push(typeDef);
+        }
       }
     }
     return opened;
@@ -112,12 +126,6 @@ export class Board {
     this.observers.push(observer);
   }
 
-  private notifyObservers(): void {
-    for (const observer of this.observers) {
-      observer.UpdateElements();
-    }
-  }
-
   public remove(id: string): void {
     if (!this.elementsMap.has(id)) {
       throw new ElementNotFoundException(id);
@@ -126,7 +134,7 @@ export class Board {
     this.notifyObservers();
   }
 
-  public append(type: ElementType): Element | null {
+  public append(type: ElementType): Element {
     if (!this.library.isOpen(type)) {
       throw new TypeNotOpenedException(type);
     }
@@ -166,5 +174,11 @@ export class Board {
 
   public elements(): Element[] {
     return Array.from(this.elementsMap.values());
+  }
+
+  private notifyObservers(): void {
+    for (const observer of this.observers) {
+      observer.updateElements();
+    }
   }
 }

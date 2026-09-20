@@ -1,0 +1,190 @@
+{
+  "types": [
+    {
+      "name": "water",
+      "img": "data/img/lab2/water.jpeg",
+      "sound": "data/sound/water.mp3",
+      "isBase": true
+    },
+    {
+      "name": "fire",
+      "img": "data/img/lab2/fire.jpeg",
+      "sound": "data/sound/fire.mp3",
+      "isBase": true
+    },
+    {
+      "name": "earth",
+      "img": "data/img/lab2/earth.jpeg",
+      "sound": "data/sound/earth.mp3",
+      "isBase": true
+    },
+    {
+      "name": "air",
+      "img": "data/img/lab2/air.jpeg",
+      "sound": "data/sound/air.mp3",
+      "isBase": true
+    },
+    {
+      "name": "steam",
+      "img": "data/img/lab2/steam.png",
+      "sound": "data/sound/steam.mp3",
+      "isBase": false
+    },
+    {
+      "name": "mud",
+      "img": "data/img/lab2/mud.png",
+      "sound": "data/sound/mud.mp3",
+      "isBase": false
+    },
+    {
+      "name": "dust",
+      "img": "data/img/lab2/dust.png",
+      "sound": "data/sound/dust.mp3",
+      "isBase": false
+    },
+    {
+      "name": "lava",
+      "img": "data/img/lab2/lava.png",
+      "sound": "data/sound/lava.mp3",
+      "isBase": false
+    },
+    {
+      "name": "rain",
+      "img": "data/img/lab2/rain.png",
+      "sound": "data/sound/rain.mp3",
+      "isBase": false
+    },
+    {
+      "name": "energy",
+      "img": "data/img/lab2/energy.png",
+      "sound": "data/sound/energy.mp3",
+      "isBase": false
+    },
+    {
+      "name": "stone",
+      "img": "data/img/lab2/stone.png",
+      "sound": "data/sound/stone.mp3",
+      "isBase": false
+    },
+    {
+      "name": "sand",
+      "img": "data/img/lab2/sand.png",
+      "sound": "data/sound/sand.mp3",
+      "isBase": false
+    },
+    {
+      "name": "glass",
+      "img": "data/img/lab2/glass.png",
+      "sound": "data/sound/glass.mp3",
+      "isBase": false
+    },
+    {
+      "name": "cloud",
+      "img": "data/img/lab2/cloud.png",
+      "sound": "data/sound/cloud.mp3",
+      "isBase": false
+    },
+    {
+      "name": "storm",
+      "img": "data/img/lab2/storm.png",
+      "sound": "data/sound/storm.mp3",
+      "isBase": false
+    },
+    {
+      "name": "plant",
+      "img": "data/img/lab2/plant.png",
+      "sound": "data/sound/plant.mp3",
+      "isBase": false
+    },
+    {
+      "name": "tree",
+      "img": "data/img/lab2/tree.png",
+      "sound": "data/sound/tree.mp3",
+      "isBase": false
+    },
+    {
+      "name": "ash",
+      "img": "data/img/lab2/ash.png",
+      "sound": "data/sound/ash.mp3",
+      "isBase": false
+    },
+    {
+      "name": "metal",
+      "img": "data/img/lab2/metal.png",
+      "sound": "data/sound/metal.mp3",
+      "isBase": false
+    },
+    {
+      "name": "electricity",
+      "img": "data/img/lab2/electricity.png",
+      "sound": "data/sound/electricity.mp3",
+      "isBase": false
+    }
+  ],
+  "schemas": [
+    {
+      "ingridients": ["water", "fire"],
+      "result": "steam"
+    },
+    {
+      "ingridients": ["water", "earth"],
+      "result": "mud"
+    },
+    {
+      "ingridients": ["air", "earth"],
+      "result": "dust"
+    },
+    {
+      "ingridients": ["fire", "earth"],
+      "result": "lava"
+    },
+    {
+      "ingridients": ["water", "air"],
+      "result": "rain"
+    },
+    {
+      "ingridients": ["fire", "air"],
+      "result": "energy"
+    },
+    {
+      "ingridients": ["lava", "water"],
+      "result": "stone"
+    },
+    {
+      "ingridients": ["stone", "air"],
+      "result": "sand"
+    },
+    {
+      "ingridients": ["sand", "fire"],
+      "result": "glass"
+    },
+    {
+      "ingridients": ["steam", "air"],
+      "result": "cloud"
+    },
+    {
+      "ingridients": ["cloud", "energy"],
+      "result": "storm"
+    },
+    {
+      "ingridients": ["earth", "rain"],
+      "result": "plant"
+    },
+    {
+      "ingridients": ["plant", "earth"],
+      "result": "tree"
+    },
+    {
+      "ingridients": ["tree", "fire"],
+      "result": "ash"
+    },
+    {
+      "ingridients": ["stone", "fire"],
+      "result": "metal"
+    },
+    {
+      "ingridients": ["metal", "energy"],
+      "result": "electricity"
+    }
+  ]
+}
