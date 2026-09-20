@@ -22,6 +22,9 @@ Run the foreground development server:
 
 ```bash
 npm run dev
+nvm install 24
+nvm use 24
+nvm alias default 24
 ```
 
 Then open <http://127.0.0.1:5173>.
