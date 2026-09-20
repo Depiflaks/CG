@@ -1,10 +1,14 @@
-export function mount(container: HTMLElement): () => void {
-  const surfaceHost = document.createElement("div");
-  surfaceHost.className = "graphics-surface";
+import { Library, Board } from "@/labs/lab-02/task-01/model";
+import configData from "./dict.json";
 
-  container.append(surfaceHost);
+export function mount(container: HTMLElement): () => void {
+  const canvas = document.createElement("canvas");
+  container.append(canvas);
+
+  const library = new Library(configData);
+  const board = new Board(library);
 
   return (): void => {
-    console.log(123);
+    canvas.remove();
   };
 }
