@@ -1,4 +1,5 @@
 import { mount as mountLab01Task01 } from "@/labs/lab-01/task-01/index.ts";
+import { mount as mountLab02Task01 } from "@/labs/lab-02/task-01/index.ts";
 import type { LabDefinition } from "@/src/app/types.ts";
 
 export const labs: readonly LabDefinition[] = [
@@ -20,7 +21,7 @@ export const labs: readonly LabDefinition[] = [
       {
         id: "task-02",
         name: "Task 1 — alchemy",
-        mount: mountLab01Task01,
+        mount: mountLab02Task01,
       },
     ],
   },
