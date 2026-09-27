@@ -47,3 +47,5 @@ dist/
 
 # debug information files
 *.dwo
+
+*.venv

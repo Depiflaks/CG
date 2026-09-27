@@ -13,6 +13,8 @@ export class Board implements model.BoardObserver {
   private modelBoard: model.Board;
   private draggedElement: Element | null;
   private dragOffset: Position | null;
+  private canvasWidth: number;
+  private canvasHeight: number;
 
   constructor(library: Library, modelBoard: model.Board) {
     this.elements = new Map<string, Element>();
@@ -20,6 +22,8 @@ export class Board implements model.BoardObserver {
     this.modelBoard = modelBoard;
     this.draggedElement = null;
     this.dragOffset = null;
+    this.canvasWidth = 0;
+    this.canvasHeight = 0;
   }
 
   public onAppend(modelElement: model.Element): void {
@@ -27,7 +31,10 @@ export class Board implements model.BoardObserver {
       return;
     }
 
-    const element = this.createElementFromModel(modelElement);
+    const element = this.createElementFromModel(
+      modelElement,
+      this.getScreenCenterPosition(),
+    );
     this.elements.set(element.id, element);
   }
 
@@ -36,31 +43,61 @@ export class Board implements model.BoardObserver {
   }
 
   public onElementsCombine(ids: string[], result: model.Element): void {
+    const combinePosition = this.getCombinedElementsMidpoint(ids);
+
     for (const id of ids) {
       this.elements.delete(id);
     }
 
-    const element = this.createElementFromModel(result);
+    const element = this.createElementFromModel(result, combinePosition);
     this.elements.set(element.id, element);
   }
 
-  private createElementFromModel(modelElement: model.Element): Element {
-    const imgSrc = this.library.getTypeDefinition(modelElement.getType())?.imgSrc;
+  private createElementFromModel(
+    modelElement: model.Element,
+    position: Position,
+  ): Element {
+    const imgSrc = this.library.getTypeDefinition(
+      modelElement.getType(),
+    )?.imgSrc;
 
     return new Element(
       modelElement.getId(),
       modelElement.getType(),
       imgSrc ?? null,
-      {
-        x: Math.random() * ELEMENT_SQUARE_SIZE,
-        y: Math.random() * ELEMENT_SQUARE_SIZE,
-      },
+      position,
     );
+  }
+
+  private getCombinedElementsMidpoint(ids: string[]): Position {
+    const positions = ids
+      .map((id) => this.elements.get(id)?.position)
+      .filter((position): position is Position => !!position);
+
+    if (positions.length === 0) {
+      return this.getScreenCenterPosition();
+    }
+
+    const total = positions.reduce(
+      (acc, position) => ({ x: acc.x + position.x, y: acc.y + position.y }),
+      { x: 0, y: 0 },
+    );
+
+    return {
+      x: total.x / positions.length,
+      y: total.y / positions.length,
+    };
+  }
+
+  private getScreenCenterPosition(): Position {
+    return { x: this.canvasWidth / 2, y: this.canvasHeight / 2 };
   }
 
   public draw(canvas: Canvas): void {
     const canvasWidth = canvas.getWidth();
     const canvasHeight = canvas.getHeight();
+    this.canvasWidth = canvasWidth;
+    this.canvasHeight = canvasHeight;
     const libraryWidth = this.getLibraryBoundaryX(canvasWidth);
 
     canvas.setFillColor("#f2f2f2");

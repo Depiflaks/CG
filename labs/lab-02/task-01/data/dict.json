@@ -26,97 +26,97 @@
     },
     {
       "name": "steam",
-      "imgSrc": "data/img/lab2/steam.png",
+      "imgSrc": "data/img/lab2/steam.jpeg",
       "sound": "data/sound/steam.mp3",
       "isBase": false
     },
     {
       "name": "mud",
-      "imgSrc": "data/img/lab2/mud.png",
+      "imgSrc": "data/img/lab2/mud.jpeg",
       "sound": "data/sound/mud.mp3",
       "isBase": false
     },
     {
       "name": "dust",
-      "imgSrc": "data/img/lab2/dust.png",
+      "imgSrc": "data/img/lab2/dust.jpeg",
       "sound": "data/sound/dust.mp3",
       "isBase": false
     },
     {
       "name": "lava",
-      "imgSrc": "data/img/lab2/lava.png",
+      "imgSrc": "data/img/lab2/lava.jpeg",
       "sound": "data/sound/lava.mp3",
       "isBase": false
     },
     {
       "name": "rain",
-      "imgSrc": "data/img/lab2/rain.png",
+      "imgSrc": "data/img/lab2/rain.jpeg",
       "sound": "data/sound/rain.mp3",
       "isBase": false
     },
     {
       "name": "energy",
-      "imgSrc": "data/img/lab2/energy.png",
+      "imgSrc": "data/img/lab2/energy.jpg",
       "sound": "data/sound/energy.mp3",
       "isBase": false
     },
     {
       "name": "stone",
-      "imgSrc": "data/img/lab2/stone.png",
+      "imgSrc": "data/img/lab2/stone.jpeg",
       "sound": "data/sound/stone.mp3",
       "isBase": false
     },
     {
       "name": "sand",
-      "imgSrc": "data/img/lab2/sand.png",
+      "imgSrc": "data/img/lab2/sand.jpeg",
       "sound": "data/sound/sand.mp3",
       "isBase": false
     },
     {
       "name": "glass",
-      "imgSrc": "data/img/lab2/glass.png",
+      "imgSrc": "data/img/lab2/glass.jpeg",
       "sound": "data/sound/glass.mp3",
       "isBase": false
     },
     {
       "name": "cloud",
-      "imgSrc": "data/img/lab2/cloud.png",
+      "imgSrc": "data/img/lab2/cloud.jpeg",
       "sound": "data/sound/cloud.mp3",
       "isBase": false
     },
     {
       "name": "storm",
-      "imgSrc": "data/img/lab2/storm.png",
+      "imgSrc": "data/img/lab2/storm.jpg",
       "sound": "data/sound/storm.mp3",
       "isBase": false
     },
     {
       "name": "plant",
-      "imgSrc": "data/img/lab2/plant.png",
+      "imgSrc": "data/img/lab2/plant.jpeg",
       "sound": "data/sound/plant.mp3",
       "isBase": false
     },
     {
       "name": "tree",
-      "imgSrc": "data/img/lab2/tree.png",
+      "imgSrc": "data/img/lab2/tree.jpeg",
       "sound": "data/sound/tree.mp3",
       "isBase": false
     },
     {
       "name": "ash",
-      "imgSrc": "data/img/lab2/ash.png",
+      "imgSrc": "data/img/lab2/ash.jpg",
       "sound": "data/sound/ash.mp3",
       "isBase": false
     },
     {
       "name": "metal",
-      "imgSrc": "data/img/lab2/metal.png",
+      "imgSrc": "data/img/lab2/metal.jpeg",
       "sound": "data/sound/metal.mp3",
       "isBase": false
     },
     {
       "name": "electricity",
-      "imgSrc": "data/img/lab2/electricity.png",
+      "imgSrc": "data/img/lab2/electricity.webp",
       "sound": "data/sound/electricity.mp3",
       "isBase": false
     }

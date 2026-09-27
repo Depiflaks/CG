@@ -158,7 +158,7 @@ export class Board {
     return element;
   }
 
-  public tryCombine(ids: string[]): Element | null {
+  public tryCombine(ids: string[]): boolean {
     const combineTypes: ElementType[] = [];
 
     for (const id of ids) {
@@ -172,7 +172,7 @@ export class Board {
     const resultType = this.library.tryCombine(combineTypes);
 
     if (!resultType) {
-      return null;
+      return false;
     }
 
     for (const id of ids) {
@@ -186,7 +186,7 @@ export class Board {
     this.elementsMap.set(resultId, resultElement);
     this.notifyElementsCombine(ids, resultElement);
 
-    return resultElement;
+    return true;
   }
 
   public elements(): Element[] {
