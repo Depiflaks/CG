@@ -5,19 +5,25 @@ import { BoardPointerEvent } from "../view";
 const LIBRARY_GRID_PADDING = 10;
 const LIBRARY_GRID_COLUMNS = 4;
 const LIBRARY_SECTION_WIDTH_RATIO = 0.4;
+const SORT_BUTTON_HEIGHT = 36;
+const SORT_BUTTON_MARGIN = 10;
 
 export class Library {
   private model: model.Library;
   private imageCache: Map<string, CanvasImage>;
+  private isSortedAlphabetically: boolean;
 
   constructor(model: model.Library) {
     this.model = model;
     this.imageCache = new Map<string, CanvasImage>();
+    this.isSortedAlphabetically = false;
   }
 
   public draw(canvas: Canvas): void {
     const size = this.getCardSize(canvas);
-    const openedTypes = this.model.openedTypes();
+    const openedTypes = this.getOpenedTypesForDisplay();
+
+    this.drawSortButton(canvas);
 
     const nextIndex = this.drawOpenedTypes(canvas, openedTypes, size);
 
@@ -25,6 +31,19 @@ export class Library {
     const remainingClosed = Math.max(0, totalTypes - openedTypes.length);
 
     this.drawClosedTypes(canvas, remainingClosed, size, nextIndex);
+  }
+
+  public onMouseDown(event: BoardPointerEvent): void {
+    const buttonRect = this.getSortButtonRect(event.canvasWidth);
+    const isInsideButton =
+      event.x >= buttonRect.x &&
+      event.x <= buttonRect.x + buttonRect.width &&
+      event.y >= buttonRect.y &&
+      event.y <= buttonRect.y + buttonRect.height;
+
+    if (isInsideButton) {
+      this.isSortedAlphabetically = !this.isSortedAlphabetically;
+    }
   }
 
   private getCardSize(canvas: Canvas): number {
@@ -75,7 +94,11 @@ export class Library {
     const col = index % LIBRARY_GRID_COLUMNS;
     const row = Math.floor(index / LIBRARY_GRID_COLUMNS);
     const x = LIBRARY_GRID_PADDING + col * (size + LIBRARY_GRID_PADDING);
-    const y = LIBRARY_GRID_PADDING + row * (size + LIBRARY_GRID_PADDING);
+    const y =
+      LIBRARY_GRID_PADDING +
+      SORT_BUTTON_HEIGHT +
+      SORT_BUTTON_MARGIN +
+      row * (size + LIBRARY_GRID_PADDING);
 
     return { x, y };
   }
@@ -102,13 +125,17 @@ export class Library {
       return undefined;
     }
 
-    const openedTypes = this.model.openedTypes();
+    const openedTypes = this.getOpenedTypesForDisplay();
     let row = 0;
     let col = 0;
 
     for (const typeDef of openedTypes) {
       const x = LIBRARY_GRID_PADDING + col * (size + LIBRARY_GRID_PADDING);
-      const y = LIBRARY_GRID_PADDING + row * (size + LIBRARY_GRID_PADDING);
+      const y =
+        LIBRARY_GRID_PADDING +
+        SORT_BUTTON_HEIGHT +
+        SORT_BUTTON_MARGIN +
+        row * (size + LIBRARY_GRID_PADDING);
 
       if (
         mouseX >= x &&
@@ -127,6 +154,47 @@ export class Library {
     }
 
     return undefined;
+  }
+
+  private getOpenedTypesForDisplay(): model.TypeDefinition[] {
+    const openedTypes = this.model.openedTypes();
+    if (!this.isSortedAlphabetically) {
+      return openedTypes;
+    }
+
+    return [...openedTypes].sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  private getSortButtonRect(canvasWidth: number): {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  } {
+    const librarySectionWidth = this.getLibrarySectionWidth(canvasWidth);
+    const width = librarySectionWidth - LIBRARY_GRID_PADDING * 2;
+    return {
+      x: LIBRARY_GRID_PADDING,
+      y: LIBRARY_GRID_PADDING,
+      width,
+      height: SORT_BUTTON_HEIGHT,
+    };
+  }
+
+  private drawSortButton(canvas: Canvas): void {
+    const rect = this.getSortButtonRect(canvas.getWidth());
+
+    canvas.setFillColor(this.isSortedAlphabetically ? "#cfd8dc" : "#e0e0e0");
+    canvas.fillRect(rect.x, rect.y, rect.width, rect.height);
+    canvas.setStrokeColor("#000000");
+    canvas.strokeRect(rect.x, rect.y, rect.width, rect.height);
+
+    canvas.setFillColor("#000000");
+    canvas.setFont("16px sans-serif");
+    canvas.setTextAlign("center");
+    canvas.setTextBaseline("middle");
+    const text = this.isSortedAlphabetically ? "discovery order" : "sort";
+    canvas.fillText(text, rect.x + rect.width / 2, rect.y + rect.height / 2);
   }
 
   private getLibrarySectionWidth(totalWidth: number): number {

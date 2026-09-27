@@ -36,6 +36,7 @@ export function mount(container: HTMLElement): () => void {
 
   const handleMouseDown = (e: MouseEvent) => {
     viewBoard.onMouseDown(toBoardPointerEvent(e));
+    viewLibrary.onMouseDown(toBoardPointerEvent(e));
   };
 
   const handleMouseMove = (e: MouseEvent) => {
