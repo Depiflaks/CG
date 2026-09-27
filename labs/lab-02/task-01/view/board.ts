@@ -6,6 +6,9 @@ import { Library } from "./library";
 
 const ELEMENT_SQUARE_SIZE = 100;
 const LIBRARY_SECTION_WIDTH_RATIO = 0.4;
+const DELETE_ZONE_RADIUS = 36;
+const DELETE_ZONE_MARGIN_BOTTOM = 24;
+const DELETE_ICON_SIZE = 18;
 
 export class Board implements model.BoardObserver {
   private elements: Map<string, Element>;
@@ -117,6 +120,7 @@ export class Board implements model.BoardObserver {
     canvas.strokeRect(libraryWidth, 0, 0, canvasHeight);
 
     this.library.draw(canvas);
+    this.drawDeleteZone(canvas);
     for (const element of this.elements.values()) {
       element.ensureImage(canvas);
       element.draw(canvas);
@@ -190,6 +194,20 @@ export class Board implements model.BoardObserver {
       return;
     }
 
+    if (
+      this.isInDeleteZone(
+        this.draggedElement.position,
+        event.canvasWidth,
+        event.canvasHeight,
+      )
+    ) {
+      if (!this.draggedElement.isTemporary) {
+        this.modelBoard.remove(this.draggedElement.id);
+      }
+      this.resetDragState();
+      return;
+    }
+
     this.finalizeTemporaryDraggedElement();
 
     const currentId = this.draggedElement.id;
@@ -256,6 +274,66 @@ export class Board implements model.BoardObserver {
 
   private getLibraryBoundaryX(canvasWidth: number): number {
     return canvasWidth * LIBRARY_SECTION_WIDTH_RATIO;
+  }
+
+  private getDeleteZoneCenter(
+    canvasWidth: number,
+    canvasHeight: number,
+  ): Position {
+    const libraryBoundaryX = this.getLibraryBoundaryX(canvasWidth);
+    return {
+      x: libraryBoundaryX + (canvasWidth - libraryBoundaryX) / 2,
+      y: canvasHeight - DELETE_ZONE_MARGIN_BOTTOM - DELETE_ZONE_RADIUS,
+    };
+  }
+
+  private isInDeleteZone(
+    position: Position,
+    canvasWidth: number,
+    canvasHeight: number,
+  ): boolean {
+    const center = this.getDeleteZoneCenter(canvasWidth, canvasHeight);
+    const dx = position.x - center.x;
+    const dy = position.y - center.y;
+    return dx * dx + dy * dy <= DELETE_ZONE_RADIUS * DELETE_ZONE_RADIUS;
+  }
+
+  private drawDeleteZone(canvas: Canvas): void {
+    const center = this.getDeleteZoneCenter(
+      this.canvasWidth,
+      this.canvasHeight,
+    );
+    const half = DELETE_ICON_SIZE / 2;
+
+    canvas.setFillColor("#f5f5f5");
+    canvas.fillRect(
+      center.x - DELETE_ZONE_RADIUS,
+      center.y - DELETE_ZONE_RADIUS,
+      DELETE_ZONE_RADIUS * 2,
+      DELETE_ZONE_RADIUS * 2,
+    );
+
+    canvas.setStrokeColor("#cc3333");
+    canvas.strokeRect(
+      center.x - DELETE_ZONE_RADIUS,
+      center.y - DELETE_ZONE_RADIUS,
+      DELETE_ZONE_RADIUS * 2,
+      DELETE_ZONE_RADIUS * 2,
+    );
+
+    canvas.setStrokeColor("#cc3333");
+    canvas.drawLine(
+      center.x - half,
+      center.y - half,
+      center.x + half,
+      center.y + half,
+    );
+    canvas.drawLine(
+      center.x + half,
+      center.y - half,
+      center.x - half,
+      center.y + half,
+    );
   }
 
   private static createTemporaryElementId(): string {

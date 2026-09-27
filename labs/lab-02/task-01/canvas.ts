@@ -18,6 +18,7 @@ export interface Canvas {
 
   fillRect(x: number, y: number, width: number, height: number): void;
   strokeRect(x: number, y: number, width: number, height: number): void;
+  drawLine(x1: number, y1: number, x2: number, y2: number): void;
   fillText(text: string, x: number, y: number): void;
 
   createImage(src: string): CanvasImage;
@@ -88,6 +89,13 @@ export class HtmlCanvas implements Canvas {
 
   public strokeRect(x: number, y: number, width: number, height: number): void {
     this.ctx.strokeRect(x, y, width, height);
+  }
+
+  public drawLine(x1: number, y1: number, x2: number, y2: number): void {
+    this.ctx.beginPath();
+    this.ctx.moveTo(x1, y1);
+    this.ctx.lineTo(x2, y2);
+    this.ctx.stroke();
   }
 
   public fillText(text: string, x: number, y: number): void {
