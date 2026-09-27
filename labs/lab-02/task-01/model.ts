@@ -2,7 +2,7 @@ export type ElementType = string;
 
 export interface TypeDefinition {
   name: ElementType;
-  img: string;
+  imgSrc: string;
   sound: string;
   isBase: boolean;
 }
@@ -107,6 +107,10 @@ export class Library {
     }
     return opened;
   }
+
+  public getDefinition(type: ElementType): TypeDefinition | undefined {
+    return this.typeDefinitions.get(type);
+  }
 }
 
 export class Board {
@@ -124,6 +128,7 @@ export class Board {
 
   public addObserver(observer: BoardObserver): void {
     this.observers.push(observer);
+    observer.updateElements();
   }
 
   public remove(id: string): void {
