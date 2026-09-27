@@ -19,6 +19,8 @@ export interface Canvas {
   fillRect(x: number, y: number, width: number, height: number): void;
   strokeRect(x: number, y: number, width: number, height: number): void;
   drawLine(x1: number, y1: number, x2: number, y2: number): void;
+  fillEllipse(x: number, y: number, radiusX: number, radiusY: number): void;
+  strokeEllipse(x: number, y: number, radiusX: number, radiusY: number): void;
   fillText(text: string, x: number, y: number): void;
 
   createImage(src: string): CanvasImage;
@@ -95,6 +97,28 @@ export class HtmlCanvas implements Canvas {
     this.ctx.beginPath();
     this.ctx.moveTo(x1, y1);
     this.ctx.lineTo(x2, y2);
+    this.ctx.stroke();
+  }
+
+  public fillEllipse(
+    x: number,
+    y: number,
+    radiusX: number,
+    radiusY: number,
+  ): void {
+    this.ctx.beginPath();
+    this.ctx.ellipse(x, y, radiusX, radiusY, 0, 0, Math.PI * 2);
+    this.ctx.fill();
+  }
+
+  public strokeEllipse(
+    x: number,
+    y: number,
+    radiusX: number,
+    radiusY: number,
+  ): void {
+    this.ctx.beginPath();
+    this.ctx.ellipse(x, y, radiusX, radiusY, 0, 0, Math.PI * 2);
     this.ctx.stroke();
   }
 

@@ -13,3 +13,4 @@ export interface BoardPointerEvent {
 export { Library } from "./view/library";
 export { Element } from "./view/element";
 export { Board } from "./view/board";
+export { Notification } from "./view/notification";

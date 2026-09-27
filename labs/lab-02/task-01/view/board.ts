@@ -3,6 +3,7 @@ import { Canvas } from "../canvas";
 import { BoardPointerEvent, Position } from "../view";
 import { Element } from "./element";
 import { Library } from "./library";
+import { Notification } from "./notification";
 
 const ELEMENT_SQUARE_SIZE = 100;
 const LIBRARY_SECTION_WIDTH_RATIO = 0.4;
@@ -19,8 +20,13 @@ export class Board implements model.BoardObserver, model.GameFinishObserver {
   private canvasWidth: number;
   private canvasHeight: number;
   private isGameFinished: boolean;
+  private notification: Notification;
 
-  constructor(library: Library, modelBoard: model.Board) {
+  constructor(
+    library: Library,
+    modelBoard: model.Board,
+    notification: Notification,
+  ) {
     this.elements = new Map<string, Element>();
     this.library = library;
     this.modelBoard = modelBoard;
@@ -29,6 +35,7 @@ export class Board implements model.BoardObserver, model.GameFinishObserver {
     this.canvasWidth = 0;
     this.canvasHeight = 0;
     this.isGameFinished = false;
+    this.notification = notification;
   }
 
   public onAppend(modelElement: model.Element): void {
@@ -140,6 +147,8 @@ export class Board implements model.BoardObserver, model.GameFinishObserver {
     if (this.isGameFinished) {
       this.drawGameFinishOverlay(canvas);
     }
+
+    this.notification.draw(canvas);
   }
 
   public onMouseDown(event: BoardPointerEvent): void {
@@ -329,19 +338,19 @@ export class Board implements model.BoardObserver, model.GameFinishObserver {
     const half = DELETE_ICON_SIZE / 2;
 
     canvas.setFillColor("#f5f5f5");
-    canvas.fillRect(
-      center.x - DELETE_ZONE_RADIUS,
-      center.y - DELETE_ZONE_RADIUS,
-      DELETE_ZONE_RADIUS * 2,
-      DELETE_ZONE_RADIUS * 2,
+    canvas.fillEllipse(
+      center.x,
+      center.y,
+      DELETE_ZONE_RADIUS,
+      DELETE_ZONE_RADIUS,
     );
 
     canvas.setStrokeColor("#cc3333");
-    canvas.strokeRect(
-      center.x - DELETE_ZONE_RADIUS,
-      center.y - DELETE_ZONE_RADIUS,
-      DELETE_ZONE_RADIUS * 2,
-      DELETE_ZONE_RADIUS * 2,
+    canvas.strokeEllipse(
+      center.x,
+      center.y,
+      DELETE_ZONE_RADIUS,
+      DELETE_ZONE_RADIUS,
     );
 
     canvas.setStrokeColor("#cc3333");

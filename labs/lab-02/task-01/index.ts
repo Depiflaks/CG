@@ -12,10 +12,12 @@ export function mount(container: HTMLElement): () => void {
   const modelLibrary = new model.Library(configData);
   const modelBoard = new model.Board(modelLibrary);
   const viewLibrary = new view.Library(modelLibrary);
-  const viewBoard = new view.Board(viewLibrary, modelBoard);
+  const notification = new view.Notification();
+  const viewBoard = new view.Board(viewLibrary, modelBoard, notification);
 
   modelBoard.addObserver(viewBoard);
   modelLibrary.addGameFinishObserver(viewBoard);
+  modelLibrary.addNotificationObserver(notification);
 
   const toBoardPointerEvent = (e: MouseEvent): view.BoardPointerEvent => {
     const rect = canvas.getBoundingClientRect();

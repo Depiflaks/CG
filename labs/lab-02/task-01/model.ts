@@ -59,11 +59,16 @@ export interface GameFinishObserver {
   onGameFinish(): void;
 }
 
+export interface NotificationObserver {
+  onNotify(message: string): void;
+}
+
 export class Library {
   private elements: Map<ElementType, boolean>;
   private typeDefinitions: Map<ElementType, TypeDefinition>;
   private schemas: Schema[];
   private finishObservers: GameFinishObserver[];
+  private notificationObservers: NotificationObserver[];
   private isFinished: boolean;
 
   constructor(data: LibraryData) {
@@ -77,6 +82,7 @@ export class Library {
 
     this.schemas = data.schemas;
     this.finishObservers = [];
+    this.notificationObservers = [];
     this.isFinished = this.openedTypes().length === this.typesCount();
   }
 
@@ -85,6 +91,10 @@ export class Library {
     if (this.isFinished) {
       observer.onGameFinish();
     }
+  }
+
+  public addNotificationObserver(observer: NotificationObserver): void {
+    this.notificationObservers.push(observer);
   }
 
   public isGameFinished(): boolean {
@@ -109,6 +119,7 @@ export class Library {
 
         if (isMatch) {
           this.elements.set(schema.result, true);
+          this.notify(`New element discovered: ${schema.result}`);
           this.checkAndNotifyGameFinished();
           return schema.result;
         }
@@ -136,6 +147,12 @@ export class Library {
 
   public getDefinition(type: ElementType): TypeDefinition | undefined {
     return this.typeDefinitions.get(type);
+  }
+
+  private notify(message: string): void {
+    for (const observer of this.notificationObservers) {
+      observer.onNotify(message);
+    }
   }
 
   private checkAndNotifyGameFinished(): void {
