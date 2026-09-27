@@ -10,7 +10,7 @@ const DELETE_ZONE_RADIUS = 36;
 const DELETE_ZONE_MARGIN_BOTTOM = 24;
 const DELETE_ICON_SIZE = 18;
 
-export class Board implements model.BoardObserver {
+export class Board implements model.BoardObserver, model.GameFinishObserver {
   private elements: Map<string, Element>;
   private library: Library;
   private modelBoard: model.Board;
@@ -18,6 +18,7 @@ export class Board implements model.BoardObserver {
   private dragOffset: Position | null;
   private canvasWidth: number;
   private canvasHeight: number;
+  private isGameFinished: boolean;
 
   constructor(library: Library, modelBoard: model.Board) {
     this.elements = new Map<string, Element>();
@@ -27,6 +28,7 @@ export class Board implements model.BoardObserver {
     this.dragOffset = null;
     this.canvasWidth = 0;
     this.canvasHeight = 0;
+    this.isGameFinished = false;
   }
 
   public onAppend(modelElement: model.Element): void {
@@ -54,6 +56,11 @@ export class Board implements model.BoardObserver {
 
     const element = this.createElementFromModel(result, combinePosition);
     this.elements.set(element.id, element);
+  }
+
+  public onGameFinish(): void {
+    this.isGameFinished = true;
+    this.resetDragState();
   }
 
   private createElementFromModel(
@@ -129,9 +136,17 @@ export class Board implements model.BoardObserver {
       this.draggedElement.ensureImage(canvas);
       this.draggedElement.draw(canvas);
     }
+
+    if (this.isGameFinished) {
+      this.drawGameFinishOverlay(canvas);
+    }
   }
 
   public onMouseDown(event: BoardPointerEvent): void {
+    if (this.isGameFinished) {
+      return;
+    }
+
     const libraryBoundaryX = this.getLibraryBoundaryX(event.canvasWidth);
 
     if (event.x > libraryBoundaryX) {
@@ -164,6 +179,10 @@ export class Board implements model.BoardObserver {
   }
 
   public onMouseMove(event: BoardPointerEvent): void {
+    if (this.isGameFinished) {
+      return;
+    }
+
     if (!this.draggedElement) {
       return;
     }
@@ -184,6 +203,10 @@ export class Board implements model.BoardObserver {
   }
 
   public onMouseUp(event: BoardPointerEvent): void {
+    if (this.isGameFinished) {
+      return;
+    }
+
     if (!this.draggedElement) {
       return;
     }
@@ -333,6 +356,21 @@ export class Board implements model.BoardObserver {
       center.y - half,
       center.x - half,
       center.y + half,
+    );
+  }
+
+  private drawGameFinishOverlay(canvas: Canvas): void {
+    canvas.setFillColor("rgba(0, 0, 0, 0.45)");
+    canvas.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+
+    canvas.setFillColor("#ffffff");
+    canvas.setFont("bold 48px sans-serif");
+    canvas.setTextAlign("center");
+    canvas.setTextBaseline("middle");
+    canvas.fillText(
+      "Game finished",
+      this.canvasWidth / 2,
+      this.canvasHeight / 2,
     );
   }
 

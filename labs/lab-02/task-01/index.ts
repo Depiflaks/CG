@@ -15,6 +15,7 @@ export function mount(container: HTMLElement): () => void {
   const viewBoard = new view.Board(viewLibrary, modelBoard);
 
   modelBoard.addObserver(viewBoard);
+  modelLibrary.addGameFinishObserver(viewBoard);
 
   const toBoardPointerEvent = (e: MouseEvent): view.BoardPointerEvent => {
     const rect = canvas.getBoundingClientRect();

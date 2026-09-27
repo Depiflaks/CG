@@ -55,10 +55,16 @@ export interface BoardObserver {
   onElementsCombine(ids: string[], result: Element): void;
 }
 
+export interface GameFinishObserver {
+  onGameFinish(): void;
+}
+
 export class Library {
   private elements: Map<ElementType, boolean>;
   private typeDefinitions: Map<ElementType, TypeDefinition>;
   private schemas: Schema[];
+  private finishObservers: GameFinishObserver[];
+  private isFinished: boolean;
 
   constructor(data: LibraryData) {
     this.elements = new Map<ElementType, boolean>();
@@ -70,6 +76,19 @@ export class Library {
     }
 
     this.schemas = data.schemas;
+    this.finishObservers = [];
+    this.isFinished = this.openedTypes().length === this.typesCount();
+  }
+
+  public addGameFinishObserver(observer: GameFinishObserver): void {
+    this.finishObservers.push(observer);
+    if (this.isFinished) {
+      observer.onGameFinish();
+    }
+  }
+
+  public isGameFinished(): boolean {
+    return this.isFinished;
   }
 
   public isOpen(type: ElementType): boolean {
@@ -90,6 +109,7 @@ export class Library {
 
         if (isMatch) {
           this.elements.set(schema.result, true);
+          this.checkAndNotifyGameFinished();
           return schema.result;
         }
       }
@@ -116,6 +136,21 @@ export class Library {
 
   public getDefinition(type: ElementType): TypeDefinition | undefined {
     return this.typeDefinitions.get(type);
+  }
+
+  private checkAndNotifyGameFinished(): void {
+    if (this.isFinished) {
+      return;
+    }
+
+    if (this.openedTypes().length !== this.typesCount()) {
+      return;
+    }
+
+    this.isFinished = true;
+    for (const observer of this.finishObservers) {
+      observer.onGameFinish();
+    }
   }
 }
 
