@@ -110,6 +110,10 @@ export class Library {
     return opened;
   }
 
+  public typesCount(): number {
+    return this.typeDefinitions.size;
+  }
+
   public getDefinition(type: ElementType): TypeDefinition | undefined {
     return this.typeDefinitions.get(type);
   }

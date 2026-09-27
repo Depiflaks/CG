@@ -106,6 +106,16 @@ export class Board implements model.BoardObserver {
     canvas.setFillColor("#ffffff");
     canvas.fillRect(libraryWidth, 0, canvasWidth - libraryWidth, canvasHeight);
 
+    canvas.setStrokeColor("#333333");
+    canvas.strokeRect(0, 0, libraryWidth, canvasHeight);
+    canvas.strokeRect(
+      libraryWidth,
+      0,
+      canvasWidth - libraryWidth,
+      canvasHeight,
+    );
+    canvas.strokeRect(libraryWidth, 0, 0, canvasHeight);
+
     this.library.draw(canvas);
     for (const element of this.elements.values()) {
       element.ensureImage(canvas);

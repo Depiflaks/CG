@@ -16,31 +16,68 @@ export class Library {
   }
 
   public draw(canvas: Canvas): void {
+    const size = this.getCardSize(canvas);
+    const openedTypes = this.model.openedTypes();
+
+    const nextIndex = this.drawOpenedTypes(canvas, openedTypes, size);
+
+    const totalTypes = this.model.typesCount();
+    const remainingClosed = Math.max(0, totalTypes - openedTypes.length);
+
+    this.drawClosedTypes(canvas, remainingClosed, size, nextIndex);
+  }
+
+  private getCardSize(canvas: Canvas): number {
     const librarySectionWidth = this.getLibrarySectionWidth(canvas.getWidth());
-    const size =
+    return (
       (librarySectionWidth -
         LIBRARY_GRID_PADDING * (LIBRARY_GRID_COLUMNS + 1)) /
-      LIBRARY_GRID_COLUMNS;
+      LIBRARY_GRID_COLUMNS
+    );
+  }
 
-    const openedTypes = this.model.openedTypes();
-    
-    let row = 0;
-    let col = 0;
-
-    for (const typeDef of openedTypes) {
-      const x = LIBRARY_GRID_PADDING + col * (size + LIBRARY_GRID_PADDING);
-      const y = LIBRARY_GRID_PADDING + row * (size + LIBRARY_GRID_PADDING);
+  private drawOpenedTypes(
+    canvas: Canvas,
+    openedTypes: model.TypeDefinition[],
+    size: number,
+  ): number {
+    for (let i = 0; i < openedTypes.length; i++) {
+      const { x, y } = this.getGridPosition(i, size);
+      const typeDef = openedTypes[i];
+      if (!typeDef) {
+        continue;
+      }
 
       this.drawCardBox(canvas, x, y, size);
       this.drawImage(canvas, typeDef.imgSrc, x, y, size);
       this.drawText(canvas, typeDef.name, x, y, size);
-
-      col++;
-      if (col >= LIBRARY_GRID_COLUMNS) {
-        col = 0;
-        row++;
-      }
     }
+
+    return openedTypes.length;
+  }
+
+  private drawClosedTypes(
+    canvas: Canvas,
+    count: number,
+    size: number,
+    startIndex: number,
+  ): void {
+    for (let i = 0; i < count; i++) {
+      const { x, y } = this.getGridPosition(startIndex + i, size);
+      this.drawCardBox(canvas, x, y, size);
+    }
+  }
+
+  private getGridPosition(
+    index: number,
+    size: number,
+  ): { x: number; y: number } {
+    const col = index % LIBRARY_GRID_COLUMNS;
+    const row = Math.floor(index / LIBRARY_GRID_COLUMNS);
+    const x = LIBRARY_GRID_PADDING + col * (size + LIBRARY_GRID_PADDING);
+    const y = LIBRARY_GRID_PADDING + row * (size + LIBRARY_GRID_PADDING);
+
+    return { x, y };
   }
 
   public getTypeDefinition(
