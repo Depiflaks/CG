@@ -10,6 +10,6 @@ export interface BoardPointerEvent {
   canvasHeight: number;
 }
 
-export { Library } from "./view/Library";
-export { Element } from "./view/Element";
-export { Board } from "./view/Board";
+export { Library } from "./view/library";
+export { Element } from "./view/element";
+export { Board } from "./view/board";

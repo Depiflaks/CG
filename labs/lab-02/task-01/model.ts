@@ -50,7 +50,9 @@ export class Element {
 }
 
 export interface BoardObserver {
-  updateElements(): void;
+  onAppend(element: Element): void;
+  onRemove(id: string): void;
+  onElementsCombine(ids: string[], result: Element): void;
 }
 
 export class Library {
@@ -128,7 +130,9 @@ export class Board {
 
   public addObserver(observer: BoardObserver): void {
     this.observers.push(observer);
-    observer.updateElements();
+    for (const element of this.elementsMap.values()) {
+      observer.onAppend(element);
+    }
   }
 
   public remove(id: string): void {
@@ -136,7 +140,7 @@ export class Board {
       throw new ElementNotFoundException(id);
     }
     this.elementsMap.delete(id);
-    this.notifyObservers();
+    this.notifyRemove(id);
   }
 
   public append(type: ElementType): Element {
@@ -149,7 +153,7 @@ export class Board {
 
     const element = new Element(id, type);
     this.elementsMap.set(id, element);
-    this.notifyObservers();
+    this.notifyAppend(element);
 
     return element;
   }
@@ -167,23 +171,43 @@ export class Board {
 
     const resultType = this.library.tryCombine(combineTypes);
 
-    if (resultType) {
-      for (const id of ids) {
-        this.remove(id);
-      }
-      return this.append(resultType);
+    if (!resultType) {
+      return null;
     }
 
-    return null;
+    for (const id of ids) {
+      this.elementsMap.delete(id);
+    }
+
+    const resultId = this.nextIdCounter.toString();
+    this.nextIdCounter++;
+
+    const resultElement = new Element(resultId, resultType);
+    this.elementsMap.set(resultId, resultElement);
+    this.notifyElementsCombine(ids, resultElement);
+
+    return resultElement;
   }
 
   public elements(): Element[] {
     return Array.from(this.elementsMap.values());
   }
 
-  private notifyObservers(): void {
+  private notifyAppend(element: Element): void {
     for (const observer of this.observers) {
-      observer.updateElements();
+      observer.onAppend(element);
+    }
+  }
+
+  private notifyRemove(id: string): void {
+    for (const observer of this.observers) {
+      observer.onRemove(id);
+    }
+  }
+
+  private notifyElementsCombine(ids: string[], result: Element): void {
+    for (const observer of this.observers) {
+      observer.onElementsCombine(ids, result);
     }
   }
 }

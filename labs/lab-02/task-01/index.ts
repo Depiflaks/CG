@@ -14,6 +14,8 @@ export function mount(container: HTMLElement): () => void {
   const viewLibrary = new view.Library(modelLibrary);
   const viewBoard = new view.Board(viewLibrary, modelBoard);
 
+  modelBoard.addObserver(viewBoard);
+
   const toBoardPointerEvent = (e: MouseEvent): view.BoardPointerEvent => {
     const rect = canvas.getBoundingClientRect();
     return {
@@ -33,27 +35,15 @@ export function mount(container: HTMLElement): () => void {
   };
 
   const handleMouseDown = (e: MouseEvent) => {
-    const cvs = getHTMLCanvas();
-    if (!cvs) {
-      return;
-    }
-    viewBoard.onMouseDown(cvs, toBoardPointerEvent(e));
+    viewBoard.onMouseDown(toBoardPointerEvent(e));
   };
 
   const handleMouseMove = (e: MouseEvent) => {
-    const cvs = getHTMLCanvas();
-    if (!cvs) {
-      return;
-    }
-    viewBoard.onMouseMove(cvs, toBoardPointerEvent(e));
+    viewBoard.onMouseMove(toBoardPointerEvent(e));
   };
 
   const handleMouseUp = (e: MouseEvent) => {
-    const cvs = getHTMLCanvas();
-    if (!cvs) {
-      return;
-    }
-    viewBoard.onMouseUp(cvs, toBoardPointerEvent(e));
+    viewBoard.onMouseUp(toBoardPointerEvent(e));
   };
 
   canvas.addEventListener("mousedown", handleMouseDown);

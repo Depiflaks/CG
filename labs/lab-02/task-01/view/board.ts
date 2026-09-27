@@ -1,8 +1,8 @@
 import * as model from "../model";
 import { Canvas } from "../canvas";
 import { BoardPointerEvent, Position } from "../view";
-import { Element } from "./Element";
-import { Library } from "./Library";
+import { Element } from "./element";
+import { Library } from "./library";
 
 const ELEMENT_SQUARE_SIZE = 100;
 const LIBRARY_SECTION_WIDTH_RATIO = 0.4;
@@ -22,27 +22,30 @@ export class Board implements model.BoardObserver {
     this.dragOffset = null;
   }
 
-  public updateElements(): void {
-    const updatedElements = new Map<string, Element>();
-
-    for (const modelElement of this.modelBoard.elements()) {
-      const existingElement = this.elements.get(modelElement.getId());
-      if (existingElement) {
-        updatedElements.set(modelElement.getId(), existingElement);
-        continue;
-      }
-
-      const newElement = this.createMissingElement(modelElement);
-      updatedElements.set(modelElement.getId(), newElement);
+  public onAppend(modelElement: model.Element): void {
+    if (this.elements.has(modelElement.getId())) {
+      return;
     }
 
-    this.elements = updatedElements;
+    const element = this.createElementFromModel(modelElement);
+    this.elements.set(element.id, element);
   }
 
-  private createMissingElement(modelElement: model.Element): Element {
-    const imgSrc = this.library.getTypeDefinition(
-      modelElement.getType(),
-    )?.imgSrc;
+  public onRemove(id: string): void {
+    this.elements.delete(id);
+  }
+
+  public onElementsCombine(ids: string[], result: model.Element): void {
+    for (const id of ids) {
+      this.elements.delete(id);
+    }
+
+    const element = this.createElementFromModel(result);
+    this.elements.set(element.id, element);
+  }
+
+  private createElementFromModel(modelElement: model.Element): Element {
+    const imgSrc = this.library.getTypeDefinition(modelElement.getType())?.imgSrc;
 
     return new Element(
       modelElement.getId(),
