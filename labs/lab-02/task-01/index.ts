@@ -23,33 +23,36 @@ export function mount(container: HTMLElement): () => void {
       canvasHeight: canvas.height,
     };
   };
-  
-  const getHTMLCanvas = (): HtmlCanvas => {
+
+  const getHTMLCanvas = (): HtmlCanvas | null => {
     const ctx = canvas.getContext("2d");
     if (!ctx) {
-      return ;
+      return null;
     }
     return new HtmlCanvas(ctx);
-  }
+  };
 
   const handleMouseDown = (e: MouseEvent) => {
-    cvs = getHTMLCanvas()
+    const cvs = getHTMLCanvas();
+    if (!cvs) {
+      return;
+    }
     viewBoard.onMouseDown(cvs, toBoardPointerEvent(e));
   };
+
   const handleMouseMove = (e: MouseEvent) => {
-    const ctx = canvas.getContext("2d");
-    if (!ctx) {
+    const cvs = getHTMLCanvas();
+    if (!cvs) {
       return;
     }
-    const cvs = new HtmlCanvas(ctx);
     viewBoard.onMouseMove(cvs, toBoardPointerEvent(e));
   };
+
   const handleMouseUp = (e: MouseEvent) => {
-    const ctx = canvas.getContext("2d");
-    if (!ctx) {
+    const cvs = getHTMLCanvas();
+    if (!cvs) {
       return;
     }
-    const cvs = new HtmlCanvas(ctx);
     viewBoard.onMouseUp(cvs, toBoardPointerEvent(e));
   };
 
@@ -60,11 +63,13 @@ export function mount(container: HTMLElement): () => void {
   let animationFrameId: number;
 
   const render = (): void => {
-    const ctx = canvas.getContext("2d");
-    if (ctx) {
-      const cvs = new HtmlCanvas(ctx);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      viewBoard.Draw(cvs);
+    const cvs = getHTMLCanvas();
+    if (cvs) {
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      viewBoard.draw(cvs);
     }
 
     animationFrameId = requestAnimationFrame(render);

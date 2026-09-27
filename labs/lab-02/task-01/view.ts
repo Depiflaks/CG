@@ -4,6 +4,7 @@ import { Canvas, CanvasImage } from "./canvas";
 const LIBRARY_GRID_PADDING = 10;
 const LIBRARY_GRID_COLUMNS = 4;
 const ELEMENT_SQUARE_SIZE = 100;
+const LIBRARY_SECTION_WIDTH_RATIO = 0.4;
 
 export interface Position {
   x: number;
@@ -27,9 +28,10 @@ export class Library {
   }
 
   public draw(canvas: Canvas): void {
-    const halfWidth = canvas.getWidth() / 2;
+    const librarySectionWidth = this.getLibrarySectionWidth(canvas.getWidth());
     const size =
-      (halfWidth - LIBRARY_GRID_PADDING * (LIBRARY_GRID_COLUMNS + 1)) /
+      (librarySectionWidth -
+        LIBRARY_GRID_PADDING * (LIBRARY_GRID_COLUMNS + 1)) /
       LIBRARY_GRID_COLUMNS;
 
     const openedTypes = this.model.openedTypes();
@@ -55,16 +57,19 @@ export class Library {
     }
   }
 
-  public getTypeAtEvent(event: BoardPointerEvent): model.TypeDefinition | undefined {
-    const halfWidth = event.canvasWidth / 2;
+  public getTypeAtEvent(
+    event: BoardPointerEvent,
+  ): model.TypeDefinition | undefined {
+    const librarySectionWidth = this.getLibrarySectionWidth(event.canvasWidth);
     const size =
-      (halfWidth - LIBRARY_GRID_PADDING * (LIBRARY_GRID_COLUMNS + 1)) /
+      (librarySectionWidth -
+        LIBRARY_GRID_PADDING * (LIBRARY_GRID_COLUMNS + 1)) /
       LIBRARY_GRID_COLUMNS;
 
     const mouseX = event.x;
     const mouseY = event.y;
 
-    if (mouseX > halfWidth) {
+    if (mouseX > librarySectionWidth) {
       return undefined;
     }
 
@@ -93,6 +98,10 @@ export class Library {
     }
 
     return undefined;
+  }
+
+  private getLibrarySectionWidth(totalWidth: number): number {
+    return totalWidth * LIBRARY_SECTION_WIDTH_RATIO;
   }
 
   private drawCardBox(
@@ -147,6 +156,7 @@ export class Element {
   public id: string;
   public type: string;
   public position: Position;
+  public isTemporary: boolean;
   private image: CanvasImage | null;
 
   constructor(
@@ -154,17 +164,19 @@ export class Element {
     type: string,
     image: CanvasImage | null,
     position: { x: number; y: number },
+    temporary = false,
   ) {
     this.id = id;
     this.type = type;
     this.position = position;
     this.image = image;
+    this.isTemporary = temporary;
   }
 
-  public Draw(canvas: Canvas): void {
+  public draw(canvas: Canvas): void {
     const halfSize = ELEMENT_SQUARE_SIZE / 2;
 
-    canvas.setFillColor("#ffffff");
+    canvas.setFillColor("#f0f0f0");
     canvas.fillRect(
       this.position.x - halfSize,
       this.position.y - halfSize,
@@ -233,20 +245,30 @@ export class Board implements model.BoardObserver {
     return;
   }
 
-  public Draw(canvas: Canvas): void {
+  public draw(canvas: Canvas): void {
+    const canvasWidth = canvas.getWidth();
+    const canvasHeight = canvas.getHeight();
+    const libraryWidth = this.getLibraryBoundaryX(canvasWidth);
+
+    canvas.setFillColor("#f2f2f2");
+    canvas.fillRect(0, 0, libraryWidth, canvasHeight);
+
+    canvas.setFillColor("#ffffff");
+    canvas.fillRect(libraryWidth, 0, canvasWidth - libraryWidth, canvasHeight);
+
     this.library.draw(canvas);
     for (const element of this.elements.values()) {
-      element.Draw(canvas);
+      element.draw(canvas);
     }
     if (this.draggedElement) {
-      this.draggedElement.Draw(canvas);
+      this.draggedElement.draw(canvas);
     }
   }
 
   public onMouseDown(canvas: Canvas, event: BoardPointerEvent): void {
-    const halfWidth = event.canvasWidth / 2;
+    const libraryBoundaryX = this.getLibraryBoundaryX(event.canvasWidth);
 
-    if (event.x > halfWidth) {
+    if (event.x > libraryBoundaryX) {
       const elementsArray = Array.from(this.elements.values()).reverse();
       for (const element of elementsArray) {
         if (element.contains(event.x, event.y)) {
@@ -258,25 +280,40 @@ export class Board implements model.BoardObserver {
     } else {
       const typeDef = this.library.getTypeAtEvent(event);
       if (typeDef) {
-        let image: CanvasImage | null = null;
-        if (typeDef.img) {
-          image = this.imageCache.get(typeDef.img) ?? null;
-          if (!image) {
-            image = canvas.createImage(typeDef.img);
-            this.imageCache.set(typeDef.img, image);
-          }
-        }
-        this.draggedElement = new Element(
-          Board.createTemporaryElementId(),
-          typeDef.name,
-          image,
-          {
-            x: event.x,
-            y: event.y,
-          },
-        );
+        const image = this.getImageForType(canvas, typeDef.img);
+        this.draggedElement = this.createTemporaryElement(typeDef.name, image, {
+          x: event.x,
+          y: event.y,
+        });
       }
     }
+  }
+
+  private getImageForType(canvas: Canvas, imgSrc?: string): CanvasImage | null {
+    if (!imgSrc) {
+      return null;
+    }
+    let image = this.imageCache.get(imgSrc) ?? null;
+    if (!image) {
+      image = canvas.createImage(imgSrc);
+      this.imageCache.set(imgSrc, image);
+    }
+
+    return image;
+  }
+
+  private createTemporaryElement(
+    type: string,
+    image: CanvasImage | null,
+    position: { x: number; y: number },
+  ): Element {
+    return new Element(
+      Board.createTemporaryElementId(),
+      type,
+      image,
+      position,
+      true,
+    );
   }
 
   public onMouseMove(_: Canvas, event: BoardPointerEvent): void {
@@ -284,10 +321,14 @@ export class Board implements model.BoardObserver {
       return;
     }
     let newX = event.x;
-    const halfWidth = event.canvasWidth / 2;
+    const libraryBoundaryX = this.getLibraryBoundaryX(event.canvasWidth);
 
-    if (newX < halfWidth + 30) {
-      newX = halfWidth + 30;
+    const halfElement = ELEMENT_SQUARE_SIZE / 2;
+    if (
+      !this.draggedElement.isTemporary &&
+      newX < libraryBoundaryX + halfElement
+    ) {
+      newX = libraryBoundaryX + halfElement;
     }
 
     this.draggedElement.position = { x: newX, y: event.y };
@@ -297,16 +338,17 @@ export class Board implements model.BoardObserver {
     if (!this.draggedElement) {
       return;
     }
-    const halfWidth = event.canvasWidth / 2;
+    const libraryBoundaryX = this.getLibraryBoundaryX(event.canvasWidth);
 
-    if (this.draggedElement.position.x <= halfWidth) {
+    if (this.draggedElement.position.x <= libraryBoundaryX) {
       this.draggedElement = null;
       return;
     }
 
-    if (this.draggedElement.id.startsWith("temp-")) {
+    if (this.draggedElement.isTemporary) {
       const newModelElement = this.modelBoard.append(this.draggedElement.type);
       this.draggedElement.id = newModelElement.getId();
+      this.draggedElement.isTemporary = false;
     }
 
     const currentId = this.draggedElement.id;
@@ -333,6 +375,10 @@ export class Board implements model.BoardObserver {
     }
 
     this.draggedElement = null;
+  }
+
+  private getLibraryBoundaryX(canvasWidth: number): number {
+    return canvasWidth * LIBRARY_SECTION_WIDTH_RATIO;
   }
 
   private static createTemporaryElementId(): string {
