@@ -87,10 +87,12 @@ export class Board implements model.BoardObserver, model.GameFinishObserver {
   }
 
   private getCombinedElementsMidpoint(ids: string[]): Position {
+    console.log(ids.length, this.elements);
     const positions = ids
       .map((id) => this.elements.get(id)?.position)
       .filter((position): position is Position => !!position);
 
+    console.log(positions.length, this.elements);
     if (positions.length === 0) {
       return this.getScreenCenterPosition();
     }
@@ -172,17 +174,17 @@ export class Board implements model.BoardObserver, model.GameFinishObserver {
         }
       }
     } else {
-      const typeDef = this.library.getTypeAtEvent(event);
-      if (typeDef) {
+      const typeAtEvent = this.library.getTypeAtEvent(event);
+      if (typeAtEvent) {
         this.draggedElement = this.createTemporaryElement(
-          typeDef.name,
-          typeDef.imgSrc,
+          typeAtEvent.type.name,
+          typeAtEvent.type.imgSrc,
           {
-            x: event.x,
-            y: event.y,
+            x: typeAtEvent.x,
+            y: typeAtEvent.y,
           },
         );
-        this.dragOffset = { x: 0, y: 0 };
+        this.dragOffset = { x: -typeAtEvent.offsetX, y: -typeAtEvent.offsetY };
       }
     }
   }
@@ -245,14 +247,9 @@ export class Board implements model.BoardObserver, model.GameFinishObserver {
     const currentId = this.draggedElement.id;
     const intersectedId = this.findIntersectedElementId(this.draggedElement);
 
+    this.elements.set(currentId, this.draggedElement);
     if (intersectedId) {
-      this.handlePotentialCombine(
-        currentId,
-        intersectedId,
-        this.draggedElement,
-      );
-    } else {
-      this.elements.set(currentId, this.draggedElement);
+      this.handlePotentialCombine(currentId, intersectedId);
     }
 
     this.resetDragState();
@@ -291,12 +288,8 @@ export class Board implements model.BoardObserver, model.GameFinishObserver {
   private handlePotentialCombine(
     currentId: string,
     intersectedId: string,
-    draggedElement: Element,
   ): void {
-    const combined = this.modelBoard.tryCombine([currentId, intersectedId]);
-    if (!combined) {
-      this.elements.set(currentId, draggedElement);
-    }
+    this.modelBoard.tryCombine([currentId, intersectedId]);
   }
 
   private resetDragState(): void {

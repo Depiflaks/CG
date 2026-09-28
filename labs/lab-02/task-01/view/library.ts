@@ -3,10 +3,11 @@ import { Canvas, CanvasImage } from "../canvas";
 import { BoardPointerEvent } from "../view";
 
 const LIBRARY_GRID_PADDING = 10;
-const LIBRARY_GRID_COLUMNS = 4;
+const LIBRARY_GRID_COLUMNS = 5;
 const LIBRARY_SECTION_WIDTH_RATIO = 0.4;
 const SORT_BUTTON_HEIGHT = 36;
 const SORT_BUTTON_MARGIN = 10;
+const CARD_SIZE = 100;
 
 export class Library {
   private model: model.Library;
@@ -46,13 +47,14 @@ export class Library {
     }
   }
 
-  private getCardSize(canvas: Canvas): number {
-    const librarySectionWidth = this.getLibrarySectionWidth(canvas.getWidth());
-    return (
-      (librarySectionWidth -
-        LIBRARY_GRID_PADDING * (LIBRARY_GRID_COLUMNS + 1)) /
-      LIBRARY_GRID_COLUMNS
-    );
+  private getCardSize(_: Canvas): number {
+    return CARD_SIZE;
+    // const librarySectionWidth = this.getLibrarySectionWidth(canvas.getWidth());
+    // return (
+    //   (librarySectionWidth -
+    //     LIBRARY_GRID_PADDING * (LIBRARY_GRID_COLUMNS + 1)) /
+    //   LIBRARY_GRID_COLUMNS
+    // );
   }
 
   private drawOpenedTypes(
@@ -111,12 +113,17 @@ export class Library {
 
   public getTypeAtEvent(
     event: BoardPointerEvent,
-  ): model.TypeDefinition | undefined {
+  ):
+    | {
+        type: model.TypeDefinition;
+        offsetX: number;
+        offsetY: number;
+        x: number;
+        y: number;
+      }
+    | undefined {
     const librarySectionWidth = this.getLibrarySectionWidth(event.canvasWidth);
-    const size =
-      (librarySectionWidth -
-        LIBRARY_GRID_PADDING * (LIBRARY_GRID_COLUMNS + 1)) /
-      LIBRARY_GRID_COLUMNS;
+    const size = CARD_SIZE;
 
     const mouseX = event.x;
     const mouseY = event.y;
@@ -137,13 +144,20 @@ export class Library {
         SORT_BUTTON_MARGIN +
         row * (size + LIBRARY_GRID_PADDING);
 
+      const halfSize = size / 2;
       if (
         mouseX >= x &&
         mouseX <= x + size &&
         mouseY >= y &&
         mouseY <= y + size
       ) {
-        return typeDef;
+        return {
+          type: typeDef,
+          x: x + halfSize,
+          y: y + halfSize,
+          offsetX: x + halfSize - mouseX,
+          offsetY: y + halfSize - mouseY,
+        };
       }
 
       col++;
