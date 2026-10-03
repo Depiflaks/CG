@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export ALL_PROXY="socks5h://localhost:10808"
+
+cd "$HOME/projects/edu/CG"
+
+exec codex "$@"
