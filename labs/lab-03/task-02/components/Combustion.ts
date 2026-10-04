@@ -1,0 +1,13 @@
+import { EngineCycle } from "../animation/EngineCycle.ts";
+import { colors } from "../graphics/colors.ts";
+import type { WebGLRenderer } from "../graphics/WebGLRenderer.ts";
+import { layout } from "../layout.ts";
+import type { EngineComponent } from "./EngineComponent.ts";
+
+export class Combustion implements EngineComponent {
+  draw(renderer: WebGLRenderer, t: number): void {
+    const cycle = new EngineCycle(t).sample();
+    if (cycle.combustion < 0.4) return;
+    renderer.fill([...layout.roof, [444, cycle.pistonTop], [276, cycle.pistonTop]], colors.fire);
+  }
+}
