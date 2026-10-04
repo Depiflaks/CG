@@ -1,0 +1,16 @@
+.desktop-controls {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    padding: 12px 18px;
+    border-radius: 8px;
+    background: rgb(255 255 255 / 85%);
+    color: #3e3933;
+    font: 14px/1.5 system-ui, sans-serif;
+    text-align: center;
+    width: max-content;
+    max-width: calc(100vw - 60px);
+    pointer-events: none;
+}

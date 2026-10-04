@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.009 0.32" numOctaves="3" seed="8" stitchTiles="stitch"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.32 0 0 0 0 0.16 0 0 0 0 0.06 0 0 0 0.6 0"/>
+      <feBlend in="SourceGraphic" mode="multiply"/>
+    </filter>
+    <pattern id="fibers" width="512" height="128" patternUnits="userSpaceOnUse">
+      <g fill="none" stroke="#633618" stroke-width="1" opacity="0.32">
+        <path d="M-20 12 Q90 4 210 14 T532 12 M-20 30 Q120 38 240 27 T532 30"/>
+        <path d="M-20 52 Q90 40 210 53 T532 52 M-20 76 Q100 87 250 74 T532 76"/>
+        <path d="M-20 99 Q140 85 290 101 T532 99 M-20 119 Q100 125 230 116 T532 119"/>
+      </g>
+      <g fill="none" stroke="#e5b97e" stroke-width="2" opacity="0.24">
+        <path d="M-20 18 Q90 10 210 20 T532 18 M-20 59 Q90 47 210 60 T532 59"/>
+        <path d="M-20 105 Q140 91 290 107 T532 105"/>
+      </g>
+    </pattern>
+  </defs>
+  <g filter="url(#grain)">
+    <path fill="#b9854e" d="M0 0H512V512H0Z"/>
+    <path fill="url(#fibers)" d="M0 0H512V512H0Z"/>
+  </g>
+</svg>
