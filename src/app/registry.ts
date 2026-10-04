@@ -1,6 +1,8 @@
 import { mount as mountLab01Task01 } from "@/labs/lab-01/task-01/index.ts";
 import { mount as mountLab02Task01 } from "@/labs/lab-02/task-01/index.ts";
 import { mount as mountLab03Task01 } from "@/labs/lab-03/task-01/index.ts";
+import { mount as mountLab03Task02 } from "@/labs/lab-03/task-02/index.ts";
+import { mount as mountLab04Task01 } from "@/labs/lab-04/task-01/index.ts";
 import type { LabDefinition } from "@/src/app/types.ts";
 
 export const labs: readonly LabDefinition[] = [
@@ -34,6 +36,22 @@ export const labs: readonly LabDefinition[] = [
         id: "task-01",
         name: "Task 1.8 — bezier",
         mount: mountLab03Task01,
+      },
+      {
+        id: "task-02",
+        name: "Task 2.3 — engine",
+        mount: mountLab03Task02,
+      },
+    ],
+  },
+  {
+    id: "lab-04",
+    name: "Lab 4",
+    tasks: [
+      {
+        id: "task-01",
+        name: "Task 1 — Курносый додекаэдр",
+        mount: mountLab04Task01,
       },
     ],
   },
