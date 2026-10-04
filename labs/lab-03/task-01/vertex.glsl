@@ -1,4 +1,6 @@
-attribute vec2 aPosition;
+#version 300 es
+
+in vec2 aPosition;
 uniform float uPointSize;
 
 void main() {
