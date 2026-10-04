@@ -17,8 +17,8 @@ export class WebGLRenderer {
     const buffer = gl.createBuffer();
     const vao = gl.createVertexArray();
     try {
-      this.buffer = requireResource(buffer, "Не удалось создать буфер WebGL2.");
-      this.vao = requireResource(vao, "Не удалось создать массив вершин WebGL2.");
+      this.buffer = requireResource(buffer, "Failed to create a WebGL2 buffer.");
+      this.vao = requireResource(vao, "Failed to create a WebGL2 vertex array.");
     } catch (error) {
       gl.deleteBuffer(buffer);
       gl.deleteVertexArray(vao);

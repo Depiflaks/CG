@@ -1,6 +1,6 @@
 export function at<T>(values: readonly T[], index: number): T {
   const value = values[index];
-  if (value === undefined) throw new Error("Индекс вершины вне границ контура.");
+  if (value === undefined) throw new Error("Vertex index is outside the contour bounds.");
   return value;
 }
 

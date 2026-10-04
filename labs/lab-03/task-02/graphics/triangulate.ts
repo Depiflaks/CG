@@ -36,7 +36,7 @@ export function triangulate(points: readonly Point[]): number[] {
   const sign = winding(points);
   while (indices.length > 3) {
     const ear = indices.findIndex((_, index) => isEar(points, indices, index, sign));
-    if (ear < 0) throw new Error("Невозможно разбить контур на треугольники.");
+    if (ear < 0) throw new Error("Unable to triangulate the contour.");
     triangles.push(at(indices, (ear + indices.length - 1) % indices.length),
       at(indices, ear), at(indices, (ear + 1) % indices.length));
     indices.splice(ear, 1);
