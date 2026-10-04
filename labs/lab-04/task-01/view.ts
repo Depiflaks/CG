@@ -1,7 +1,7 @@
 import "./style.css";
+import { createCanvas } from "@/src/common/canvas/index.ts";
 
 const markup = `
-  <canvas class="snub-canvas" tabindex="0" aria-label="Курносый додекаэдр. Вращайте мышью или стрелками, изменяйте масштаб колесом."></canvas>
   <section class="snub-panel" aria-label="Параметры визуализации">
     <a href="#/">← Все задания</a>
     <h1>Курносый додекаэдр</h1>
@@ -36,10 +36,16 @@ export function createView(container: HTMLElement): TaskView {
   const root = document.createElement("div");
   root.className = "snub-task";
   root.innerHTML = markup;
+  const canvas = createCanvas({
+    className: "snub-canvas",
+    tabIndex: 0,
+    label: "Курносый додекаэдр. Вращайте мышью или стрелками, изменяйте масштаб колесом.",
+  });
+  root.prepend(canvas);
   container.append(root);
   return {
     root,
-    canvas: element(root, "canvas", HTMLCanvasElement),
+    canvas,
     opacity: element(root, "input[type=range]", HTMLInputElement),
     output: element(root, "output", HTMLOutputElement),
     lighting: element(root, "input[type=checkbox]", HTMLInputElement),

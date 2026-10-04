@@ -1,5 +1,5 @@
 import * as model from "../model";
-import { Canvas, CanvasImage } from "../canvas";
+import { Canvas, CanvasImage } from "@/src/common/canvas/HtmlCanvas.ts";
 import { BoardPointerEvent } from "../view";
 
 const LIBRARY_GRID_PADDING = 10;

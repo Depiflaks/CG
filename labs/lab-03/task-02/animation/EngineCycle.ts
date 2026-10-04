@@ -1,4 +1,4 @@
-import type { Point } from "../graphics/types.ts";
+import type { Point } from "@/src/common/graphics/types.ts";
 import { layout } from "../layout.ts";
 
 export type Stroke = "intake" | "compression" | "power" | "exhaust";

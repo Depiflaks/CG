@@ -17,11 +17,6 @@ export function scale(vector: Vector3, factor: number): Vector3 {
 }
 
 export function normalize(vector: Vector3): Vector3 {
-  return scale(vector, 1 / Math.hypot(...vector));
-}
-
-export function at<T>(values: readonly T[], index: number): T {
-  const value = values[index];
-  if (value === undefined) throw new Error("Некорректный индекс геометрии.");
-  return value;
+  const length = Math.hypot(...vector);
+  return length === 0 ? [0, 0, 0] : scale(vector, 1 / length);
 }

@@ -1,7 +1,7 @@
 import { colorFaces } from "./coloring.ts";
 import { createFaces, faceNormal } from "./faces.ts";
 import type { Polyhedron } from "./types.ts";
-import { at } from "./vector.ts";
+import { at } from "@/src/common/collections/index.ts";
 import { createVertices } from "./vertices.ts";
 
 function createEdges(faces: readonly (readonly number[])[]): [number, number][] {

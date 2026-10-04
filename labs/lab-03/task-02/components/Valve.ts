@@ -1,6 +1,6 @@
 import { EngineCycle } from "../animation/EngineCycle.ts";
 import { colors } from "../graphics/colors.ts";
-import { orient, rectangle } from "../graphics/geometry.ts";
+import { orient, rectangle } from "@/src/common/graphics/geometry2D.ts";
 import type { WebGLRenderer } from "../graphics/WebGLRenderer.ts";
 import { valves, type ValveKind } from "../layout.ts";
 import type { EngineComponent } from "./EngineComponent.ts";

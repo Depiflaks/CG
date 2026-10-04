@@ -1,5 +1,5 @@
-import { cross } from "./geometry.ts";
-import { at } from "./checked.ts";
+import { cross } from "./geometry2D.ts";
+import { at } from "@/src/common/collections/index.ts";
 import type { Point } from "./types.ts";
 
 function winding(points: readonly Point[]): number {

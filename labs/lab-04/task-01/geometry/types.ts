@@ -1,4 +1,4 @@
-export type Vector3 = readonly [number, number, number];
+import type { Vector3 } from "@/src/common/graphics/types.ts";
 
 export interface Face {
   readonly indices: readonly number[];

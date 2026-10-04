@@ -1,5 +1,5 @@
 import * as model from "../model";
-import { Canvas } from "../canvas";
+import { Canvas } from "@/src/common/canvas/HtmlCanvas.ts";
 
 const NOTIFICATION_DURATION_MS = 3000;
 const NOTIFICATION_HEIGHT = 44;

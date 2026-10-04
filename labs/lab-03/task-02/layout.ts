@@ -1,4 +1,4 @@
-import type { Point } from "./graphics/types.ts";
+import type { Point } from "@/src/common/graphics/types.ts";
 
 export type ValveKind = "intake" | "exhaust";
 

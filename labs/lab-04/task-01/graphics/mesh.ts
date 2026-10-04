@@ -1,5 +1,5 @@
 import type { Polyhedron } from "../geometry/types.ts";
-import { at } from "../geometry/vector.ts";
+import { at } from "@/src/common/collections/index.ts";
 
 export function faceVertices(polyhedron: Polyhedron): Float32Array {
   const data: number[] = [];

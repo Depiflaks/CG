@@ -1,3 +1,4 @@
+import { createCanvas } from "@/src/common/canvas/index.ts";
 import vertexShaderSource from "./vertex.glsl?raw";
 import fragmentShaderSource from "./fragment.glsl?raw";
 import { createBuffer, createContext, createProgram } from "@/src/common/webgl/index.ts";
@@ -30,7 +31,7 @@ function drawTriangles(gl: WebGL2RenderingContext): void {
 }
 
 export function mount(container: HTMLElement): () => void {
-  const canvas = document.createElement("canvas");
+  const canvas = createCanvas({ className: "", touchAction: "auto" });
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   container.append(canvas);

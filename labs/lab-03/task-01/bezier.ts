@@ -1,6 +1,6 @@
-import { Vector2D } from "@/src/common/graphics/Vector2D.ts";
+import { Vector2 } from "@/src/common/graphics/vector2";
 
-export type ControlPoints = [Vector2D, Vector2D, Vector2D, Vector2D];
+export type ControlPoints = [Vector2, Vector2, Vector2, Vector2];
 
 export function approximateBezier(
   points: ControlPoints,

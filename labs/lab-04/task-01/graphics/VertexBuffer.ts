@@ -1,4 +1,4 @@
-import { required } from "./program.ts";
+import { createBuffer, requireResource } from "@/src/common/webgl/index.ts";
 
 export class VertexBuffer {
   private readonly buffer: WebGLBuffer;
@@ -6,12 +6,11 @@ export class VertexBuffer {
   private readonly count: number;
 
   constructor(private readonly gl: WebGL2RenderingContext, program: WebGLProgram, data: Float32Array) {
-    this.buffer = required(gl.createBuffer());
-    this.array = required(gl.createVertexArray());
+    this.buffer = createBuffer(gl, data);
+    this.array = requireResource(gl.createVertexArray());
     this.count = data.length / 9;
     gl.bindVertexArray(this.array);
     gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
     ["aPosition", "aNormal", "aColor"].forEach((name, index) => {
       const location = gl.getAttribLocation(program, name);
       gl.enableVertexAttribArray(location);

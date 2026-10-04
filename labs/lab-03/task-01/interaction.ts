@@ -1,9 +1,9 @@
-import { Vector2D } from "@/src/common/graphics/Vector2D.ts";
+import { Vector2 } from "@/src/common/graphics/vector2.ts";
 import type { ControlPoints } from "./bezier.ts";
 
-function pointerPosition(canvas: HTMLCanvasElement, event: PointerEvent): Vector2D {
+function pointerPosition(canvas: HTMLCanvasElement, event: PointerEvent): Vector2 {
   const rect = canvas.getBoundingClientRect();
-  return new Vector2D(
+  return new Vector2(
     Math.max(-1, Math.min(1, (event.clientX - rect.left) / rect.width * 2 - 1)),
     Math.max(-1, Math.min(1, 1 - (event.clientY - rect.top) / rect.height * 2)),
   );

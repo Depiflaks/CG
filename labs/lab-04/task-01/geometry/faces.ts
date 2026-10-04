@@ -1,5 +1,6 @@
-import type { Vector3 } from "./types.ts";
-import { at, cross, dot, normalize, scale, subtract } from "./vector.ts";
+import type { Vector3 } from "@/src/common/graphics/types.ts";
+import { at } from "@/src/common/collections/index.ts";
+import { cross, dot, normalize, scale, subtract } from "@/src/common/graphics/vector3.ts";
 
 function neighbors(vertices: readonly Vector3[], origin: Vector3): number[] {
   const distances = vertices.map((vertex) => Math.hypot(...subtract(vertex, origin)));

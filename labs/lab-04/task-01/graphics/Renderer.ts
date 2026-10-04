@@ -1,7 +1,10 @@
-import { projectionMatrix, viewMatrix } from "../camera/matrices.ts";
-import type { Polyhedron, Vector3 } from "../geometry/types.ts";
+import { projectionMatrix, viewMatrix } from "@/src/common/graphics/matrices.ts";
+import type { Polyhedron } from "../geometry/types.ts";
+import type { Vector3 } from "@/src/common/graphics/types.ts";
 import { edgeVertices, faceVertices } from "./mesh.ts";
-import { createProgram, required } from "./program.ts";
+import { createProgram, requireResource } from "@/src/common/webgl/index.ts";
+import vertexSource from "./vertex.glsl?raw";
+import fragmentSource from "./fragment.glsl?raw";
 import { VertexBuffer } from "./VertexBuffer.ts";
 
 export interface RenderSettings {
@@ -16,11 +19,11 @@ export class Renderer {
   private readonly uniforms: Record<string, WebGLUniformLocation>;
 
   constructor(private readonly gl: WebGL2RenderingContext, polyhedron: Polyhedron) {
-    this.program = createProgram(gl);
+    this.program = createProgram(gl, vertexSource, fragmentSource);
     this.faces = new VertexBuffer(gl, this.program, faceVertices(polyhedron));
     this.edges = new VertexBuffer(gl, this.program, edgeVertices(polyhedron));
     this.uniforms = Object.fromEntries(["uView", "uProjection", "uEye", "uAlpha", "uLighting"]
-      .map((name) => [name, required(gl.getUniformLocation(this.program, name))]));
+      .map((name) => [name, requireResource(gl.getUniformLocation(this.program, name))]));
     gl.clearColor(0.93, 0.95, 0.98, 1);
     gl.enable(gl.DEPTH_TEST);
     gl.depthFunc(gl.LEQUAL);
@@ -37,7 +40,7 @@ export class Renderer {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.useProgram(this.program);
     gl.uniformMatrix4fv(this.uniform("uView"), false, viewMatrix(eye));
-    gl.uniformMatrix4fv(this.uniform("uProjection"), false, projectionMatrix(gl.canvas.width / gl.canvas.height));
+    gl.uniformMatrix4fv(this.uniform("uProjection"), false, projectionMatrix(gl.canvas.width / gl.canvas.height, 2.4 * Math.min(1, gl.canvas.width / gl.canvas.height)));
     gl.uniform3fv(this.uniform("uEye"), eye);
     if (settings.opacity < 1) this.drawTransparent(settings);
     else this.drawOpaque(settings);
@@ -51,7 +54,7 @@ export class Renderer {
   }
 
   private uniform(name: string): WebGLUniformLocation {
-    return required(this.uniforms[name] ?? null);
+    return requireResource(this.uniforms[name] ?? null);
   }
 
   private material(opacity: number, lighting: boolean): void {

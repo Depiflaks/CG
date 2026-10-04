@@ -1,4 +1,4 @@
-import { Canvas, CanvasImage } from "../canvas";
+import { Canvas, CanvasImage } from "@/src/common/canvas/HtmlCanvas.ts";
 import { Position } from "../view";
 
 const ELEMENT_SQUARE_SIZE = 100;

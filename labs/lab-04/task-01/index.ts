@@ -1,10 +1,11 @@
+import { createContext } from "@/src/common/webgl/index.ts";
 import { Application } from "./Application.ts";
 import { createView, showStatus } from "./view.ts";
 
 export function mount(container: HTMLElement): () => void {
   const view = createView(container);
   try {
-    const gl = view.canvas.getContext("webgl2", { antialias: true, alpha: false });
+    const gl = createContext(view.canvas, "webgl2", { antialias: true, alpha: false });
     if (gl === null) throw new Error("Для этого задания требуется браузер с поддержкой WebGL2.");
     const application = new Application(view, gl);
     return (): void => {

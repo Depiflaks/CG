@@ -1,4 +1,4 @@
-import type { Vector3 } from "../geometry/types.ts";
+import type { Vector3 } from "@/src/common/graphics/types.ts";
 
 export class OrbitCamera {
   private yaw = 0.55;

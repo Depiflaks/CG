@@ -1,5 +1,5 @@
-import type { Vector3 } from "./types.ts";
-import { normalize } from "./vector.ts";
+import type { Vector3 } from "@/src/common/graphics/types.ts";
+import { normalize } from "@/src/common/graphics/vector3.ts";
 
 function seeds(): Vector3[] {
   const phi = (1 + Math.sqrt(5)) / 2;

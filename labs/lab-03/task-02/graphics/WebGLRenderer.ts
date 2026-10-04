@@ -1,9 +1,12 @@
 import { colors } from "./colors.ts";
-import { at, requireResource } from "./checked.ts";
-import { circlePoints } from "./geometry.ts";
-import { createProgram } from "./ShaderProgram.ts";
-import { triangulate } from "./triangulate.ts";
-import type { Color, Point } from "./types.ts";
+import { at } from "@/src/common/collections/index.ts";
+import { requireResource } from "@/src/common/webgl/index.ts";
+import { circlePoints } from "@/src/common/graphics/geometry2D.ts";
+import { createProgram } from "@/src/common/webgl/index.ts";
+import vertexSource from "./vertex.glsl?raw";
+import fragmentSource from "./fragment.glsl?raw";
+import { triangulate } from "@/src/common/graphics/triangulate.ts";
+import type { Color, Point } from "@/src/common/graphics/types.ts";
 import { VertexBatch } from "./VertexBatch.ts";
 
 export class WebGLRenderer {
@@ -13,7 +16,7 @@ export class WebGLRenderer {
   private readonly batch = new VertexBatch();
 
   constructor(private readonly gl: WebGL2RenderingContext) {
-    this.program = createProgram(gl);
+    this.program = createProgram(gl, vertexSource, fragmentSource);
     const buffer = gl.createBuffer();
     const vao = gl.createVertexArray();
     try {

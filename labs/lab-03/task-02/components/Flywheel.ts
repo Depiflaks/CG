@@ -1,6 +1,6 @@
 import { EngineCycle } from "../animation/EngineCycle.ts";
 import { colors } from "../graphics/colors.ts";
-import { rotate } from "../graphics/geometry.ts";
+import { rotate } from "@/src/common/graphics/geometry2D.ts";
 import type { WebGLRenderer } from "../graphics/WebGLRenderer.ts";
 import { layout } from "../layout.ts";
 import type { EngineComponent } from "./EngineComponent.ts";

@@ -1,10 +1,11 @@
+import { bindCanvasResize } from "@/src/common/canvas/index.ts";
 import { Engine } from "./Engine.ts";
 import { WebGLRenderer } from "./graphics/WebGLRenderer.ts";
 
 export class EngineApplication {
   private renderer: WebGLRenderer;
   private readonly engine = new Engine();
-  private readonly observer: ResizeObserver;
+  private readonly unbindResize: () => void;
   private frame = 0;
   private elapsed = 0;
   private previousTime: number | null = null;
@@ -12,21 +13,17 @@ export class EngineApplication {
 
   constructor(private readonly canvas: HTMLCanvasElement, private readonly gl: WebGL2RenderingContext) {
     this.renderer = new WebGLRenderer(gl);
-    this.observer = new ResizeObserver(this.resize);
-    this.observer.observe(canvas);
     canvas.addEventListener("click", this.toggle);
     canvas.addEventListener("keydown", this.keydown);
     canvas.addEventListener("webglcontextlost", this.contextLost);
     canvas.addEventListener("webglcontextrestored", this.contextRestored);
-    window.addEventListener("resize", this.resize);
-    this.resize();
+    this.unbindResize = bindCanvasResize(canvas, this.resize, 2);
     this.frame = requestAnimationFrame(this.tick);
   }
 
   dispose(): void {
     cancelAnimationFrame(this.frame);
-    this.observer.disconnect();
-    window.removeEventListener("resize", this.resize);
+    this.unbindResize();
     this.canvas.removeEventListener("click", this.toggle);
     this.canvas.removeEventListener("keydown", this.keydown);
     this.canvas.removeEventListener("webglcontextlost", this.contextLost);
@@ -36,15 +33,7 @@ export class EngineApplication {
 
   private readonly resize = (): void => {
     if (this.gl.isContextLost()) return;
-    const bounds = this.canvas.getBoundingClientRect();
-    const ratio = Math.min(window.devicePixelRatio, 2);
-    const width = Math.max(1, Math.round(bounds.width * ratio));
-    const height = Math.max(1, Math.round(bounds.height * ratio));
-    if (this.canvas.width !== width || this.canvas.height !== height) {
-      this.canvas.width = width;
-      this.canvas.height = height;
-    }
-    this.renderer.resize(width, height);
+    this.renderer.resize(this.canvas.width, this.canvas.height);
     this.engine.draw(this.renderer, this.elapsed / 6000);
   };
 

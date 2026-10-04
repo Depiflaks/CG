@@ -1,4 +1,4 @@
-import type { Color } from "./types.ts";
+import type { Color } from "@/src/common/graphics/types.ts";
 
 export const colors = {
   background: [0.95, 0.96, 0.97, 1],

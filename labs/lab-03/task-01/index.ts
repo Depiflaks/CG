@@ -1,4 +1,4 @@
-import { Vector2D } from "@/src/common/graphics/Vector2D.ts";
+import { Vector2 } from "@/src/common/graphics/vector2.ts";
 import { bindCanvasResize, createCanvas } from "@/src/common/canvas/index.ts";
 import { createContext } from "@/src/common/webgl/index.ts";
 import type { ControlPoints } from "./bezier.ts";
@@ -12,10 +12,10 @@ export function mount(container: HTMLElement): () => void {
   if (gl === null) throw new Error("WebGL2 is not supported by this browser.");
   const renderer = createRenderer(gl);
   const points: ControlPoints = [
-    new Vector2D(-0.75, -0.45),
-    new Vector2D(-0.35, 0.7),
-    new Vector2D(0.35, -0.7),
-    new Vector2D(0.75, 0.45),
+    new Vector2(-0.75, -0.45),
+    new Vector2(-0.35, 0.7),
+    new Vector2(0.35, -0.7),
+    new Vector2(0.75, 0.45),
   ];
   const render = (): void => {
     renderer.render(points);

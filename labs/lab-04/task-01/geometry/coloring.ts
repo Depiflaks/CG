@@ -1,5 +1,5 @@
-import type { Vector3 } from "./types.ts";
-import { at } from "./vector.ts";
+import type { Vector3 } from "@/src/common/graphics/types.ts";
+import { at } from "@/src/common/collections/index.ts";
 
 const palette: readonly Vector3[] = [
   [0.96, 0.38, 0.27], [0.24, 0.65, 0.93], [0.98, 0.77, 0.26],

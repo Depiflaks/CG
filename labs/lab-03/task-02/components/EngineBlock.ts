@@ -1,6 +1,6 @@
 import { colors } from "../graphics/colors.ts";
-import { rectangle } from "../graphics/geometry.ts";
-import type { Point } from "../graphics/types.ts";
+import { rectangle } from "@/src/common/graphics/geometry2D.ts";
+import type { Point } from "@/src/common/graphics/types.ts";
 import type { WebGLRenderer } from "../graphics/WebGLRenderer.ts";
 import { layout } from "../layout.ts";
 import type { EngineComponent } from "./EngineComponent.ts";

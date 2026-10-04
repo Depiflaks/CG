@@ -1,5 +1,5 @@
 import * as model from "../model";
-import { Canvas } from "../canvas";
+import { Canvas } from "@/src/common/canvas/HtmlCanvas.ts";
 import { BoardPointerEvent, Position } from "../view";
 import { Element } from "./element";
 import { Library } from "./library";

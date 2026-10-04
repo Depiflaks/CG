@@ -1,4 +1,4 @@
-import type { Color, Point } from "./types.ts";
+import type { Color, Point } from "@/src/common/graphics/types.ts";
 
 export class VertexBatch {
   private data = new Float32Array(65536);

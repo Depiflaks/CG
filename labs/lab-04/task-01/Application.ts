@@ -1,3 +1,4 @@
+import { bindCanvasResize } from "@/src/common/canvas/index.ts";
 import { OrbitCamera } from "./camera/OrbitCamera.ts";
 import { OrbitControls } from "./camera/OrbitControls.ts";
 import { createPolyhedron } from "./geometry/polyhedron.ts";
@@ -8,13 +9,11 @@ export class Application {
   private readonly camera = new OrbitCamera();
   private readonly polyhedron = createPolyhedron();
   private readonly events = new AbortController();
-  private readonly observer: ResizeObserver;
+  private readonly unbindResize: () => void;
   private renderer: Renderer;
 
   constructor(private readonly view: TaskView, private readonly gl: WebGL2RenderingContext) {
     this.renderer = new Renderer(gl, this.polyhedron);
-    this.observer = new ResizeObserver(this.resize);
-    this.observer.observe(view.canvas);
     const signal = this.events.signal;
     new OrbitControls(view.canvas, this.camera, this.redraw, signal);
     view.opacity.addEventListener("input", this.redraw, { signal });
@@ -22,13 +21,12 @@ export class Application {
     view.reset.addEventListener("click", this.reset, { signal });
     view.canvas.addEventListener("webglcontextlost", this.contextLost, { signal });
     view.canvas.addEventListener("webglcontextrestored", this.contextRestored, { signal });
-    window.addEventListener("resize", this.resize, { signal });
-    this.resize();
+    this.unbindResize = bindCanvasResize(view.canvas, this.resize, 2);
   }
 
   dispose(): void {
     this.events.abort();
-    this.observer.disconnect();
+    this.unbindResize();
     this.renderer.dispose();
   }
 
@@ -40,15 +38,6 @@ export class Application {
 
   private readonly resize = (): void => {
     if (this.gl.isContextLost()) return;
-    const canvas = this.view.canvas;
-    const bounds = canvas.getBoundingClientRect();
-    const ratio = Math.min(window.devicePixelRatio || 1, 2);
-    const width = Math.max(1, Math.round(bounds.width * ratio));
-    const height = Math.max(1, Math.round(bounds.height * ratio));
-    if (canvas.width !== width || canvas.height !== height) {
-      canvas.width = width;
-      canvas.height = height;
-    }
     this.redraw();
   };
 
