@@ -1,35 +1,35 @@
-import type { Point } from "./types.ts";
+import { Vector2 } from "./vector2.ts";
 
-export function rectangle(x: number, y: number, width: number, height: number): Point[] {
-  return [[x, y], [x + width, y], [x + width, y + height], [x, y + height]];
+export function rectangle(x: number, y: number, width: number, height: number): Vector2[] {
+  return [new Vector2(x, y), new Vector2(x + width, y),
+    new Vector2(x + width, y + height), new Vector2(x, y + height)];
 }
 
-export function circlePoints(center: Point, radius: number, segments = 32): Point[] {
-  return Array.from({ length: segments }, (_, index): Point => {
+export function circlePoints(center: Vector2, radius: number, segments = 32): Vector2[] {
+  return Array.from({ length: segments }, (_, index): Vector2 => {
     const angle = index * Math.PI * 2 / segments;
-    return [center[0] + Math.cos(angle) * radius, center[1] + Math.sin(angle) * radius];
+    return center.add(new Vector2(Math.cos(angle), Math.sin(angle)).scale(radius));
   });
 }
 
-export function rotate(point: Point, center: Point, angle: number): Point {
-  const x = point[0] - center[0];
-  const y = point[1] - center[1];
+export function rotate(point: Vector2, center: Vector2, angle: number): Vector2 {
+  const { x, y } = point.subtract(center);
   const cosine = Math.cos(angle);
   const sine = Math.sin(angle);
-  return [center[0] + x * cosine - y * sine, center[1] + x * sine + y * cosine];
+  return center.add(new Vector2(x * cosine - y * sine, x * sine + y * cosine));
 }
 
-export function orient(points: readonly Point[], origin: Point, axis: Point): Point[] {
-  return points.map(([x, y]): Point => [
-    origin[0] + axis[1] * x + axis[0] * y,
-    origin[1] - axis[0] * x + axis[1] * y,
-  ]);
+export function orient(points: readonly Vector2[], origin: Vector2, axis: Vector2): Vector2[] {
+  return points.map(({ x, y }): Vector2 => origin.add(new Vector2(
+    axis.y * x + axis.x * y,
+    -axis.x * x + axis.y * y,
+  )));
 }
 
-export function along(origin: Point, axis: Point, distance: number): Point {
-  return [origin[0] + axis[0] * distance, origin[1] + axis[1] * distance];
+export function along(origin: Vector2, axis: Vector2, distance: number): Vector2 {
+  return origin.add(axis.scale(distance));
 }
 
-export function cross(a: Point, b: Point, c: Point): number {
-  return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0]);
+export function cross(a: Vector2, b: Vector2, c: Vector2): number {
+  return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
 }

@@ -1,4 +1,5 @@
 import { EngineCycle } from "../animation/EngineCycle.ts";
+import { Vector2 } from "@/src/common/graphics/vector2.ts";
 import { colors } from "../graphics/colors.ts";
 import { rotate } from "@/src/common/graphics/geometry2D.ts";
 import type { WebGLRenderer } from "../graphics/WebGLRenderer.ts";
@@ -13,7 +14,7 @@ export class Flywheel implements EngineComponent {
     renderer.circle(center, 95, colors.cavity);
     for (let index = 0; index < 4; index += 1) {
       const angle = crankAngle + index * Math.PI / 2;
-      renderer.line(center, rotate([360, 616], center, angle), colors.metal, 12);
+      renderer.line(center, rotate(new Vector2(360, 616), center, angle), colors.metal, 12);
     }
   }
 }

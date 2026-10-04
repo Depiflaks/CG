@@ -1,22 +1,22 @@
 import { cross } from "./geometry2D.ts";
 import { at } from "@/src/common/collections/index.ts";
-import type { Point } from "./types.ts";
+import type { Vector2 } from "./vector2.ts";
 
-function winding(points: readonly Point[]): number {
+function winding(points: readonly Vector2[]): number {
   const area = points.reduce((sum, point, index) => {
     const next = at(points, (index + 1) % points.length);
-    return sum + point[0] * next[1] - next[0] * point[1];
+    return sum + point.x * next.y - next.x * point.y;
   }, 0);
   return Math.sign(area);
 }
 
-function contains(point: Point, a: Point, b: Point, c: Point, sign: number): boolean {
+function contains(point: Vector2, a: Vector2, b: Vector2, c: Vector2, sign: number): boolean {
   return cross(a, b, point) * sign >= -0.0001
     && cross(b, c, point) * sign >= -0.0001
     && cross(c, a, point) * sign >= -0.0001;
 }
 
-function isEar(points: readonly Point[], indices: number[], index: number, sign: number): boolean {
+function isEar(points: readonly Vector2[], indices: number[], index: number, sign: number): boolean {
   const previous = at(indices, (index + indices.length - 1) % indices.length);
   const current = at(indices, index);
   const next = at(indices, (index + 1) % indices.length);
@@ -30,7 +30,7 @@ function isEar(points: readonly Point[], indices: number[], index: number, sign:
   });
 }
 
-export function triangulate(points: readonly Point[]): number[] {
+export function triangulate(points: readonly Vector2[]): number[] {
   const indices = points.map((_, index) => index);
   const triangles: number[] = [];
   const sign = winding(points);

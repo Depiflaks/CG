@@ -1,4 +1,5 @@
-import type { Color, Point } from "@/src/common/graphics/types.ts";
+import type { Color } from "@/src/common/graphics/types.ts";
+import type { Vector2 } from "@/src/common/graphics/vector2.ts";
 
 export class VertexBatch {
   private data = new Float32Array(65536);
@@ -8,9 +9,9 @@ export class VertexBatch {
     this.length = 0;
   }
 
-  append(point: Point, color: Color): void {
+  append(point: Vector2, color: Color): void {
     this.reserve(6);
-    this.data.set([point[0], point[1], ...color], this.length);
+    this.data.set([point.x, point.y, ...color], this.length);
     this.length += 6;
   }
 

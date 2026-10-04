@@ -6,7 +6,8 @@ import { createProgram } from "@/src/common/webgl/index.ts";
 import vertexSource from "./vertex.glsl?raw";
 import fragmentSource from "./fragment.glsl?raw";
 import { triangulate } from "@/src/common/graphics/triangulate.ts";
-import type { Color, Point } from "@/src/common/graphics/types.ts";
+import type { Color } from "@/src/common/graphics/types.ts";
+import { Vector2 } from "@/src/common/graphics/vector2.ts";
 import { VertexBatch } from "./VertexBatch.ts";
 
 export class WebGLRenderer {
@@ -57,19 +58,19 @@ export class WebGLRenderer {
     gl.drawArrays(gl.TRIANGLES, 0, vertices.length / 6);
   }
 
-  fill(points: readonly Point[], color: Color): void {
+  fill(points: readonly Vector2[], color: Color): void {
     if (points.length < 3) return;
     for (const index of triangulate(points)) {
       this.batch.append(at(points, index), color);
     }
   }
 
-  shape(points: readonly Point[], color: Color, width = 2): void {
+  shape(points: readonly Vector2[], color: Color, width = 2): void {
     this.fill(points, color);
     this.polyline(points, colors.outline, width, true);
   }
 
-  circle(center: Point, radius: number, color: Color): void {
+  circle(center: Vector2, radius: number, color: Color): void {
     const points = circlePoints(center, radius);
     for (let index = 0; index < points.length; index += 1) {
       this.batch.append(center, color);
@@ -79,20 +80,17 @@ export class WebGLRenderer {
     this.polyline(points, colors.outline, 2, true);
   }
 
-  line(start: Point, end: Point, color: Color, width = 2): void {
+  line(start: Vector2, end: Vector2, color: Color, width = 2): void {
     if (width <= 0) return;
-    const dx = end[0] - start[0];
-    const dy = end[1] - start[1];
-    const length = Math.hypot(dx, dy);
+    const direction = end.subtract(start);
+    const length = direction.magnitude();
     if (length === 0) return;
-    const x = -dy * width / length / 2;
-    const y = dx * width / length / 2;
-    const points: Point[] = [[start[0] + x, start[1] + y], [end[0] + x, end[1] + y],
-      [end[0] - x, end[1] - y], [start[0] - x, start[1] - y]];
+    const offset = new Vector2(-direction.y, direction.x).scale(width / length / 2);
+    const points = [start.add(offset), end.add(offset), end.subtract(offset), start.subtract(offset)];
     this.fill(points, color);
   }
 
-  polyline(points: readonly Point[], color: Color, width = 2, closed = false): void {
+  polyline(points: readonly Vector2[], color: Color, width = 2, closed = false): void {
     const segments = closed ? points.length : points.length - 1;
     for (let index = 0; index < segments; index += 1) {
       this.line(at(points, index), at(points, (index + 1) % points.length), color, width);
