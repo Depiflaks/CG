@@ -6,3 +6,6 @@ export ALL_PROXY="socks5h://localhost:10808"
 cd "$HOME/projects/edu/CG"
 
 exec codex "$@"
+
+mkdir -p ~/.codex/log
+codex -c log_dir="$HOME/.codex/log"

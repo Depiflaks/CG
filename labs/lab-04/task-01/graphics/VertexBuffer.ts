@@ -5,7 +5,11 @@ export class VertexBuffer {
   private readonly array: WebGLVertexArrayObject;
   private readonly count: number;
 
-  constructor(private readonly gl: WebGL2RenderingContext, program: WebGLProgram, data: Float32Array) {
+  constructor(
+    private readonly gl: WebGL2RenderingContext,
+    program: WebGLProgram,
+    data: Float32Array,
+  ) {
     this.buffer = createBuffer(gl, data);
     this.array = requireResource(gl.createVertexArray());
     this.count = data.length / 9;

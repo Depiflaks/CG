@@ -1,4 +1,7 @@
-import { projectionMatrix, viewMatrix } from "@/src/common/graphics/matrices.ts";
+import {
+  projectionMatrix,
+  viewMatrix,
+} from "@/src/common/graphics/matrices.ts";
 import type { Polyhedron } from "../geometry/types.ts";
 import type { Vector3 } from "@/src/common/graphics/types.ts";
 import { edgeVertices, faceVertices } from "./mesh.ts";
@@ -18,17 +21,29 @@ export class Renderer {
   private readonly edges: VertexBuffer;
   private readonly uniforms: Record<string, WebGLUniformLocation>;
 
-  constructor(private readonly gl: WebGL2RenderingContext, polyhedron: Polyhedron) {
+  constructor(
+    private readonly gl: WebGL2RenderingContext,
+    polyhedron: Polyhedron,
+  ) {
     this.program = createProgram(gl, vertexSource, fragmentSource);
     this.faces = new VertexBuffer(gl, this.program, faceVertices(polyhedron));
     this.edges = new VertexBuffer(gl, this.program, edgeVertices(polyhedron));
-    this.uniforms = Object.fromEntries(["uView", "uProjection", "uEye", "uAlpha", "uLighting"]
-      .map((name) => [name, requireResource(gl.getUniformLocation(this.program, name))]));
+    this.uniforms = Object.fromEntries(
+      ["uView", "uProjection", "uEye", "uAlpha", "uLighting"].map((name) => [
+        name,
+        requireResource(gl.getUniformLocation(this.program, name)),
+      ]),
+    );
     gl.clearColor(0.93, 0.95, 0.98, 1);
     gl.enable(gl.DEPTH_TEST);
+    // Less or Equal
     gl.depthFunc(gl.LEQUAL);
+    // какой порядок вершин считать лицевой стороной треугольника
+    // против часовой
     gl.frontFace(gl.CCW);
+    // смешивание прозрачных цветов
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    // сдвиг глубины полигонов, чтобы они не наезжали друг на друга
     gl.polygonOffset(1, 1);
   }
 
@@ -40,7 +55,14 @@ export class Renderer {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.useProgram(this.program);
     gl.uniformMatrix4fv(this.uniform("uView"), false, viewMatrix(eye));
-    gl.uniformMatrix4fv(this.uniform("uProjection"), false, projectionMatrix(gl.canvas.width / gl.canvas.height, 2.4 * Math.min(1, gl.canvas.width / gl.canvas.height)));
+    gl.uniformMatrix4fv(
+      this.uniform("uProjection"),
+      false,
+      projectionMatrix(
+        gl.canvas.width / gl.canvas.height,
+        2.4 * Math.min(1, gl.canvas.width / gl.canvas.height),
+      ),
+    );
     gl.uniform3fv(this.uniform("uEye"), eye);
     if (settings.opacity < 1) this.drawTransparent(settings);
     else this.drawOpaque(settings);
