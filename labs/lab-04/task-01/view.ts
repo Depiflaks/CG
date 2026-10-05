@@ -10,8 +10,6 @@ const markup = `
     <label class="snub-opacity" for="snub-opacity">Непрозрачность <output for="snub-opacity">62%</output></label>
     <input id="snub-opacity" type="range" min="0" max="100" value="62" step="1">
     <label class="snub-lighting"><input type="checkbox" checked> Освещение</label>
-    <button type="button">Сбросить камеру</button>
-    <p class="snub-hint">Перетаскивание — вращение<br>Колесо — масштаб · Стрелки — вращение</p>
   </section>
   <p class="snub-status" role="status" hidden></p>
 `;
@@ -22,7 +20,6 @@ export interface TaskView {
   readonly opacity: HTMLInputElement;
   readonly output: HTMLOutputElement;
   readonly lighting: HTMLInputElement;
-  readonly reset: HTMLButtonElement;
   readonly status: HTMLParagraphElement;
 }
 
@@ -49,7 +46,6 @@ export function createView(container: HTMLElement): TaskView {
     opacity: element(root, "input[type=range]", HTMLInputElement),
     output: element(root, "output", HTMLOutputElement),
     lighting: element(root, "input[type=checkbox]", HTMLInputElement),
-    reset: element(root, "button", HTMLButtonElement),
     status: element(root, ".snub-status", HTMLParagraphElement),
   };
 }

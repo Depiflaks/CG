@@ -29,7 +29,7 @@ export class EngineCycle {
     const pistonPin = this.pistonPin(crankPin);
     return {
       stroke, progress, crankAngle, camAngle: phase * Math.PI * 2, crankPin, pistonPin,
-      pistonTop: pistonPin.y - layout.crownOffset,
+      pistonTop: pistonPin.y - layout.pistonTopOffset,
       intakeLift: stroke === "intake" ? Math.sin(progress * Math.PI) ** 2 * 18 : 0,
       exhaustLift: stroke === "exhaust" ? Math.sin(progress * Math.PI) ** 2 * 18 : 0,
       ignition: Math.max(0, 1 - Math.abs(phase - 0.505) / 0.018),

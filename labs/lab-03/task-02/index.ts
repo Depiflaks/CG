@@ -6,8 +6,6 @@ export function mount(container: HTMLElement): () => void {
   const canvas = createCanvas({
     tabIndex: 0,
     touchAction: "auto",
-    label:
-      "Двигатель внутреннего сгорания в разрезе. Нажмите или используйте пробел для паузы.",
   });
   container.append(canvas);
   try {
@@ -16,7 +14,7 @@ export function mount(container: HTMLElement): () => void {
       alpha: false,
     });
     if (gl === null)
-      throw new Error("WebGL2 support is required for this task.");
+      throw new Error("WebGL2 is not supported by this browser.");
     const application = new EngineApplication(canvas, gl);
     return (): void => {
       application.dispose();

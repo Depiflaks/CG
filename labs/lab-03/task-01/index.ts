@@ -1,5 +1,5 @@
 import { Vector2 } from "@/src/common/graphics/vector2.ts";
-import { bindCanvasResize, createCanvas } from "@/src/common/canvas/index.ts";
+import { createCanvas } from "@/src/common/canvas/index.ts";
 import { createContext } from "@/src/common/webgl/index.ts";
 import type { ControlPoints } from "./bezier.ts";
 import { createRenderer } from "./renderer.ts";
@@ -21,10 +21,14 @@ export function mount(container: HTMLElement): () => void {
     renderer.render(points);
   };
   const unbind = bindInteraction(canvas, points, render);
-  const unbindResize = bindCanvasResize(canvas, render);
+  const bounds = canvas.getBoundingClientRect();
+  canvas.width = Math.round(bounds.width);
+  canvas.height = Math.round(bounds.height);
+  canvas.style.width = `${String(bounds.width)}px`;
+  canvas.style.height = `${String(bounds.height)}px`;
+  render();
 
   return (): void => {
-    unbindResize();
     unbind();
     renderer.dispose();
     canvas.remove();

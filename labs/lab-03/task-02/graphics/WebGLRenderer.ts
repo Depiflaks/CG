@@ -38,6 +38,7 @@ export class WebGLRenderer {
     const scale = Math.min(width / 720, height / 900) * 0.96;
     gl.viewport(0, 0, width, height);
     gl.useProgram(this.program);
+    // TODO: использовать нормальную матрицу проецирования и моделирования-вида
     gl.uniform2f(gl.getUniformLocation(this.program, "uViewport"), width / scale, height / scale);
     gl.uniform2f(gl.getUniformLocation(this.program, "uSceneSize"), 720, 900);
   }

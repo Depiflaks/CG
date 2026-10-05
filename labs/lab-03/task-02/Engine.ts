@@ -16,11 +16,11 @@ export class Engine {
     new Flywheel(),
     new Crankshaft(),
     new ConnectingRod(),
-    new Piston(),
-    new Valve("intake"),
+    new Piston(), // поршень
+    new Valve("intake"), //клапан
     new Valve("exhaust"),
-    new Combustion(),
-    new SparkPlug(),
+    new Combustion(), // взрыв
+    new SparkPlug(), // свеча
   ];
 
   draw(renderer: WebGLRenderer, t: number): void {

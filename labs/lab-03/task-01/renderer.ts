@@ -3,7 +3,7 @@ import fragmentShaderSource from "./fragment.glsl?raw";
 import { approximateBezier, type ControlPoints } from "./bezier.ts";
 import { createBuffer, createProgram } from "@/src/common/webgl/index.ts";
 
-function dashedPolygon(points: ControlPoints): Float32Array {
+function buildDashedSegments(points: ControlPoints): Float32Array {
   const vertices: number[] = [];
   const dash = 0.08;
   const step = 0.14;
@@ -47,9 +47,16 @@ export function createRenderer(gl: WebGL2RenderingContext) {
   };
 }
 
-type Draw = (vertices: Float32Array, mode: number, rgb: [number, number, number]) => void;
+type Draw = (
+  vertices: Float32Array,
+  mode: number,
+  rgb: [number, number, number],
+) => void;
 
-function createDraw(gl: WebGL2RenderingContext, color: WebGLUniformLocation | null): Draw {
+function createDraw(
+  gl: WebGL2RenderingContext,
+  color: WebGLUniformLocation | null,
+): Draw {
   return (
     vertices: Float32Array,
     mode: number,
@@ -61,13 +68,17 @@ function createDraw(gl: WebGL2RenderingContext, color: WebGLUniformLocation | nu
   };
 }
 
-function renderScene(gl: WebGL2RenderingContext, pointSize: WebGLUniformLocation | null,
-  points: ControlPoints, draw: Draw): void {
+function renderScene(
+  gl: WebGL2RenderingContext,
+  pointSize: WebGLUniformLocation | null,
+  points: ControlPoints,
+  draw: Draw,
+): void {
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
   gl.clearColor(1, 1, 1, 1);
   gl.clear(gl.COLOR_BUFFER_BIT);
   gl.uniform1f(pointSize, 12);
-  draw(dashedPolygon(points), gl.LINES, [0.5, 0.5, 0.6]);
+  draw(buildDashedSegments(points), gl.LINES, [0.5, 0.5, 0.6]);
   draw(approximateBezier(points), gl.LINE_STRIP, [0.2, 0.8, 1]);
   draw(
     new Float32Array(points.flatMap((point) => [point.x, point.y])),

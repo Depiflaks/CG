@@ -38,3 +38,5 @@ export function bindCanvasResize(canvas: HTMLCanvasElement, render: () => void, 
     window.removeEventListener("resize", resize);
   };
 }
+
+// TODO: сделать так, чтобы пропорции не искажались

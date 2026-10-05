@@ -105,8 +105,8 @@ export class Renderer {
     gl.enable(gl.POLYGON_OFFSET_FILL);
     gl.cullFace(gl.FRONT);
     this.drawFaces(settings);
-    gl.cullFace(gl.BACK);
-    this.drawFaces(settings);
+    // gl.cullFace(gl.BACK);
+    // this.drawFaces(settings);
     gl.disable(gl.POLYGON_OFFSET_FILL);
     gl.disable(gl.CULL_FACE);
     gl.disable(gl.BLEND);

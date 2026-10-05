@@ -12,13 +12,13 @@ export class Application {
   private readonly unbindResize: () => void;
   private renderer: Renderer;
 
+  // TODO: сделать так, чтобы вращался объект, а не камера
   constructor(private readonly view: TaskView, private readonly gl: WebGL2RenderingContext) {
     this.renderer = new Renderer(gl, this.polyhedron);
     const signal = this.events.signal;
     new OrbitControls(view.canvas, this.camera, this.redraw, signal);
     view.opacity.addEventListener("input", this.redraw, { signal });
     view.lighting.addEventListener("change", this.redraw, { signal });
-    view.reset.addEventListener("click", this.reset, { signal });
     view.canvas.addEventListener("webglcontextlost", this.contextLost, { signal });
     view.canvas.addEventListener("webglcontextrestored", this.contextRestored, { signal });
     this.unbindResize = bindCanvasResize(view.canvas, this.resize, 2);
