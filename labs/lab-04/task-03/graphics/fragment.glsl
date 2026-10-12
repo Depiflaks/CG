@@ -10,19 +10,22 @@ uniform sampler2DArray uSurface;
 out vec4 outColor;
 
 void main() {
-    vec2 uv = vMaterial > 6.5 ? vec2(vUV.x, clamp(vUV.y, 0.002, 0.998)) : vUV;
+    vec2 uv = vUV;
     vec3 surface = texture(uSurface, vec3(uv, vMaterial)).rgb;
-    if (vMaterial > 6.5) {
+    if (vMaterial == 7.0) {
         outColor = vec4(surface, 1.0);
         return;
     }
-    vec3 normal = normalize(vNormal);
-    vec3 light = normalize(vec3(-0.45, 0.85, 0.3));
-    float brightness = 0.4 + 0.6 * max(dot(normal, light), 0.0);
-    float wallShade = mix(0.45, 1.0, smoothstep(0.0, 1.8, vPosition.y));
-    float shadow = abs(normal.y) < 0.5 ? wallShade : 1.0;
-    float distanceToEye = length(uEye - vPosition);
-    float fog = smoothstep(2.0, 12.0, distanceToEye);
-    vec3 color = mix(surface * brightness * shadow, vec3(0.65, 0.76, 0.86), fog);
+    vec3 light = uEye - vPosition;
+    float distanceToEye = length(light);
+    float diffuse = max(dot(normalize(vNormal), normalize(light)), 0.0);
+    float brightness = 0.3 + 0.7 * diffuse /
+                (1.0 + 0.035 * distanceToEye * distanceToEye);
+    float fog = clamp((distanceToEye - 2.0) / 10.0, 0.0, 1.0);
+    vec3 color = mix(
+            surface * brightness,
+            vec3(0.65, 0.76, 0.86),
+            fog
+        );
     outColor = vec4(color, 1.0);
 }
