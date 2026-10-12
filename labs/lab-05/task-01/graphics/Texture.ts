@@ -1,15 +1,28 @@
 import { requireResource } from "@/src/common/webgl/index.ts";
-import woodUrl from "../textures/wood.svg?url";
+import woodUrl from "../textures/wood.avif?url";
 
 export class Texture {
   private readonly texture: WebGLTexture;
   private readonly image = new Image();
 
-  constructor(private readonly gl: WebGL2RenderingContext, redraw: () => void, failed: () => void) {
+  constructor(
+    private readonly gl: WebGL2RenderingContext,
+    redraw: () => void,
+    failed: () => void,
+  ) {
     this.texture = requireResource(gl.createTexture());
     this.bind();
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
-      new Uint8Array([170, 112, 63, 255]));
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      0,
+      gl.RGBA,
+      1,
+      1,
+      0,
+      gl.RGBA,
+      gl.UNSIGNED_BYTE,
+      new Uint8Array([170, 112, 63, 255]),
+    );
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
@@ -17,9 +30,20 @@ export class Texture {
     this.image.onload = (): void => {
       if (gl.isContextLost()) return;
       this.bind();
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.image);
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        this.image,
+      );
       gl.generateMipmap(gl.TEXTURE_2D);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+      gl.texParameteri(
+        gl.TEXTURE_2D,
+        gl.TEXTURE_MIN_FILTER,
+        gl.LINEAR_MIPMAP_LINEAR,
+      );
       redraw();
     };
     this.image.onerror = failed;

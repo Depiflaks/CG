@@ -1,11 +1,15 @@
 import { bindCanvasResize } from "@/src/common/canvas/index.ts";
-import { OrbitCamera } from "./camera/OrbitCamera.ts";
-import { OrbitControls } from "./camera/OrbitControls.ts";
+import { OrbitCamera } from "@/src/common/graphics/OrbitCamera.ts";
+import { RotationControls } from "@/src/common/canvas/RotationControls.ts";
+import { ObjectRotation } from "@/src/common/graphics/ObjectRotation.ts";
 import { createDesk } from "./geometry/desk.ts";
 import { Renderer } from "./graphics/Renderer.ts";
 
 export class Application {
-  private readonly camera = new OrbitCamera();
+  private readonly camera = new OrbitCamera({
+    target: [0, 0.9, 0], yaw: 0.5, pitch: 0.38, minDistance: 3.4, maxDistance: 11,
+  });
+  private readonly rotation = new ObjectRotation();
   private readonly geometry = createDesk();
   private readonly events = new AbortController();
   private readonly unbindResize: () => void;
@@ -15,7 +19,8 @@ export class Application {
     private readonly hint: HTMLElement) {
     this.renderer = this.createRenderer();
     const signal = this.events.signal;
-    new OrbitControls(canvas, this.camera, this.redraw, signal);
+    new RotationControls(canvas, this.rotation, this.redraw, signal);
+    canvas.addEventListener("wheel", this.wheel, { signal, passive: false });
     canvas.addEventListener("webglcontextlost", this.contextLost, { signal });
     canvas.addEventListener("webglcontextrestored", this.contextRestored, { signal });
     this.unbindResize = bindCanvasResize(canvas, this.redraw, 2);
@@ -34,7 +39,24 @@ export class Application {
   }
 
   private readonly redraw = (): void => {
-    this.renderer.draw(this.camera.eye, this.camera.target);
+    this.renderer.draw(this.camera.eye, this.camera.target, this.centeredModelMatrix());
+  };
+
+  private centeredModelMatrix(): Float32Array {
+    const model = this.rotation.modelMatrix();
+    const center = this.camera.target[1];
+    model[12] = -(model[4] ?? 0) * center;
+    model[13] = center - (model[5] ?? 0) * center;
+    model[14] = -(model[6] ?? 0) * center;
+    return model;
+  }
+
+  private readonly wheel = (event: WheelEvent): void => {
+    event.preventDefault();
+    const canvas = event.currentTarget as HTMLCanvasElement;
+    const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? canvas.clientHeight : 1;
+    this.camera.zoom(Math.max(-300, Math.min(300, event.deltaY * unit)));
+    this.redraw();
   };
 
   private readonly contextLost = (event: Event): void => {

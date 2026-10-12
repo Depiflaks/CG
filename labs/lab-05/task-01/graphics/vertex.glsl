@@ -5,6 +5,7 @@ in vec2 aUV;
 in vec3 aColor;
 in float aTextured;
 uniform mat4 uView;
+uniform mat4 uModel;
 uniform mat4 uProjection;
 out vec3 vPosition;
 out vec3 vNormal;
@@ -13,10 +14,11 @@ out vec3 vColor;
 out float vTextured;
 
 void main() {
-    vPosition = aPosition;
-    vNormal = aNormal;
+    vec4 position = uModel * vec4(aPosition, 1.0);
+    vPosition = position.xyz;
+    vNormal = mat3(uModel) * aNormal;
     vUV = aUV;
     vColor = aColor;
     vTextured = aTextured;
-    gl_Position = uProjection * uView * vec4(aPosition, 1.0);
+    gl_Position = uProjection * uView * position;
 }
