@@ -11,9 +11,9 @@ export class Maze {
     this.carve();
   }
 
-  isOpen(x: number, z: number): boolean {
-    if (x < 0 || z < 0 || x >= MAZE_SIZE || z >= MAZE_SIZE) return false;
-    return this.cells[z * MAZE_SIZE + x] === 1;
+  isOpen(xIndex: number, zIndex: number): boolean {
+    if (xIndex < 0 || zIndex < 0 || xIndex >= MAZE_SIZE || zIndex >= MAZE_SIZE) return false;
+    return this.cells[zIndex * MAZE_SIZE + xIndex] === 1;
   }
 
   canOccupy(x: number, z: number, radius: number): boolean {

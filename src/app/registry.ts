@@ -63,7 +63,7 @@ export const labs: readonly LabDefinition[] = [
       },
       {
         id: "task-03",
-        name: "Task 3 — Прогулка по лабиринту",
+        name: "Task 3 — Лабиринт",
         mount: mountLab04Task03,
       },
     ],

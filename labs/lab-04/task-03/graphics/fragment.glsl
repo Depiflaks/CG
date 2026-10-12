@@ -11,7 +11,7 @@ void main() {
     float distanceToEye = length(light);
     float diffuse = max(dot(normalize(vNormal), normalize(light)), 0.0);
     float brightness = 0.3 + 0.7 * diffuse / (1.0 + 0.035 * distanceToEye * distanceToEye);
-    float fog = 1.0 - exp(-0.025 * distanceToEye);
-    vec3 color = mix(vColor * brightness, vec3(0.04, 0.05, 0.07), fog);
+    float fog = 1.0 - exp(-0.3 * distanceToEye);
+    vec3 color = mix(vColor * brightness, vec3(0.5, 0.5, 0.5), fog);
     outColor = vec4(color, 1.0);
 }
