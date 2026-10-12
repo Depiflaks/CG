@@ -1,0 +1,10 @@
+.maze-status {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: #101820;
+    color: #f0f4f8;
+    font: 16px / 1.6 system-ui, sans-serif;
+}

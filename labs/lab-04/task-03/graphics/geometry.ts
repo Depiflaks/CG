@@ -3,6 +3,7 @@ import { BLOCK_SIZE, DIRECTIONS, MAZE_SIZE, Maze, WALL_HEIGHT } from "../Maze.ts
 
 export const FLOOR_MATERIAL = 6;
 export const SKY_MATERIAL = 7;
+
 const WALL_CORNERS: readonly (readonly Vector3[])[] = [
   [[1, 0, 0], [1, 1, 0], [1, 1, 1], [1, 0, 1]],
   [[1, 0, 1], [1, 1, 1], [0, 1, 1], [0, 0, 1]],

@@ -3,6 +3,7 @@ import { createProgram, requireResource } from "@/src/common/webgl/index.ts";
 import type { Player } from "../camera/Player.ts";
 import { Mesh } from "./Mesh.ts";
 import { Textures } from "./Textures.ts";
+import type { TextureImages } from "./materials.ts";
 import { createSkyGeometry } from "./sky.ts";
 import vertexSource from "./vertex.glsl?raw";
 import fragmentSource from "./fragment.glsl?raw";
@@ -16,11 +17,11 @@ export class Renderer {
   private readonly projection: WebGLUniformLocation;
   private readonly eye: WebGLUniformLocation;
 
-  constructor(private readonly gl: WebGL2RenderingContext, geometry: Float32Array) {
+  constructor(private readonly gl: WebGL2RenderingContext, geometry: Float32Array, images: TextureImages) {
     this.program = createProgram(gl, vertexSource, fragmentSource);
     this.mesh = new Mesh(gl, geometry);
     this.sky = new Mesh(gl, createSkyGeometry());
-    this.textures = new Textures(gl);
+    this.textures = new Textures(gl, images);
     this.view = requireResource(gl.getUniformLocation(this.program, "uView"));
     this.projection = requireResource(gl.getUniformLocation(this.program, "uProjection"));
     this.eye = requireResource(gl.getUniformLocation(this.program, "uEye"));
