@@ -5,7 +5,7 @@ import { Application } from "./Application.ts";
 export function mount(container: HTMLElement): () => void {
   const canvas = createCanvas({
     tabIndex: 0,
-    label: "Hyperbolic paraboloid. Drag or use arrow keys to rotate, scroll to zoom.",
+    label: "Hyperbolic paraboloid. Drag or use arrow keys to rotate the object.",
   });
   container.append(canvas);
   try {

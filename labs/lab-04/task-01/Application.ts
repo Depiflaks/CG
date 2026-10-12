@@ -1,10 +1,10 @@
 import { bindCanvasResize } from "@/src/common/canvas/index.ts";
-import { ObjectRotation } from "./camera/ObjectRotation.ts";
-import { OrbitControls } from "./camera/RotationControls.ts";
+import { ObjectRotation } from "@/src/common/graphics/ObjectRotation.ts";
+import { RotationControls } from "@/src/common/canvas/RotationControls.ts";
 import { createPolyhedron } from "./geometry/polyhedron.ts";
 import { Renderer } from "./graphics/Renderer.ts";
 import { showStatus, type TaskView } from "./view.ts";
-import { OrbitCamera } from "../task-02/camera/OrbitCamera.ts";
+import { OrbitCamera } from "@/src/common/graphics/OrbitCamera.ts";
 
 export class Application {
   private readonly rotation = new ObjectRotation();
@@ -17,7 +17,7 @@ export class Application {
   constructor(private readonly view: TaskView, private readonly gl: WebGL2RenderingContext) {
     this.renderer = new Renderer(gl, this.polyhedron);
     const signal = this.events.signal;
-    new OrbitControls(view.canvas, this.rotation, this.redraw, signal);
+    new RotationControls(view.canvas, this.rotation, this.redraw, signal);
     view.opacity.addEventListener("input", this.redraw, { signal });
     view.lighting.addEventListener("change", this.redraw, { signal });
     view.canvas.addEventListener("webglcontextlost", this.contextLost, { signal });

@@ -1,6 +1,6 @@
 import { normalize } from "@/src/common/graphics/vector3.ts";
 
-const extent = 1.4;
+const extent = 1.7;
 const subdivisions = 96;
 const stride = subdivisions + 1;
 

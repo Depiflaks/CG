@@ -1,6 +1,6 @@
-import { ObjectRotation } from "./ObjectRotation.ts";
+import { ObjectRotation } from "../graphics/ObjectRotation.ts";
 
-export class OrbitControls {
+export class RotationControls {
   private pointer: number | null = null;
   private x = 0;
   private y = 0;

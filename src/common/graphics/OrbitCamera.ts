@@ -7,7 +7,11 @@ export class OrbitCamera {
 
   get eye(): Vector3 {
     const radius = this.distance * Math.cos(this.pitch);
-    return [radius * Math.sin(this.yaw), this.distance * Math.sin(this.pitch), radius * Math.cos(this.yaw)];
+    return [
+      radius * Math.sin(this.yaw),
+      this.distance * Math.sin(this.pitch),
+      radius * Math.cos(this.yaw),
+    ];
   }
 
   rotate(dx: number, dy: number): void {
@@ -16,6 +20,9 @@ export class OrbitCamera {
   }
 
   zoom(delta: number): void {
-    this.distance = Math.max(3.6, Math.min(12, this.distance * Math.exp(delta * 0.001)));
+    this.distance = Math.max(
+      3.6,
+      Math.min(12, this.distance * Math.exp(delta * 0.001)),
+    );
   }
 }

@@ -14,7 +14,7 @@ export class Renderer {
   constructor(private readonly gl: WebGL2RenderingContext, surface: SurfaceMesh) {
     this.program = createProgram(gl, vertexSource, fragmentSource);
     this.mesh = new Mesh(gl, this.program, surface);
-    this.uniforms = Object.fromEntries(["uView", "uProjection", "uEye"]
+    this.uniforms = Object.fromEntries(["uModel", "uView", "uProjection", "uEye"]
       .map((name) => [name, requireResource(gl.getUniformLocation(this.program, name))]));
     gl.clearColor(0.93, 0.95, 0.98, 1);
     gl.enable(gl.DEPTH_TEST);
@@ -24,13 +24,14 @@ export class Renderer {
     gl.frontFace(gl.CCW);
   }
 
-  draw(eye: Vector3): void {
+  draw(eye: Vector3, model: Float32Array): void {
     const gl = this.gl;
     if (gl.isContextLost()) return;
     const aspect = gl.canvas.width / gl.canvas.height;
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.useProgram(this.program);
+    gl.uniformMatrix4fv(this.uniform("uModel"), false, model);
     gl.uniformMatrix4fv(this.uniform("uView"), false, viewMatrix(eye));
     gl.uniformMatrix4fv(this.uniform("uProjection"), false, projectionMatrix(aspect, 2.1 * Math.min(1, aspect)));
     gl.uniform3fv(this.uniform("uEye"), eye);
