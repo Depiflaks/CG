@@ -29,7 +29,7 @@ export class Renderer {
     this.faces = new VertexBuffer(gl, this.program, faceVertices(polyhedron));
     this.edges = new VertexBuffer(gl, this.program, edgeVertices(polyhedron));
     this.uniforms = Object.fromEntries(
-      ["uView", "uProjection", "uEye", "uAlpha", "uLighting"].map((name) => [
+      ["uView", "uModel", "uProjection", "uEye", "uAlpha", "uLighting"].map((name) => [
         name,
         requireResource(gl.getUniformLocation(this.program, name)),
       ]),
@@ -47,13 +47,14 @@ export class Renderer {
     gl.polygonOffset(1, 1);
   }
 
-  draw(eye: Vector3, settings: RenderSettings): void {
+  draw(eye: Vector3, model: Float32Array, settings: RenderSettings): void {
     const gl = this.gl;
     if (gl.isContextLost()) return;
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.depthMask(true);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.useProgram(this.program);
+    gl.uniformMatrix4fv(this.uniform("uModel"), false, model);
     gl.uniformMatrix4fv(this.uniform("uView"), false, viewMatrix(eye));
     gl.uniformMatrix4fv(
       this.uniform("uProjection"),
@@ -105,8 +106,8 @@ export class Renderer {
     gl.enable(gl.POLYGON_OFFSET_FILL);
     gl.cullFace(gl.FRONT);
     this.drawFaces(settings);
-    // gl.cullFace(gl.BACK);
-    // this.drawFaces(settings);
+    gl.cullFace(gl.BACK);
+    this.drawFaces(settings);
     gl.disable(gl.POLYGON_OFFSET_FILL);
     gl.disable(gl.CULL_FACE);
     gl.disable(gl.BLEND);
