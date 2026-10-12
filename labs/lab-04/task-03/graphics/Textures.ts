@@ -3,30 +3,21 @@ import type { TextureImages } from "./materials.ts";
 
 export class Textures {
   private readonly surface: WebGLTexture;
-  private readonly shadow: WebGLTexture;
 
   constructor(private readonly gl: WebGL2RenderingContext, images: TextureImages) {
     this.surface = requireResource(gl.createTexture());
-    this.shadow = requireResource(gl.createTexture());
     this.bind();
-    gl.activeTexture(gl.TEXTURE0);
     this.uploadMaterials(images.materials);
-    gl.activeTexture(gl.TEXTURE1);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, images.shadow);
-    this.configure(gl.TEXTURE_2D, gl.CLAMP_TO_EDGE);
   }
 
   bind(): void {
     const gl = this.gl;
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D_ARRAY, this.surface);
-    gl.activeTexture(gl.TEXTURE1);
-    gl.bindTexture(gl.TEXTURE_2D, this.shadow);
   }
 
   dispose(): void {
     this.gl.deleteTexture(this.surface);
-    this.gl.deleteTexture(this.shadow);
   }
 
   private uploadMaterials(images: readonly HTMLImageElement[]): void {
@@ -35,7 +26,7 @@ export class Textures {
     const width = first.naturalWidth;
     const height = first.naturalHeight;
     if (images.some((image) => image.naturalWidth !== width || image.naturalHeight !== height)) {
-      throw new Error("Текстуры стен, пола и неба должны иметь одинаковые размеры.");
+      throw new Error("Error: size missmatch");
     }
     const levels = 1 + Math.floor(Math.log2(Math.max(width, height)));
     gl.texStorage3D(gl.TEXTURE_2D_ARRAY, levels, gl.RGBA8, width, height, images.length);
@@ -43,15 +34,16 @@ export class Textures {
       gl.texSubImage3D(gl.TEXTURE_2D_ARRAY, 0, 0, 0, layer,
         width, height, 1, gl.RGBA, gl.UNSIGNED_BYTE, image);
     });
-    this.configure(gl.TEXTURE_2D_ARRAY, gl.REPEAT);
+    this.configure();
   }
 
-  private configure(target: number, wrap: number): void {
+  private configure(): void {
     const gl = this.gl;
+    const target = gl.TEXTURE_2D_ARRAY;
     gl.generateMipmap(target);
     gl.texParameteri(target, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
     gl.texParameteri(target, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(target, gl.TEXTURE_WRAP_S, wrap);
-    gl.texParameteri(target, gl.TEXTURE_WRAP_T, wrap);
+    gl.texParameteri(target, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(target, gl.TEXTURE_WRAP_T, gl.REPEAT);
   }
 }

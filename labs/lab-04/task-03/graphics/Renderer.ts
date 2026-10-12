@@ -27,7 +27,6 @@ export class Renderer {
     this.eye = requireResource(gl.getUniformLocation(this.program, "uEye"));
     gl.useProgram(this.program);
     gl.uniform1i(requireResource(gl.getUniformLocation(this.program, "uSurface")), 0);
-    gl.uniform1i(requireResource(gl.getUniformLocation(this.program, "uShadow")), 1);
     gl.clearColor(0.65, 0.76, 0.86, 1);
     gl.enable(gl.DEPTH_TEST);
     gl.enable(gl.CULL_FACE);

@@ -9,11 +9,11 @@ export class Mesh {
     this.array = requireResource(gl.createVertexArray());
     gl.bindVertexArray(this.array);
     this.vertices = createBuffer(gl, data);
-    this.count = data.length / 11;
-    const attributes = [[3, 0], [3, 3], [2, 6], [2, 8], [1, 10]] as const;
+    this.count = data.length / 9;
+    const attributes = [[3, 0], [3, 3], [2, 6], [1, 8]] as const;
     attributes.forEach(([size, offset], location) => {
       gl.enableVertexAttribArray(location);
-      gl.vertexAttribPointer(location, size, gl.FLOAT, false, 44, offset * 4);
+      gl.vertexAttribPointer(location, size, gl.FLOAT, false, 36, offset * 4);
     });
     gl.bindVertexArray(null);
   }

@@ -6,14 +6,12 @@ import tileUrl from "../textures/tile.png?url";
 import sandstoneUrl from "../textures/sandstone.png?url";
 import floorUrl from "../textures/floor.png?url";
 import skyUrl from "../textures/sky.png?url";
-import shadowUrl from "../textures/shadow.png?url";
 
 const MATERIAL_URLS = [brickUrl, stoneUrl, woodUrl, metalUrl,
   tileUrl, sandstoneUrl, floorUrl, skyUrl] as const;
 
 export interface TextureImages {
   readonly materials: readonly HTMLImageElement[];
-  readonly shadow: HTMLImageElement;
 }
 
 async function loadImage(url: string, signal: AbortSignal): Promise<HTMLImageElement> {
@@ -35,9 +33,6 @@ async function loadImage(url: string, signal: AbortSignal): Promise<HTMLImageEle
 }
 
 export async function loadTextureImages(signal: AbortSignal): Promise<TextureImages> {
-  const [materials, shadow] = await Promise.all([
-    Promise.all(MATERIAL_URLS.map((url) => loadImage(url, signal))),
-    loadImage(shadowUrl, signal),
-  ]);
-  return { materials, shadow };
+  const materials = await Promise.all(MATERIAL_URLS.map((url) => loadImage(url, signal)));
+  return { materials };
 }

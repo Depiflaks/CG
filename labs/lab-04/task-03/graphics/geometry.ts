@@ -11,7 +11,7 @@ const WALL_CORNERS: readonly (readonly Vector3[])[] = [
   [[0, 0, 0], [0, 1, 0], [1, 1, 0], [1, 0, 0]],
 ];
 const WALL_UV = [[0, 0], [0, 1.4], [1, 1.4], [1, 0]] as const;
-const SHADOW_UV = [[0, 0], [0, 1], [1, 1], [1, 0]] as const;
+const FLOOR_UV = [[0, 0], [0, 1], [1, 1], [1, 0]] as const;
 
 export function wallMaterial(x: number, z: number): number {
   return (Math.floor(x / 3) + Math.floor(z / 3) * 3) % 6;
@@ -20,10 +20,9 @@ export function wallMaterial(x: number, z: number): number {
 function quad(data: number[], corners: readonly Vector3[], normal: Vector3, material: number): void {
   for (const index of [0, 1, 2, 0, 2, 3]) {
     const point = corners[index];
-    const uv = normal[1] === 0 ? WALL_UV[index] : SHADOW_UV[index];
-    const shadow = SHADOW_UV[index];
-    if (point === undefined || uv === undefined || shadow === undefined) throw new Error("Missing vertex.");
-    data.push(...point, ...normal, ...uv, ...shadow, material);
+    const uv = normal[1] === 0 ? WALL_UV[index] : FLOOR_UV[index];
+    if (point === undefined || uv === undefined) throw new Error("Missing vertex.");
+    data.push(...point, ...normal, ...uv, material);
   }
 }
 
