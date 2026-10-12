@@ -9,6 +9,7 @@ export class Player {
   private x = BLOCK_SIZE * 1.5;
   private z = BLOCK_SIZE * 1.5;
   private yaw: number;
+  private pitch = 0;
 
   constructor(private readonly maze: Maze) {
     this.yaw = maze.isOpen(2, 1) ? Math.PI / 2 : Math.PI;
@@ -19,7 +20,14 @@ export class Player {
   }
 
   get target(): Vector3 {
-    return [this.x + Math.sin(this.yaw), 1.65, this.z - Math.cos(this.yaw)];
+    const horizontal = Math.cos(this.pitch);
+    return [this.x + Math.sin(this.yaw) * horizontal,
+      1.65 + Math.sin(this.pitch), this.z - Math.cos(this.yaw) * horizontal];
+  }
+
+  look(dx: number, dy: number): void {
+    this.yaw = (this.yaw + dx * 0.003) % (Math.PI * 2);
+    this.pitch = Math.max(-1.4, Math.min(1.4, this.pitch - dy * 0.003));
   }
 
   update(forward: number, sideways: number, turn: number, seconds: number): void {

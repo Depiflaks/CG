@@ -1,7 +1,7 @@
 import { normalize } from "@/src/common/graphics/vector3.ts";
 
 const extent = 1.7;
-const subdivisions = 96;
+const subdivisions = 20;
 const stride = subdivisions + 1;
 
 export interface SurfaceMesh {

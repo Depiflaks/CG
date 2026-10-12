@@ -7,7 +7,7 @@ uniform vec3 uEye;
 uniform bool uLighting;
 uniform float uAlpha;
 out vec4 outColor;
-
+// поправить вращение
 vec3 illuminate() {
     vec3 normal = normalize(gl_FrontFacing ? vNormal : -vNormal);
     vec3 light = normalize(vec3(3.0, 4.0, 5.0) - vPosition);

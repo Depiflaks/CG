@@ -1,17 +1,30 @@
 #version 300 es
 precision highp float;
+precision highp sampler2DArray;
 in vec3 vPosition;
 in vec3 vNormal;
-in vec3 vColor;
+in vec2 vUV;
+in vec2 vShadowUV;
+flat in float vMaterial;
 uniform vec3 uEye;
+uniform sampler2DArray uSurface;
+uniform sampler2D uShadow;
 out vec4 outColor;
 
 void main() {
-    vec3 light = uEye - vPosition;
-    float distanceToEye = length(light);
-    float diffuse = max(dot(normalize(vNormal), normalize(light)), 0.0);
-    float brightness = 0.3 + 0.7 * diffuse / (1.0 + 0.035 * distanceToEye * distanceToEye);
-    float fog = 1.0 - exp(-0.3 * distanceToEye);
-    vec3 color = mix(vColor * brightness, vec3(0.5, 0.5, 0.5), fog);
+    vec2 uv = vMaterial > 6.5 ? vec2(vUV.x, clamp(vUV.y, 0.002, 0.998)) : vUV;
+    vec3 surface = texture(uSurface, vec3(uv, vMaterial)).rgb;
+    if (vMaterial > 6.5) {
+        outColor = vec4(surface, 1.0);
+        return;
+    }
+    vec3 normal = normalize(vNormal);
+    vec3 light = normalize(vec3(-0.45, 0.85, 0.3));
+    float brightness = 0.55 + 0.45 * max(dot(normal, light), 0.0);
+    vec2 shadowUV = vec2(vShadowUV.x, 1.0 - vShadowUV.y);
+    float shadow = abs(normal.y) < 0.5 ? texture(uShadow, shadowUV).r : 1.0;
+    float distanceToEye = length(uEye - vPosition);
+    float fog = 1.0 - exp(-pow(distanceToEye * 0.035, 2.0));
+    vec3 color = mix(surface * brightness * shadow, vec3(0.65, 0.76, 0.86), fog);
     outColor = vec4(color, 1.0);
 }
