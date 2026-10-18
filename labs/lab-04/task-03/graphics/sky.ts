@@ -19,7 +19,7 @@ function skyQuad(data: number[], column: number, row: number): void {
     if (corner === undefined) throw new Error("Missing sky vertex.");
     const u = corner[0] / SEGMENTS;
     const v = corner[1] / RINGS;
-    data.push(...point(u, v), 0, 0, 0, u, v, SKY_MATERIAL);
+    data.push(...point(u, v), 0, 0, 0, u, v, SKY_MATERIAL, -1);
   }
 }
 

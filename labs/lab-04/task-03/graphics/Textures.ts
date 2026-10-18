@@ -3,24 +3,32 @@ import type { TextureImages } from "./materials.ts";
 
 export class Textures {
   private readonly surface: WebGLTexture;
+  private readonly paintings: WebGLTexture;
 
   constructor(private readonly gl: WebGL2RenderingContext, images: TextureImages) {
     this.surface = requireResource(gl.createTexture());
+    this.paintings = requireResource(gl.createTexture());
     this.bind();
-    this.uploadMaterials(images.materials);
+    gl.activeTexture(gl.TEXTURE0);
+    this.uploadImages(images.materials, gl.REPEAT);
+    gl.activeTexture(gl.TEXTURE1);
+    this.uploadImages(images.paintings, gl.CLAMP_TO_EDGE);
   }
 
   bind(): void {
     const gl = this.gl;
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D_ARRAY, this.surface);
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D_ARRAY, this.paintings);
   }
 
   dispose(): void {
     this.gl.deleteTexture(this.surface);
+    this.gl.deleteTexture(this.paintings);
   }
 
-  private uploadMaterials(images: readonly HTMLImageElement[]): void {
+  private uploadImages(images: readonly HTMLImageElement[], wrap: number): void {
     const gl = this.gl;
     const first = requireResource(images[0] ?? null, "Не найдены текстуры материалов.");
     const width = first.naturalWidth;
@@ -34,16 +42,16 @@ export class Textures {
       gl.texSubImage3D(gl.TEXTURE_2D_ARRAY, 0, 0, 0, layer,
         width, height, 1, gl.RGBA, gl.UNSIGNED_BYTE, image);
     });
-    this.configure();
+    this.configure(wrap);
   }
 
-  private configure(): void {
+  private configure(wrap: number): void {
     const gl = this.gl;
     const target = gl.TEXTURE_2D_ARRAY;
     gl.generateMipmap(target);
     gl.texParameteri(target, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
     gl.texParameteri(target, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(target, gl.TEXTURE_WRAP_S, gl.REPEAT);
-    gl.texParameteri(target, gl.TEXTURE_WRAP_T, gl.REPEAT);
+    gl.texParameteri(target, gl.TEXTURE_WRAP_S, wrap);
+    gl.texParameteri(target, gl.TEXTURE_WRAP_T, wrap);
   }
 }

@@ -10,19 +10,20 @@ const WALL_CORNERS: readonly (readonly Vector3[])[] = [
   [[0, 0, 1], [0, 1, 1], [0, 1, 0], [0, 0, 0]],
   [[0, 0, 0], [0, 1, 0], [1, 1, 0], [1, 0, 0]],
 ];
-const WALL_UV = [[0, 0], [0, 1.4], [1, 1.4], [1, 0]] as const;
+const WALL_UV = [[1, 0], [1, 1.4], [0, 1.4], [0, 0]] as const;
 const FLOOR_UV = [[0, 0], [0, 1], [1, 1], [1, 0]] as const;
 
 export function wallMaterial(x: number, z: number): number {
   return (Math.floor(x / 3) + Math.floor(z / 3) * 3) % 6;
 }
 
-function quad(data: number[], corners: readonly Vector3[], normal: Vector3, material: number): void {
+function quad(data: number[], corners: readonly Vector3[], normal: Vector3,
+  material: number, painting = -1): void {
   for (const index of [0, 1, 2, 0, 2, 3]) {
     const point = corners[index];
     const uv = normal[1] === 0 ? WALL_UV[index] : FLOOR_UV[index];
     if (point === undefined || uv === undefined) throw new Error("Missing vertex.");
-    data.push(...point, ...normal, ...uv, material);
+    data.push(...point, ...normal, ...uv, material, painting);
   }
 }
 
@@ -32,6 +33,11 @@ function horizontal(data: number[], x: number, z: number, height: number, materi
   quad(data, corners, [0, 1, 0], material);
 }
 
+function wallPainting(x: number, z: number, face: number): number {
+  const seed = x * 17 + z * 31 + face * 13;
+  return seed % 5 === 0 || (x === 1 && z === 1) ? seed % 3 : -1;
+}
+
 function walls(data: number[], maze: Maze, x: number, z: number): void {
   DIRECTIONS.forEach(([dx, dz], index) => {
     if (maze.isOpen(x + dx, z + dz)) return;
@@ -39,7 +45,8 @@ function walls(data: number[], maze: Maze, x: number, z: number): void {
     if (corners === undefined) throw new Error("Missing wall vertices.");
     const points = corners.map(([px, py, pz]): Vector3 =>
       [(x + px) * BLOCK_SIZE, py * WALL_HEIGHT, (z + pz) * BLOCK_SIZE]);
-    quad(data, points.reverse(), [-dx, 0, -dz], wallMaterial(x + dx, z + dz));
+    quad(data, points.reverse(), [-dx, 0, -dz],
+      wallMaterial(x + dx, z + dz), wallPainting(x, z, index));
   });
 }
 
