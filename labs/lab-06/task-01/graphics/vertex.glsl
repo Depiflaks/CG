@@ -1,0 +1,18 @@
+#version 300 es
+in vec3 aPosition;
+in vec3 aNormal;
+in vec2 aUV;
+uniform mat4 uModel;
+uniform mat4 uView;
+uniform mat4 uProjection;
+out vec3 vPosition;
+out vec3 vNormal;
+out vec2 vUV;
+
+void main() {
+    vec4 position = uModel * vec4(aPosition, 1.0);
+    vPosition = position.xyz;
+    vNormal = mat3(uModel) * aNormal;
+    vUV = aUV;
+    gl_Position = uProjection * uView * position;
+}

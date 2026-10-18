@@ -6,6 +6,7 @@ import { mount as mountLab04Task01 } from "@/labs/lab-04/task-01/index.ts";
 import { mount as mountLab04Task02 } from "@/labs/lab-04/task-02/index.ts";
 import { mount as mountLab04Task03 } from "@/labs/lab-04/task-03/index.ts";
 import { mount as mountLab05Task01 } from "@/labs/lab-05/task-01/index.ts";
+import { mount as mountLab06Task01 } from "@/labs/lab-06/task-01/index.ts";
 import type { LabDefinition } from "@/src/app/types.ts";
 
 export const labs: readonly LabDefinition[] = [
@@ -76,6 +77,17 @@ export const labs: readonly LabDefinition[] = [
         id: "task-01",
         name: "Task 1 — Компьютерный стол",
         mount: mountLab05Task01,
+      },
+    ],
+  },
+  {
+    id: "lab-06",
+    name: "Lab 6",
+    tasks: [
+      {
+        id: "task-01",
+        name: "Task 1 — Комната из OBJ-моделей",
+        mount: mountLab06Task01,
       },
     ],
   },

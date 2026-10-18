@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="64" viewBox="0 0 128 64">
+  <defs>
+    <pattern id="keys" width="12" height="12" patternUnits="userSpaceOnUse">
+      <rect width="12" height="12" fill="#52565b"/>
+      <rect x="1" y="1" width="10" height="10" rx="1" fill="#d4d5d5"/>
+    </pattern>
+  </defs>
+  <rect width="128" height="64" fill="url(#keys)"/>
+</svg>

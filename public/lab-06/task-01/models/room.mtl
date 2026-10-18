@@ -1,0 +1,100 @@
+newmtl floor
+Ka 0.32 0.26 0.19
+Kd 0.9 0.82 0.67
+Ks 0.18 0.18 0.18
+Ns 48
+map_Kd wood.svg
+
+newmtl wood
+Ka 0.26 0.17 0.09
+Kd 0.72 0.48 0.27
+Ks 0.22 0.19 0.15
+Ns 64
+map_Kd wood.svg
+
+newmtl wall
+Ka 0.42 0.43 0.4
+Kd 0.84 0.86 0.8
+Ks 0.02 0.02 0.02
+Ns 8
+
+newmtl metal
+Ka 0.05 0.06 0.07
+Kd 0.13 0.16 0.18
+Ks 0.75 0.75 0.75
+Ns 160
+
+newmtl fabric
+Ka 0.1 0.17 0.18
+Kd 0.2 0.4 0.43
+Ks 0.04 0.04 0.04
+Ns 8
+map_Kd fabric.svg
+
+newmtl sage
+Ka 0.18 0.24 0.15
+Kd 0.42 0.57 0.35
+Ks 0.08 0.08 0.08
+Ns 16
+
+newmtl rug
+Ka 0.29 0.16 0.1
+Kd 0.78 0.42 0.28
+Ks 0.02 0.02 0.02
+Ns 4
+map_Kd fabric.svg
+
+newmtl screen
+Ka 0.15 0.3 0.36
+Kd 0.22 0.49 0.59
+Ks 0.7 0.7 0.7
+Ns 200
+
+newmtl keys
+Ka 0.18 0.19 0.2
+Kd 0.35 0.37 0.4
+Ks 0.18 0.18 0.18
+Ns 32
+map_Kd keys.svg
+
+newmtl ceramic
+Ka 0.34 0.28 0.21
+Kd 0.83 0.69 0.51
+Ks 0.5 0.5 0.5
+Ns 96
+
+newmtl art
+Ka 0.24 0.3 0.31
+Kd 0.58 0.76 0.77
+Ks 0.02 0.02 0.02
+Ns 8
+
+newmtl leaf
+Ka 0.05 0.16 0.06
+Kd 0.13 0.44 0.18
+Ks 0.1 0.15 0.1
+Ns 24
+
+newmtl soil
+Ka 0.07 0.04 0.02
+Kd 0.17 0.1 0.05
+Ks 0 0 0
+Ns 1
+
+newmtl book_red
+Ka 0.28 0.08 0.06
+Kd 0.67 0.2 0.14
+Ks 0.08 0.08 0.08
+Ns 16
+
+newmtl book_blue
+Ka 0.07 0.12 0.23
+Kd 0.18 0.32 0.58
+Ks 0.08 0.08 0.08
+Ns 16
+
+newmtl shade
+Ka 0.45 0.38 0.25
+Kd 0.97 0.85 0.59
+Ks 0.08 0.08 0.08
+Ns 16
