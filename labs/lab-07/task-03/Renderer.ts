@@ -12,7 +12,6 @@ export class Renderer {
   private readonly view: WebGLUniformLocation;
   private readonly projection: WebGLUniformLocation;
   private readonly morph: WebGLUniformLocation;
-  private readonly wireframe: WebGLUniformLocation;
 
   constructor(private readonly gl: WebGL2RenderingContext) {
     this.program = createProgram(gl, vertexSource, fragmentSource);
@@ -21,7 +20,6 @@ export class Renderer {
       this.view = this.uniform("uView");
       this.projection = this.uniform("uProjection");
       this.morph = this.uniform("uMorph");
-      this.wireframe = this.uniform("uWireframe");
       this.mesh = new Mesh(gl, this.program);
     } catch (error) {
       gl.deleteProgram(this.program);
@@ -33,7 +31,7 @@ export class Renderer {
     gl.disable(gl.BLEND);
   }
 
-  draw(eye: Vector3, model: Float32Array, amount: number, wireframe: boolean): void {
+  draw(eye: Vector3, model: Float32Array, amount: number): void {
     const gl = this.gl;
     if (gl.isContextLost()) return;
     const aspect = gl.canvas.width / gl.canvas.height;
@@ -45,8 +43,7 @@ export class Renderer {
     gl.uniformMatrix4fv(this.projection, false,
       projectionMatrix(aspect, 2.2 * Math.min(1, aspect)));
     gl.uniform1f(this.morph, amount);
-    gl.uniform1i(this.wireframe, wireframe ? 1 : 0);
-    this.mesh.draw(wireframe);
+    this.mesh.draw();
   }
 
   dispose(): void {

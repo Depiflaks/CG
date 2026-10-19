@@ -13,9 +13,8 @@ function createVertices(): Float32Array {
   return vertices;
 }
 
-function createIndices(): { triangles: Uint16Array; lines: Uint16Array } {
+function createIndices(): Uint16Array {
   const triangles: number[] = [];
-  const lines: number[] = [];
   for (let row = 0; row < SEGMENTS; row += 1) {
     for (let column = 0; column < SEGMENTS; column += 1) {
       const a = row * (SEGMENTS + 1) + column;
@@ -23,14 +22,11 @@ function createIndices(): { triangles: Uint16Array; lines: Uint16Array } {
       const c = a + SEGMENTS + 1;
       const d = c + 1;
       triangles.push(a, b, c, b, d, c);
-      lines.push(a, b, a, c, b, c);
-      if (row === SEGMENTS - 1) lines.push(c, d);
-      if (column === SEGMENTS - 1) lines.push(b, d);
     }
   }
-  return { triangles: new Uint16Array(triangles), lines: new Uint16Array(lines) };
+  return new Uint16Array(triangles);
 }
 
 export function createPlane() {
-  return { vertices: createVertices(), ...createIndices() };
+  return { vertices: createVertices(), triangles: createIndices() };
 }

@@ -32,7 +32,7 @@ export class Application {
 
   private readonly redraw = (): void => {
     this.renderer.draw(this.eye, this.rotation.modelMatrix([0, 0, 0.35]),
-      Number(this.input.value), false);
+      Number(this.input.value));
   };
 
   private get eye(): [number, number, number] {

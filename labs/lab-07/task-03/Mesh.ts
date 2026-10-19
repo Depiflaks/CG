@@ -6,7 +6,6 @@ export class Mesh {
   private readonly vertices: WebGLBuffer;
   private readonly indices: WebGLBuffer;
   private readonly triangleCount: number;
-  private readonly lineCount: number;
 
   constructor(private readonly gl: WebGL2RenderingContext, program: WebGLProgram) {
     this.vao = requireResource(gl.createVertexArray());
@@ -16,7 +15,6 @@ export class Mesh {
       this.indices = requireResource(gl.createBuffer());
       const plane = createPlane();
       this.triangleCount = plane.triangles.length;
-      this.lineCount = plane.lines.length;
       this.upload(program, plane);
     } catch (error) {
       this.dispose();
@@ -26,12 +24,10 @@ export class Mesh {
     }
   }
 
-  draw(wireframe: boolean): void {
+  draw(): void {
     const gl = this.gl;
     gl.bindVertexArray(this.vao);
-    gl.drawElements(wireframe ? gl.LINES : gl.TRIANGLES,
-      wireframe ? this.lineCount : this.triangleCount, gl.UNSIGNED_SHORT,
-      wireframe ? this.triangleCount * Uint16Array.BYTES_PER_ELEMENT : 0);
+    gl.drawElements(gl.TRIANGLES, this.triangleCount, gl.UNSIGNED_SHORT, 0);
     gl.bindVertexArray(null);
   }
 
@@ -47,10 +43,7 @@ export class Mesh {
     const position = gl.getAttribLocation(program, "aPosition");
     gl.enableVertexAttribArray(position);
     gl.vertexAttribPointer(position, 3, gl.FLOAT, false, 0, 0);
-    const indices = new Uint16Array(this.triangleCount + this.lineCount);
-    indices.set(plane.triangles);
-    indices.set(plane.lines, this.triangleCount);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indices);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, plane.triangles, gl.STATIC_DRAW);
   }
 }
