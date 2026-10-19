@@ -6,8 +6,8 @@ import { createSurface } from "./geometry.ts";
 import { Renderer } from "./graphics/Renderer.ts";
 
 export class Application {
-  private readonly rotation = new ObjectRotation();
   private readonly camera = new OrbitCamera();
+  private readonly rotation = new ObjectRotation(this.camera.eye, this.camera.target);
   private readonly surface = createSurface();
   private readonly events = new AbortController();
   private readonly unbindResize: () => void;

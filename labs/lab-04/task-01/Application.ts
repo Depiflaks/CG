@@ -7,8 +7,8 @@ import { showStatus, type TaskView } from "./view.ts";
 import { OrbitCamera } from "@/src/common/graphics/OrbitCamera.ts";
 
 export class Application {
-  private readonly rotation = new ObjectRotation();
   private readonly camera = new OrbitCamera();
+  private readonly rotation = new ObjectRotation(this.camera.eye, this.camera.target);
   private readonly polyhedron = createPolyhedron();
   private readonly events = new AbortController();
   private readonly unbindResize: () => void;

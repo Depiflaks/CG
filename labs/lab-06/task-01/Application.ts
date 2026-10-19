@@ -18,7 +18,7 @@ export class Application {
   private readonly camera = new OrbitCamera({
     target: [0, 1, 0], yaw: 0.6, pitch: 0.55, distance: 12,
   });
-  private readonly rotation = new ObjectRotation();
+  private readonly rotation = new ObjectRotation(this.camera.eye, this.camera.target);
   private readonly events = new AbortController();
   private readonly unbindResize: () => void;
   private parts: ModelPart[] = [];

@@ -8,6 +8,7 @@ import fragmentSource from "./fragment.glsl?raw";
 export class Renderer {
   private readonly program: WebGLProgram;
   private readonly mesh: Mesh;
+  private readonly model: WebGLUniformLocation;
   private readonly view: WebGLUniformLocation;
   private readonly projection: WebGLUniformLocation;
   private readonly morph: WebGLUniformLocation;
@@ -16,6 +17,7 @@ export class Renderer {
   constructor(private readonly gl: WebGL2RenderingContext) {
     this.program = createProgram(gl, vertexSource, fragmentSource);
     try {
+      this.model = this.uniform("uModel");
       this.view = this.uniform("uView");
       this.projection = this.uniform("uProjection");
       this.morph = this.uniform("uMorph");
@@ -31,13 +33,14 @@ export class Renderer {
     gl.disable(gl.BLEND);
   }
 
-  draw(eye: Vector3, amount: number, wireframe: boolean): void {
+  draw(eye: Vector3, model: Float32Array, amount: number, wireframe: boolean): void {
     const gl = this.gl;
     if (gl.isContextLost()) return;
     const aspect = gl.canvas.width / gl.canvas.height;
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.useProgram(this.program);
+    gl.uniformMatrix4fv(this.model, false, model);
     gl.uniformMatrix4fv(this.view, false, viewMatrix(eye, [0, 0, 0.35], [0, 0, 1]));
     gl.uniformMatrix4fv(this.projection, false,
       projectionMatrix(aspect, 2.2 * Math.min(1, aspect)));

@@ -9,7 +9,7 @@ export class Application {
   private readonly camera = new OrbitCamera({
     target: [0, 0.9, 0], yaw: 0.5, pitch: 0.38, minDistance: 3.4, maxDistance: 11,
   });
-  private readonly rotation = new ObjectRotation();
+  private readonly rotation = new ObjectRotation(this.camera.eye, this.camera.target);
   private readonly geometry = createDesk();
   private readonly events = new AbortController();
   private readonly unbindResize: () => void;
