@@ -3,7 +3,6 @@ import type { Vector3 } from "@/src/common/graphics/types.ts";
 export const POSITION_COMPONENTS = 3;
 export const TEXTURE_COMPONENTS = 2;
 export const VERTEX_COMPONENTS = POSITION_COMPONENTS * 2 + TEXTURE_COMPONENTS;
-export const DEFAULT_MATERIAL_NAME = "default";
 
 export interface Material {
   ambient: Vector3;
@@ -22,17 +21,9 @@ export function createDefaultMaterial(): Material {
   };
 }
 
-export interface ObjPart {
-  material: string;
-  vertices: Float32Array;
-}
-
-export interface ObjDocument {
-  libraries: string[];
-  parts: ObjPart[];
-}
-
 export interface ModelPart {
+  name: string;
   material: Material;
   vertices: Float32Array;
+  rotation?: { pivot: Vector3; speed: number };
 }
