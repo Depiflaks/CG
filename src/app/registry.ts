@@ -7,6 +7,8 @@ import { mount as mountLab04Task02 } from "@/labs/lab-04/task-02/index.ts";
 import { mount as mountLab04Task03 } from "@/labs/lab-04/task-03/index.ts";
 import { mount as mountLab05Task01 } from "@/labs/lab-05/task-01/index.ts";
 import { mount as mountLab06Task01 } from "@/labs/lab-06/task-01/index.ts";
+import { mount as mountLab07Task01 } from "@/labs/lab-07/task-01/index.ts";
+import { mount as mountLab07Task02 } from "@/labs/lab-07/task-02/index.ts";
 import type { LabDefinition } from "@/src/app/types.ts";
 
 export const labs: readonly LabDefinition[] = [
@@ -88,6 +90,22 @@ export const labs: readonly LabDefinition[] = [
         id: "task-01",
         name: "Task 1 — Комната из OBJ-моделей",
         mount: mountLab06Task01,
+      },
+    ],
+  },
+  {
+    id: "lab-07",
+    name: "Lab 7",
+    tasks: [
+      {
+        id: "task-01",
+        name: "Task 1.3 — Канабола",
+        mount: mountLab07Task01,
+      },
+      {
+        id: "task-02",
+        name: "Task 2 — Пятиконечная звезда",
+        mount: mountLab07Task02,
       },
     ],
   },
