@@ -5,7 +5,7 @@ import { createDefaultMaterial, VERTEX_COMPONENTS, type Material, type ModelPart
 
 async function loadText(url: string, signal: AbortSignal): Promise<string> {
   const response = await fetch(url, { signal });
-  if (!response.ok) throw new Error(`Не удалось загрузить ${url}: HTTP ${String(response.status)}`);
+  if (!response.ok) throw new Error(`Failed to load ${url}: HTTP ${String(response.status)}`);
   return response.text();
 }
 
@@ -32,7 +32,7 @@ function readVertices(geometry: BufferGeometry, start: number, count: number): F
       uv?.getX(vertex) ?? 0, uv?.getY(vertex) ?? 0,
     ], index * VERTEX_COMPONENTS);
   }
-  if (!vertices.every(Number.isFinite)) throw new Error("OBJ содержит некорректные данные вершин.");
+  if (!vertices.every(Number.isFinite)) throw new Error("OBJ contains invalid vertex data.");
   return vertices;
 }
 
@@ -44,7 +44,7 @@ function readMesh(mesh: Mesh, materials: Map<string, Material>): ModelPart[] {
   return groups.map(({ start, count, materialIndex }) => {
     const name = meshMaterials[materialIndex ?? 0]?.name ?? "";
     const material = materials.get(name);
-    if (!material) throw new Error(`Не найден материал ${name}. Проверьте mtllib и usemtl.`);
+    if (!material) throw new Error(`Material ${name} not found. Check mtllib and usemtl.`);
     return { name: mesh.name, material, vertices: readVertices(geometry, start, count) };
   });
 }
@@ -64,6 +64,6 @@ async function loadModelParts(url: string, signal: AbortSignal): Promise<ModelPa
   object.traverse((child) => {
     if (child instanceof Mesh) parts.push(...readMesh(child as Mesh, materials));
   });
-  if (parts.length === 0) throw new Error("OBJ не содержит полигональных граней.");
+  if (parts.length === 0) throw new Error("OBJ contains no polygonal faces.");
   return parts;
 }
