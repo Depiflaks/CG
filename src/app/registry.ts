@@ -9,6 +9,10 @@ import { mount as mountLab05Task01 } from "@/labs/lab-05/task-01/index.ts";
 import { mount as mountLab06Task01 } from "@/labs/lab-06/task-01/index.ts";
 import { mount as mountLab07Task01 } from "@/labs/lab-07/task-01/index.ts";
 import { mount as mountLab07Task02 } from "@/labs/lab-07/task-02/index.ts";
+import { mount as mountLab07Task03 } from "@/labs/lab-07/task-03/index.ts";
+import { mount as mountLab07Task04 } from "@/labs/lab-07/task-04/index.ts";
+import { mount as mountLab08Task01 } from "@/labs/lab-08/task-01/index.ts";
+import { mount as mountLab08Task02 } from "@/labs/lab-08/task-02/index.ts";
 import type { LabDefinition } from "@/src/app/types.ts";
 
 export const labs: readonly LabDefinition[] = [
@@ -99,13 +103,39 @@ export const labs: readonly LabDefinition[] = [
     tasks: [
       {
         id: "task-01",
-        name: "Task 1.3 — Канабола",
+        name: "Task 1 — Канабола",
         mount: mountLab07Task01,
       },
       {
         id: "task-02",
         name: "Task 2 — Пятиконечная звезда",
         mount: mountLab07Task02,
+      },
+      {
+        id: "task-03",
+        name: "Task 3 — Морфинг параболоидов",
+        mount: mountLab07Task03,
+      },
+      {
+        id: "task-04",
+        name: "Task 4 — Волны",
+        mount: mountLab07Task04,
+      },
+    ],
+  },
+  {
+    id: "lab-08",
+    name: "Lab 8",
+    tasks: [
+      {
+        id: "task-01",
+        name: "Task 1 — Освещение Фонга",
+        mount: mountLab08Task01,
+      },
+      {
+        id: "task-02",
+        name: "Task 2 — Тени",
+        mount: mountLab08Task02,
       },
     ],
   },
