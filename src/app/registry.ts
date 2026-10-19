@@ -13,6 +13,8 @@ import { mount as mountLab07Task03 } from "@/labs/lab-07/task-03/index.ts";
 import { mount as mountLab07Task04 } from "@/labs/lab-07/task-04/index.ts";
 import { mount as mountLab08Task01 } from "@/labs/lab-08/task-01/index.ts";
 import { mount as mountLab08Task02 } from "@/labs/lab-08/task-02/index.ts";
+import { mount as mountLab08Task03 } from "@/labs/lab-08/task-03/index.ts";
+import { mount as mountLab08Task04 } from "@/labs/lab-08/task-04/index.ts";
 import type { LabDefinition } from "@/src/app/types.ts";
 
 export const labs: readonly LabDefinition[] = [
@@ -136,6 +138,16 @@ export const labs: readonly LabDefinition[] = [
         id: "task-02",
         name: "Task 2 — Тени",
         mount: mountLab08Task02,
+      },
+      {
+        id: "task-03",
+        name: "Task 3 — Эллиптические параболоиды",
+        mount: mountLab08Task03,
+      },
+      {
+        id: "task-04",
+        name: "Task 4 — Гиперболический параболоид",
+        mount: mountLab08Task04,
       },
     ],
   },

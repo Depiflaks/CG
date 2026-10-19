@@ -12,22 +12,42 @@ export class Renderer {
   private readonly position: number;
   private readonly uniforms: Record<string, WebGLUniformLocation> = {};
 
-  constructor(private readonly gl: WebGL2RenderingContext, images: Images) {
+  constructor(
+    private readonly gl: WebGL2RenderingContext,
+    images: Images,
+  ) {
     this.program = createProgram(gl, vertexSource, fragmentSource);
     this.position = gl.getAttribLocation(this.program, "aPosition");
     try {
       this.buffer = requireResource(gl.createBuffer());
       gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
-      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-      for (const name of ["First", "Second", "ImageAspects", "Resolution", "Origin", "Progress", "Source"]) {
-        this.uniforms[name] = requireResource(gl.getUniformLocation(this.program, `u${name}`));
+      gl.bufferData(
+        gl.ARRAY_BUFFER,
+        new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]),
+        gl.STATIC_DRAW,
+      );
+      for (const name of [
+        "First",
+        "Second",
+        "ImageAspects",
+        "Resolution",
+        "Origin",
+        "Progress",
+        "Source",
+      ]) {
+        this.uniforms[name] = requireResource(
+          gl.getUniformLocation(this.program, `u${name}`),
+        );
       }
       for (const image of images) this.textures.push(this.createTexture(image));
       gl.useProgram(this.program);
       gl.uniform1i(this.uniform("First"), 0);
       gl.uniform1i(this.uniform("Second"), 1);
-      gl.uniform2f(this.uniform("ImageAspects"), images[0].naturalWidth / images[0].naturalHeight,
-        images[1].naturalWidth / images[1].naturalHeight);
+      gl.uniform2f(
+        this.uniform("ImageAspects"),
+        images[0].naturalWidth / images[0].naturalHeight,
+        images[1].naturalWidth / images[1].naturalHeight,
+      );
     } catch (error) {
       this.dispose();
       throw error;
